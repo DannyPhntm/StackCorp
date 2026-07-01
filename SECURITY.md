@@ -1,185 +1,116 @@
-# SECURITY.md — Security Baseline
+# SECURITY.md — Agency Security & Safety Rules
 
-Non-negotiable security rules for every project, client, and contributor. Security is **baseline, not an upsell** — it applies to all work, internal and client-facing.
+This file applies to all agency projects, client projects, and internal products.
 
-This is the agency-wide policy. The proven, project-level reference lives in [reference/malir-cantt-bazaar/security.md](reference/malir-cantt-bazaar/security.md). Engineering enforcement lives in [PROJECT_WORKFLOW.md](PROJECT_WORKFLOW.md).
+Claude, Daniyal, and Affan must follow these rules unless Daniyal explicitly approves an exception.
 
----
+## Highest Priority Rules
 
-## The Absolute Rules
+- Do not expose secrets.
+- Do not commit `.env` files.
+- Do not print API keys, JWT secrets, database URLs, tokens, passwords, or private credentials.
+- Do not rewrite entire files unless explicitly requested or absolutely necessary.
+- Do not delete, overwrite, or restructure important existing code without explaining why.
+- Do not merge pull requests automatically unless Daniyal explicitly says to merge.
+- Do not push directly to `main` unless explicitly approved.
+- Do not make destructive production data changes unless explicitly approved.
+- Do not weaken validation, authentication, authorization, or admin protections.
+- Do not remove existing working features while fixing another issue.
 
-These are never broken. No exceptions, no "just this once."
+## File Editing Rules
 
-1. **Never commit `.env` files.**
-2. **Never commit secrets** — API keys, tokens, JWT secrets, database URLs, platform credentials.
-3. **Never put client passwords or API keys in docs, markdown, code, or commit messages.**
-4. **Never expose secrets to the frontend.**
-5. **Never return password hashes to the client.**
-6. **Never expose private/admin-only data on public pages.**
-7. **Never use real production data for testing, and never edit the production database casually.**
+Claude must preserve existing work.
 
-If any of these has already happened, treat it as an incident — see [If a Secret Leaks](#if-a-secret-leaks).
+Before editing:
+1. Inspect the relevant files.
+2. Understand the current behavior.
+3. Identify the smallest safe change.
+4. Explain the plan if the task is large or risky.
 
----
+When editing:
+- Prefer targeted edits.
+- Preserve existing functions, imports, styles, and logic where possible.
+- Do not replace a full file just because it is easier.
+- Do not remove code unless it is proven unused, broken, or explicitly requested.
+- Do not rename fields/routes/components casually.
+- Do not change database schema without explaining migration impact.
+- Do not change public API shapes unless necessary and documented.
 
-## Secrets & API Keys
+If a full-file rewrite is needed:
+- Ask for confirmation first.
+- Explain why partial editing is not safe.
+- Confirm what behavior will be preserved.
+- Run tests/build after.
 
-### Where secrets live
-- **Only** in the host platform's environment settings (Vercel, Railway, etc.).
-- Never in the repo, never in markdown, never in client-facing documents.
+## Git / GitHub Rules
 
-### Never include in this repo
-- `.env` files
+- Work on a branch per task.
+- Use clear branch names:
+  - `feat/...`
+  - `fix/...`
+  - `chore/...`
+  - `docs/...`
+- Open a PR to `main`.
+- Do not merge without explicit approval.
+- Do not auto-merge because tests passed.
+- Before merge, report:
+  - changed files
+  - tests run
+  - migration status
+  - deployment steps
+  - risks/blockers
+- If multiple PRs touch the same files, verify merge order first.
+- If conflicts exist, resolve carefully and re-run checks.
+- Never hide merge conflicts or pretend a PR is clean.
+
+## Production Data Rules
+
+Do not directly edit production data unless explicitly approved.
+
+Forbidden without explicit approval:
+- deleting users
+- deleting businesses
+- deleting shops
+- deleting listings
+- changing admin roles
+- changing verification status
+- modifying payment/waiver status
+- running destructive cleanup scripts
+- editing production database manually
+
+If a script may affect production:
+- first run dry-run mode
+- report exactly what would change
+- wait for approval
+- then run with destructive flags only if approved
+
+## Secrets Rules
+
+Never commit or print:
+
+- `.env`
 - Railway secrets
-- Vercel environment variables
+- Vercel env vars
 - Neon database URLs
 - Resend API keys
 - Cloudinary URLs
 - JWT secrets
-- Client passwords
-- Production credentials
-- Private customer data
+- GitHub tokens
+- OAuth/client secrets
+- email passwords
+- client credentials
+- private customer data
 
-### Repo hygiene
-- `.env` and `.env.*` must be in `.gitignore` on every code project.
-- Provide a committed `.env.example` with **key names only** and no values.
-- Scan diffs for accidental secrets before every PR.
+Allowed:
+- `.env.example` with placeholder values only
+- documentation listing variable names only
 
-### Sharing secrets with the team or client
-- Use a secure channel (a password manager or the platform's own access controls).
-- Never share secrets over plain email, chat, or in a doc in this repo.
-- Track which accounts exist — but not their secrets — in [docs/tool-accounts.md](docs/tool-accounts.md).
+Example safe documentation:
 
-### Safe documentation rule
-Only document **what** tools are used and **who** manages access — never the secret values.
+```text
+DATABASE_URL=<your database url>
+JWT_SECRET=<long random secret>
 
-> Example: "Vercel: frontend hosting · Railway: backend hosting · Neon: database · Resend: email · Cloudinary: image storage." No values, ever.
 
----
 
-## Authentication & Authorization
-
-- **Hash all passwords.** Never store or transmit plaintext. Never return hashes to the frontend.
-- **`JWT_SECRET` must exist in production** and be strong and unique per environment.
-- **Guard routes by role:**
-  - Admin routes require the admin role.
-  - Business routes require an approved business account.
-- **Ownership checks:** users may edit/delete only their own data unless they are admin.
-- **Admin-only actions:** only admins approve businesses/listings or view private documents.
-
----
-
-## Data Privacy
-
-Some data is private and must **never** appear on public pages or in API responses to non-admins:
-
-- Business verification documents
-- CNIC / NTN or equivalent identity documents
-- Admin notes and internal approval data
-- Private rejection reasons
-
-**Rule:** private data is admin-only by default. Public endpoints return only public fields.
-
----
-
-## Input Validation & Database Safety
-
-- **Validate all input** before any database write.
-- **Use allow-listed enum values** for statuses, categories, roles, listing types, and sorting.
-- **Use the ORM (Prisma).** Avoid raw SQL; never concatenate user input into SQL.
-- Reject malformed, oversized, or unexpected input early.
-
----
-
-## Upload Security
-
-For all file uploads (listings, verification documents, etc.):
-
-- Use `multipart/form-data`.
-- **Accept images only**; reject non-image and empty files.
-- Enforce **size limits**.
-- Upload to the storage provider (Cloudinary) and **validate the response**.
-- Store **secure URLs** in the database — never base64 image data.
-- A failed upload must **block** the operation, not pass silently.
-
----
-
-## Rate Limiting
-
-Rate-limit all sensitive actions to resist abuse and brute force:
-
-- Login, register, logout
-- Email verification and resend
-- Password reset
-- Contact form
-- Listing creation
-- Image uploads
-- Business application
-
----
-
-## Deployment Readiness Checklist
-
-A build is **not** ready for production until every box is checked.
-
-- [ ] No secrets, `.env` files, or credentials in the repo or history
-- [ ] `.env.example` present with key names only
-- [ ] All required production env vars set in the host platform
-- [ ] `JWT_SECRET` set and strong in production
-- [ ] Passwords hashed; hashes never returned to frontend
-- [ ] Admin and business routes guarded by role
-- [ ] Ownership checks enforced on edit/delete
-- [ ] Private data (verification docs, CNIC/NTN, admin notes) confirmed admin-only
-- [ ] All input validated; allow-listed enums used
-- [ ] No raw SQL / no user input concatenated into SQL
-- [ ] Uploads: images only, size-limited, validated, secure URLs stored
-- [ ] Rate limiting on sensitive actions
-- [ ] Build, lint, and tests pass
-- [ ] Migrations reviewed and additive where possible
-- [ ] Post-deploy smoke test passed (auth, core flows, admin, mobile)
-
-The full deploy procedure and smoke test: [reference/malir-cantt-bazaar/deployment.md](reference/malir-cantt-bazaar/deployment.md).
-
----
-
-## Production Safety Rules
-
-- No fake production data.
-- No direct production database edits without explicit approval.
-- Never casually delete real user, business, or shop data.
-- Migrations additive where possible; run `prisma validate` then `prisma migrate deploy`.
-- Always run build/lint/tests before deploying.
-- Confirm the app still works after every deploy.
-
----
-
-## Beta / Launch Gate
-
-Do not send a beta or launch link until:
-
-- Critical security fixes are deployed
-- Core flows (auth, uploads, limits, approvals, verification, admin moderation) work live
-- Private data is confirmed protected
-- Mobile layout is acceptable
-
----
-
-## If a Secret Leaks
-
-Treat any committed secret as compromised. Immediately:
-
-1. **Rotate** the secret at its source (regenerate the key/token, change the password).
-2. **Update** the new value in the host environment only.
-3. **Remove** the secret from the repo and, if needed, from git history.
-4. **Verify** the old secret no longer works.
-5. **Record** the incident and follow-ups in [DECISIONS.md](DECISIONS.md).
-
-Rotating beats merely deleting — assume anything pushed was captured.
-
----
-
-## Responsibilities
-
-- **Every contributor** owns these rules on every change.
-- Security checks are part of the [PR checklist](PROJECT_WORKFLOW.md#pull-requests), not a separate phase.
-- When in doubt, choose the more conservative, more private option.
+ls
