@@ -3,7 +3,9 @@
 A running log of significant decisions: architecture, tooling, process, and pricing precedent. This is our institutional memory — **why** we do things the way we do.
 
 ## How to Use This Log
+## Decision — Claude Work Protocol
 
+For all agency and client work, Claude must follow a Spec → Build → Verify loop. Before meaningful work, Claude must check `SECURITY.md` and `SKILLS.md`, decide whether skills or subagents are needed, state the verification plan, ask clarifying questions instead of assuming, and update relevant docs after meaningful changes. For taste-heavy or strategy-heavy tasks, AI should augment human judgment. For repetitive processes that produce roughly 80% good output consistently, automation may be considered, but legal, security, privacy, money, and client-facing risks require human approval.
 - Add a new entry whenever a decision sets a lasting precedent or would otherwise be forgotten.
 - Newest entries go at the top of the log.
 - Keep entries short and factual. The point is the **reasoning**, not prose.
