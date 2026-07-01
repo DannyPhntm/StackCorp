@@ -29,7 +29,11 @@ We will build **an automated enrollment engine** — a single, always-on system 
 
 In plain terms, it does four things, automatically:
 
-1. **Attracts the right families.** Targeted Facebook, Instagram, and Google campaigns put The Guide Institute in front of exactly the parents and students looking for O/A-Level help in your area — with an irresistible free offer (a diagnostic test or trial class) that turns interest into an actual inquiry.
+1. **Attracts the right families — from three directions at once.** We don't rely on a single source of leads. Your institute gets a complete lead-generation engine with three parts working together:
+   - **Advertising:** targeted Facebook, Instagram, and Google campaigns put The Guide Institute in front of exactly the parents and students searching for O/A-Level help in your area — with an irresistible free offer (a diagnostic test or trial class).
+   - **Re-engaging people who already know you:** we automatically reach back out to your past inquiries, trial no-shows, and former students at the right moments — the fastest, lowest-cost students you'll ever win.
+   - **School & corporate partnerships:** we proactively approach schools, companies (staff study benefits), and universities to set up referral partnerships — each one can send you many students at once.
+   Every lead, no matter the source, flows into the same system so nothing is ever handled twice or lost.
 
 2. **Captures every inquiry in one place.** Whether a family comes from an ad, WhatsApp, a phone call, or a referral, their details land in one organized system — nothing scattered across phones, notebooks, and inboxes. Nothing gets lost.
 
@@ -48,7 +52,7 @@ A phased build so you see value quickly — first leads flowing within the first
 | Phase | What we do | What you get |
 |-------|-----------|--------------|
 | **1. Foundation** | Define your standout offer, set up tracking, map the enrollment journey | A compelling free-trial offer + measurement in place |
-| **2. Lead Generation** | Launch targeted ad campaigns for parents & students + organic and referral engines | A consistent flow of qualified inquiries |
+| **2. Lead Generation** | Launch the 3-engine lead system — ads, re-engagement of your existing contacts, and school/corporate partnership outreach | A consistent, multi-source flow of qualified inquiries |
 | **3. Capture & Organize** | Set up your central CRM so every inquiry is captured, tagged, and prioritized | One organized home for every lead — nothing lost |
 | **4. Automated Follow-Up** | Build the WhatsApp/SMS/email nurture sequences that respond instantly and follow up for you | A tireless follow-up system that never forgets a family |
 | **5. Hot-Lead Handoff** | Set up instant alerts so your team calls interested families at the perfect moment | Warm leads delivered to admissions, ready to close |
@@ -58,7 +62,10 @@ A phased build so you see value quickly — first leads flowing within the first
 
 ### You will receive:
 - [ ] A complete, done-for-you automated lead & enrollment system
+- [ ] A **3-engine lead-generation system**: paid ads + re-engagement of your existing contacts + school/corporate partnership outreach
 - [ ] Targeted ad campaigns (parent + student) with creative
+- [ ] A re-engagement campaign that revives your past inquiries and former students
+- [ ] A partnership outreach program (schools, companies, universities) with done-for-you email + call scripts
 - [ ] An irresistible lead-magnet offer (free trial / diagnostic)
 - [ ] A central CRM with every lead captured, tagged, and scored
 - [ ] Multi-channel WhatsApp + SMS + email follow-up sequences

@@ -69,27 +69,29 @@ Nothing converts without positioning and tracking. Do this first.
 
 ---
 
-## Phase 1 — Top-of-Funnel (Lead Generation)
+## Phase 1 — The Three-Engine Lead Generation System
 
-Goal: a **predictable, always-on flow** of qualified inquiries, scaled up in peak windows.
+Goal: a **predictable, always-on flow** of qualified inquiries from **three independent engines** — so lead flow never depends on a single channel. All three feed one CRM (Phase 2).
 
-### Paid (fastest to consistency)
-- **Meta Ads (Facebook + Instagram) — primary.** Two audience sets:
-  - *Parent set:* interests + location radius around the institute; creative = results, credibility, "book a free assessment."
-  - *Student set:* Reels-first creative; relatable "struggling with [subject]?" hooks → free past-paper pack.
-- **Lead objective split-test:** Meta Lead Forms (instant, cheap leads) **vs.** click-to-landing-page (higher intent). Run both; keep the cheaper cost-per-*qualified*-lead.
-- **Click-to-WhatsApp ads** — for this market these often outperform form ads because they open a live chat instantly.
-- **Google Search Ads** for high-intent queries: *"A level chemistry tuition [area]"*, *"O level tuition near me"*. Lower volume, higher intent — worth it seasonally.
+> **Full detail:** this phase is documented end-to-end in the companion **[lead-generation-system.md](lead-generation-system.md)** (channel-by-channel strategy, automation flow, lean tool stack, KPIs, and 30/60/90 rollout). Summary below.
 
-### Organic (compounds over time, lower cost)
-- **Instagram/TikTok Reels:** short "1-minute exam tip" and "how to solve this past-paper question" clips. Positions teachers as experts, feeds the student audience.
-- **Google Business Profile:** fully optimized for local "near me" search + reviews engine (ask every enrolled family for a review).
-- **Referral loop:** every enrolled student's parent gets a referral offer (fee discount for a successful referral) — the cheapest, highest-trust lead source in education.
+**Audience/tool note:** the institute sells B2C (parents/students). So paid ads target parents/students directly; **Apollo + cold email are used only for the B2B partnership arm** (schools/corporates/universities), not for emailing parents; and cold-call/WhatsApp outbound run on **owned/opted-in lists** (reactivation) — effective *and* compliant.
 
-### Partnerships
-- School exam-prep talks, coaching-center cross-promos, and results-day pop-up presence.
+### Engine 1 — Inbound (Paid + Organic + Referral)
+- **Meta Ads — primary.** Campaign A (Parents/conversions: results & credibility → free assessment), Campaign B (Students/Reels: "struggling with [subject]?" → past-paper pack), Campaign C (Retargeting: video-viewers, page-visitors, WhatsApp openers → strongest offer). Split-test Lead Forms vs. landing page vs. **click-to-WhatsApp** (usually the market winner); keep the lowest cost-per-*qualified*-lead.
+- **Google Search Ads** for high-intent queries (*"A level chemistry tuition [area]"*, *"O level tuition near me"*).
+- **Organic:** Reels ("1-minute exam tip" / solved past-paper), an optimized Google Business Profile + reviews engine, and local subject/level SEO pages.
+- **Referral engine:** automated post-enrollment referral offer + student "bring-a-friend" trial.
 
-**Deliverable:** 2–3 live campaigns, creative library, organic content cadence, referral mechanism.
+### Engine 2 — Outbound (Push), ordered by ROI
+- **2A — Database reactivation (start here):** re-engage owned past inquiries, no-shows, and ex-students via WhatsApp → SMS → call, triggered around each CAIE session. Cheapest, cleanest ROI.
+- **2B — B2B partnership outbound (Apollo + cold email):** build Apollo lists of school admins, corporate HR, universities, and consultants → verify → run a 4-step cold-email sequence on **warmed secondary domains** (Instantly) → replies routed to a partnership pipeline. One partner = many students into the B2C funnel.
+- **2C — Cold calling:** from legitimate lists (uncontacted inbound, event sign-ups, partner lists) via the CRM dialer, scripted, with logged dispositions.
+
+### Engine 3 — feeds Capture & Nurture (Phases 2–4)
+Every engine tags leads by **source**, so budget can later flow to whichever engine produces the lowest **cost per enrollment**.
+
+**Deliverable:** live paid campaigns + creative library; reactivation campaign shipped; Apollo lists + warmed domains + cold-email sequences running; cold-call scripts + dialer configured; referral + organic cadence in place — all wired to the CRM. Full spec in [lead-generation-system.md](lead-generation-system.md).
 
 ---
 
@@ -227,9 +229,14 @@ Goal: turn the system into a **compounding asset** — cheaper leads and higher 
 | Email | Resend *(agency stack)* or platform-native | Detail + proof messages |
 | Landing pages | Platform funnels, or React+Vite on Vercel | Custom route if data-ownership matters |
 | Ads | Meta Ads (primary) + Google Search | Meta Pixel + CAPI required |
+| Cold email (B2B partnership arm) | Instantly.ai *(or Smartlead)* | Secondary warmed domains only, not the main domain |
+| B2B contact data | Apollo.io (free/starter credits) | Schools/corporates/universities — **not** parents |
+| Cold-call dialer | GoHighLevel built-in dialer | Click-to-call, auto-logged, dispositioned |
 | Booking | Platform calendar | Feeds Track C reminders |
 | Data (custom route) | Neon Postgres + Prisma via Node/Express | Agency's proven stack |
 | Analytics | GTM + platform dashboard | Single KPI dashboard |
+
+> Full channel strategy, automation flow, lean stack, and rollout: **[lead-generation-system.md](lead-generation-system.md)**.
 
 ---
 
