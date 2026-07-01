@@ -1,6 +1,6 @@
 # CLIENT_WORKFLOW.md — From Lead to Handoff
 
-How we move a prospect through the full journey: **initial business audit → pitching AI solutions → custom build → handoff and support.**
+How **StackCorp** moves a prospect through the full journey: **initial business audit → pitching AI solutions → custom build → handoff and support.**
 
 This is the client-facing side of our [audit-to-build pipeline](AGENCY.md#the-audit-to-build-pipeline). For the internal coding and delivery mechanics, see [PROJECT_WORKFLOW.md](PROJECT_WORKFLOW.md).
 

@@ -1,6 +1,13 @@
-# Agency Operating System
+# StackCorp — Agency Operating System
 
-The single source of truth for how our agency runs. This repository is not a client app — it is the **operating system** for our AI services, web development, AI consultancy, audits, automation, and custom systems work.
+The single source of truth for how **StackCorp** ([stackcorp.org](https://stackcorp.org)) runs. This repository is not a client app — it is the **operating system** for our AI services, web development, AI consultancy, audits, automation, and custom systems work.
+
+> **StackCorp** builds websites, AI workflows, automations, audits, and business systems for modern businesses.
+> *Websites, AI workflows, and business systems that help companies operate better.*
+>
+> - **StackCorp** is the agency brand.
+> - **Malir Cantt Bazaar** is StackCorp's first live product and case study.
+> - Production secrets and client credentials must **never** be stored in this repo.
 
 Everything here is written in markdown so it stays readable, versioned, and easy to update. When knowledge changes, we update the relevant `.md` file rather than letting it live in someone's head.
 

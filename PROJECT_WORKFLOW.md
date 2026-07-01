@@ -1,6 +1,6 @@
 # PROJECT_WORKFLOW.md — Internal Delivery Rules
 
-How we build: coding standards, branch management, pull requests, deployment discipline, and security hygiene.
+How **StackCorp** builds: coding standards, branch management, pull requests, deployment discipline, and security hygiene.
 
 This is the internal engineering side of delivery. For the client-facing journey, see [CLIENT_WORKFLOW.md](CLIENT_WORKFLOW.md). For the technology we build on, see [TECH_STACK.md](TECH_STACK.md).
 

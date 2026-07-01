@@ -27,6 +27,13 @@ For all agency and client work, Claude must follow a Spec → Build → Verify l
 
 ## Log
 
+## ADR-0007 — Agency name and primary domain
+- **Date:** 2026-07-01
+- **Status:** Accepted
+- **Context:** The agency operating system was documented before a brand name and domain were finalized; docs referred to "the agency" generically.
+- **Decision:** Agency name selected: **StackCorp**. Primary domain: **stackcorp.org**. Do not claim legal incorporation or company registration until that is formally done and documented here.
+- **Consequences:** Docs now reference StackCorp and stackcorp.org consistently; no legal/registration status is asserted; a future ADR will record incorporation if and when it happens.
+
 ## ADR-0006 — Value-based pricing across audit → build → retainer
 - **Date:** 2026-07-01
 - **Status:** Accepted
@@ -71,4 +78,4 @@ For all agency and client work, Claude must follow a Spec → Build → Verify l
 
 ---
 
-> ADR-0001 through ADR-0006 record the founding decisions captured when the agency operating system was first documented. Add the next decision as **ADR-0007** at the top of the log.
+> ADR-0001 through ADR-0007 record the founding decisions captured when the agency operating system was first documented. Add the next decision as **ADR-0008** at the top of the log.

@@ -1,6 +1,6 @@
 # SERVICES.md — Service Catalog
 
-What we sell, what each engagement includes, and how it maps to our [audit-to-build pipeline](AGENCY.md#the-audit-to-build-pipeline).
+What **StackCorp** sells, what each engagement includes, and how it maps to our [audit-to-build pipeline](AGENCY.md#the-audit-to-build-pipeline).
 
 This is the practical menu. For positioning and principles see [AGENCY.md](AGENCY.md); for packaging and price points see [PRICING.md](PRICING.md).
 

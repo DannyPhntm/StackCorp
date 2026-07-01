@@ -1,7 +1,7 @@
 # Proposal — [Project Name]
 
 **Prepared for:** [Client Name]
-**Prepared by:** [Agency / Team member]
+**Prepared by:** StackCorp — [Team member]
 **Date:** [Date]
 **Valid until:** [Date]
 

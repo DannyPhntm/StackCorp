@@ -1,6 +1,6 @@
 # PROMPTS.md — Standard Claude Code Prompts
 
-A repository of reusable prompts for daily work in Claude Code. These keep our work consistent with the agency operating system — the same standards, the same workflow, every time.
+A repository of reusable prompts for daily work in Claude Code. These keep our work consistent with the **StackCorp** operating system — the same standards, the same workflow, every time.
 
 ## How to Use
 

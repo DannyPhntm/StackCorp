@@ -1,6 +1,6 @@
 # PRICING.md — Pricing Structure
 
-How we package and price our work. Our model is **value-based**: we price by the outcome and risk we remove for the client, not by hours logged.
+How **StackCorp** packages and prices its work. Our model is **value-based**: we price by the outcome and risk we remove for the client, not by hours logged.
 
 This is internal guidance for scoping and proposals. It maps directly to the [service catalog](SERVICES.md) and the [client workflow](CLIENT_WORKFLOW.md).
 

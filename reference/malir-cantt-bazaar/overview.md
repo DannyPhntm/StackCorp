@@ -1,6 +1,6 @@
 # Malir Cantt Bazaar — Reference Overview
 
-Malir Cantt Bazaar is our first live product and agency case study.
+Malir Cantt Bazaar is **StackCorp's** first live product and agency case study.
 
 It is a local marketplace and shops directory for Malir Cantt residents and businesses.
 

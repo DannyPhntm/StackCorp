@@ -1,6 +1,6 @@
 # AGENCY.md — Who We Are & How We Operate
 
-This document defines the agency: our mission, our positioning, the principles we hold, and the **audit-to-build pipeline** that turns a conversation into a shipped, supported system.
+This document defines **StackCorp** ([stackcorp.org](https://stackcorp.org)): our mission, our positioning, the principles we hold, and the **audit-to-build pipeline** that turns a conversation into a shipped, supported system.
 
 For the catalog of what we sell, see [SERVICES.md](SERVICES.md). For working rules inside this repo, see [CLAUDE.md](CLAUDE.md).
 
@@ -10,7 +10,10 @@ For the catalog of what we sell, see [SERVICES.md](SERVICES.md). For working rul
 
 We help businesses modernize through **real, shipped systems** — websites, AI tooling, and automations that work in production and keep working.
 
-We are an AI services, web development, AI consultancy, audit, automation, and custom-systems agency. We are deliberately practical: we measure ourselves by what we launch and what it does for the client, not by decks or demos.
+StackCorp is an AI services, web development, AI consultancy, audit, automation, and custom-systems agency. We are deliberately practical: we measure ourselves by what we launch and what it does for the client, not by decks or demos.
+
+> **Tagline:** Websites, AI workflows, and business systems that help companies operate better.
+> **Short:** Websites, AI systems, and automation for modern businesses.
 
 ---
 

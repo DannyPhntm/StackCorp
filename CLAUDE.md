@@ -1,6 +1,8 @@
 # CLAUDE.md — Agency Operating System
 
-This repo is the operating system for our AI services, web development, AI consultancy, audits, automation, and custom systems agency.
+This repo is the operating system for **StackCorp** ([stackcorp.org](https://stackcorp.org)) — our AI services, web development, AI consultancy, audits, automation, and custom systems agency.
+
+StackCorp is the agency brand. Malir Cantt Bazaar is StackCorp's first live product and case study. Production secrets and client credentials must never be stored in this repo.
 
 ## Important Context
 

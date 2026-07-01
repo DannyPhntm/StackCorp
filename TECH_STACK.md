@@ -1,6 +1,6 @@
 # TECH_STACK.md — Standard Stack
 
-Our default, opinionated technology stack — chosen for speed, reliability, and security, and **proven in production by [Malir Cantt Bazaar](https://malircanttbazaar.com)**.
+**StackCorp's** default, opinionated technology stack — chosen for speed, reliability, and security, and **proven in production by [Malir Cantt Bazaar](https://malircanttbazaar.com)**.
 
 We default to this stack so we move fast and reuse what we know works. We deviate only when a project genuinely needs something different — never by accident.
 
