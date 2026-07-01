@@ -11,6 +11,100 @@ A repository of reusable prompts for daily work in Claude Code. These keep our w
 
 ---
 
+## Default Claude Task Prompt
+
+Use this before meaningful agency or client tasks:
+
+```text
+Before starting, read CLAUDE.md, SECURITY.md, SKILLS.md, and the relevant project files.
+
+Do not edit anything yet.
+
+First:
+1. Summarize the task.
+2. Identify what files/docs are relevant.
+3. Decide whether any skill from SKILLS.md applies.
+4. Decide whether subagents/perspectives are needed. If yes, state how many and what each perspective will check.
+5. Create or confirm the spec.
+6. Ask clarifying questions if anything is unclear.
+7. State how you will verify the work before calling it done.
+
+Rules:
+- Do not assume important details.
+- Do not rewrite whole files unless approved.
+- Do not touch production data.
+- Do not merge automatically.
+- Do not expose secrets.
+- Update relevant docs after meaningful changes.
+- Before saying done, run the verification and report results.
+```
+
+## Default End-of-Task Prompt
+
+```text
+Before ending, verify the task.
+
+Report:
+1. What changed
+2. Files changed
+3. Skills used, if any
+4. Subagents/perspectives used, if any
+5. Verification plan stated before work
+6. Verification actually run after work
+7. Browser/manual checks performed, if applicable
+8. Tests/checks run
+9. What passed
+10. What could not be verified
+11. Risks/blockers
+12. Docs updated
+13. Commit/PR status
+14. Deployment steps
+15. Next recommended task
+
+Do not claim the task is complete unless the verification supports it.
+```
+
+## Website Build Prompt Add-On
+
+```text
+For this website task, use browser verification if available.
+
+Before coding:
+- create/confirm the spec
+- identify pages/components affected
+- identify mobile states
+- identify success criteria
+- state verification plan
+
+After coding:
+- run lint/build
+- open/preview the affected page if possible
+- check desktop and mobile widths
+- check forms/interactions
+- report screenshots or viewport results if possible
+```
+
+## Security Task Prompt Add-On
+
+```text
+For this security task, use separate perspectives:
+1. auth/access control
+2. data/privacy
+3. input validation/injection
+4. deployment/config
+
+Before coding:
+- state threat being addressed
+- state files/routes affected
+- state how protection will be verified
+
+After coding:
+- run relevant tests/checks
+- verify the protection actually blocks the bad case
+- report any remaining risk
+```
+
+
 ## 1. Client Work — Audits & Discovery
 
 ### AI audit
