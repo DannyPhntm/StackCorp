@@ -172,6 +172,120 @@ We follow the deployment pattern proven on Malir Cantt Bazaar → [reference/mal
 
 ---
 
+## Spec → Build → Verify Loop
+
+Every meaningful project task should follow this loop:
+
+1. Understand the task
+2. Read relevant docs/files
+3. Check `SECURITY.md`
+4. Check `SKILLS.md`
+5. Decide whether subagents/perspectives are needed
+6. Create or confirm a spec
+7. Ask clarifying questions if anything is unclear
+8. Implement the smallest safe change
+9. Verify the result
+10. Report what changed, what passed, and what remains
+
+## Subagent / Perspective Planning
+
+Use multiple perspectives when the task affects multiple areas.
+
+Examples:
+
+### Website Build
+
+Use 4 perspectives:
+
+* Product/spec perspective
+* UI/UX perspective
+* Technical implementation perspective
+* QA/browser verification perspective
+
+### Security Audit
+
+Use 4 perspectives:
+
+* Auth/access control perspective
+* Data/privacy perspective
+* Infrastructure/config perspective
+* Abuse/edge-case perspective
+
+### Client Proposal
+
+Use 3 perspectives:
+
+* Client/business perspective
+* Scope/pricing perspective
+* Risk/expectations perspective
+
+### Documentation Cleanup
+
+Use 2 perspectives:
+
+* Structure/completeness perspective
+* Consistency/security perspective
+
+Small edits do not need subagents.
+
+## Verification Standards
+
+Before marking work as done:
+
+* UI work should be visually checked.
+* Website work should be checked in browser where possible.
+* Mobile UI should be checked at common mobile widths.
+* Backend work should have relevant tests/checks.
+* Database work should have schema/migration validation.
+* Security work should verify that the protection actually works.
+* Documentation work should verify that referenced files exist and links are not hollow.
+
+## Browser Verification Rule
+
+When building or editing a website, Claude should use browser preview/inspection if available.
+
+Check:
+
+* page loads
+* layout is not broken
+* mobile responsiveness
+* forms still work
+* console errors if available
+* key flows still work
+
+If browser verification is not available, Claude must say so and provide manual checks for Daniyal/Affan.
+
+## Documentation Update Rule
+
+After meaningful changes, update relevant docs.
+
+Examples:
+
+* New service/process → update `SERVICES.md`, `CLIENT_WORKFLOW.md`, or templates.
+* New technical rule → update `TECH_STACK.md`, `SECURITY.md`, or `PROJECT_WORKFLOW.md`.
+* New Claude workflow → update `CLAUDE.md`, `PROMPTS.md`, or `SKILLS.md`.
+* New project decision → update `DECISIONS.md`.
+* New client/project reference → update `projects/` or `reference/`.
+
+Do not silently change docs without explaining why.
+
+## Agency Automation Decision Filter
+
+For each agency process, decide:
+
+1. Should we manually do it?
+2. Should AI augment it?
+3. Should we automate it?
+
+Use these rules:
+
+* Taste-heavy work should be augmented, not fully automated.
+* Strategy-heavy work should be augmented, not fully automated.
+* Repetitive work with stable rules can be automated.
+* If AI output is consistently 80% good and easy to review, consider automation.
+* Anything involving legal risk, client money, secrets, private data, or security must keep human approval.
+
+
 ## End-of-Session Rule
 
 At the end of each session, report:
