@@ -1,4 +1,3 @@
-cat > SKILLS.md <<'EOF'
 # SKILLS.md — Claude Skills Guide
 
 This file documents the Claude skills available to Daniyal/Affan and when Claude should use them across agency projects.
@@ -318,4 +317,3 @@ A skill must never:
 - weaken auth/security
 - auto-merge PRs
 - remove existing working features
-EOF
