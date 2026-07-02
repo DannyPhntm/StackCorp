@@ -99,9 +99,10 @@ Every engine tags leads by **source**, so budget can later flow to whichever eng
 
 Goal: **no lead ever lands in a place no one checks.** Every inquiry is captured, tagged, and routed in seconds.
 
-### Recommended engine
-- **Primary recommendation: a unified CRM + automation platform (e.g., GoHighLevel or HubSpot).** One platform gives us CRM, pipeline, WhatsApp/SMS/email sending, landing pages, calendar booking, and automation in one place — fastest path to a working system and easiest for the institute's staff to run.
-- **WhatsApp sending:** WhatsApp Business API via **Meta / Twilio / 360dialog** (required for automated + templated messages at scale, vs. a personal number).
+### Recommended engine (lean, no all-in-one platform)
+- **Primary recommendation: a lean assembled stack, not a heavy all-in-one.** We use **HubSpot Free CRM** as the pipeline/source of truth and **Make.com as the automation backbone** that ties every tool together (routing, speed-to-lead, hot-lead alerts). This avoids locking into a platform like GoHighLevel before it's needed. (See the full [lead-gen tool stack](lead-generation-system.md#6-recommended-lean-tool-stack-no-all-in-one-platform).)
+- **Nurture sending:** **Brevo** (email/SMS, free tier) + a **WhatsApp tool** (AiSensy / WATI / Interakt, or 360dialog API) — automated, templated messaging.
+- **WhatsApp sending:** WhatsApp Business API (required for automated + templated messages at scale, vs. a personal number).
 - **Data-ownership option:** if the institute wants to own its data on our proven stack, we build a lightweight capture layer — **React landing page → Node/Express webhook → Neon Postgres**, with **Resend** for email — and sync to the CRM. (See [TECH_STACK.md](../../TECH_STACK.md).) We'll recommend the pragmatic path in discovery.
 
 ### Capture points (all feed one CRM)
@@ -223,16 +224,17 @@ Goal: turn the system into a **compounding asset** — cheaper leads and higher 
 
 | Need | Recommended | Alt / notes |
 |------|-------------|-------------|
-| CRM + automation + pipeline | GoHighLevel *(agency-run)* or HubSpot | One platform = fastest to value |
-| WhatsApp (automated) | WhatsApp Business API (Meta / Twilio / 360dialog) | Required for templated bulk sending |
-| SMS | Twilio / platform-native | Urgent nudges only |
-| Email | Resend *(agency stack)* or platform-native | Detail + proof messages |
-| Landing pages | Platform funnels, or React+Vite on Vercel | Custom route if data-ownership matters |
+| CRM + pipeline | **HubSpot Free CRM** *(or Airtable/Notion)* | Free, purpose-built pipeline; single source of truth |
+| Automation backbone (glue) | **Make.com** (free → low tier) | Ties every tool together; runs routing + alerts |
+| WhatsApp (automated) | AiSensy / WATI / Interakt *(or 360dialog API)* | Required for templated bulk sending |
+| Email + SMS nurture | **Brevo** (free tier) *or Resend + Make* | Sequences, proof, urgent nudges |
+| Landing pages | **React+Vite on Vercel** (agency stack) or Meta Instant Forms | In-house → ~$0; no-page option via Meta forms |
 | Ads | Meta Ads (primary) + Google Search | Meta Pixel + CAPI required |
 | Cold email (B2B partnership arm) | Instantly.ai *(or Smartlead)* | Secondary warmed domains only, not the main domain |
 | B2B contact data | Apollo.io (free/starter credits) | Schools/corporates/universities — **not** parents |
-| Cold-call dialer | GoHighLevel built-in dialer | Click-to-call, auto-logged, dispositioned |
-| Booking | Platform calendar | Feeds Track C reminders |
+| Cold-call dialer | None yet — click-to-call + log in HubSpot | No power dialer needed at low volume |
+| Booking | Cal.com (free) | Feeds Track C reminders |
+| Reporting | Looker Studio (free) | Cross-source KPI dashboard |
 | Data (custom route) | Neon Postgres + Prisma via Node/Express | Agency's proven stack |
 | Analytics | GTM + platform dashboard | Single KPI dashboard |
 

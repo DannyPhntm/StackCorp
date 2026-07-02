@@ -39,11 +39,13 @@ This keeps every channel both **effective** and **above-board**.
 
 ## 2. ENGINE 1 — Inbound (Paid + Organic + Referral)
 
+> **Online classes = no geography limit.** The institute teaches online (single branch), so targeting is **not** capped to a local radius. Run two geo tiers: **(1) Local** — families near the branch (also good for any in-person option); **(2) Wider** — nationwide + the **overseas Pakistani diaspora** (UK/Gulf/US), who actively seek trusted O/A-Level tutors online and often pay premium. This is a large expansion of the addressable market — budget should reflect it.
+
 ### 2.1 Paid Ads (primary volume driver)
 Structured so spend is always-on and scaled into peak windows (results days, term starts).
 
 **Meta Ads (Facebook + Instagram) — primary.** Campaign structure:
-- **Campaign A — Parents / Conversions:** objective = leads; creative = results, credibility, "book a free assessment." Audience: location radius around the institute + parent-age + interest layers.
+- **Campaign A — Parents / Conversions:** objective = leads; creative = results, credibility, "book a free assessment." Audience: **local radius + nationwide + diaspora geos** (split into separate ad sets), parent-age + interest layers. Lead with "expert O/A-Level prep, online from anywhere."
 - **Campaign B — Students / Reels:** objective = leads/engagement; creative = relatable "struggling with [subject]?" Reels → free past-paper pack.
 - **Campaign C — Retargeting:** everyone who watched 50%+ of a Reel, visited the landing page, or opened WhatsApp but didn't convert → strongest offer (free trial class).
 - **Split-test** Meta Lead Forms (cheap, instant) vs. click-to-landing-page vs. **click-to-WhatsApp** (usually the winner in this market). Keep the lowest cost-per-*qualified*-lead.
@@ -107,7 +109,7 @@ Instead of chasing parents one by one, we sign **partners** who each deliver a b
 
 ### 3.3 (2C) Cold Calling — *for warm & high-value targets*
 - **List sources (legitimate only):** uncontacted inbound leads (speed-to-lead), event/school-fair sign-ups, partner-provided lists, reactivation segment.
-- **Tooling:** CRM built-in dialer (GoHighLevel) — click-to-call, auto-logged, dispositioned.
+- **Tooling:** click-to-call from HubSpot (log the call + disposition on the contact) — no dedicated dialer needed at this stage.
 - **Script skeleton:** *Open (permission) → Reason (their inquiry / relevant offer) → 1 discovery question → Value → Book the free assessment → Log disposition.*
 - **Dispositions:** Booked · Follow-up · Not now (→ long-term nurture) · Do-not-contact. All feed the CRM + scoring.
 
@@ -149,21 +151,30 @@ This is the system already defined in the [roadmap](implementation-roadmap.md) (
 
 ---
 
-## 6. Recommended Lean Tool Stack
+## 6. Recommended Lean Tool Stack (no all-in-one platform)
+
+We deliberately **avoid a heavy all-in-one platform (e.g. GoHighLevel) at this stage** — not needed yet, and it locks us in. Instead we assemble lean/free-tier tools, with **Make.com as the automation backbone** that ties them together.
 
 | Layer | Lean pick | Why it's the low-cost choice |
 |-------|-----------|------------------------------|
-| CRM + automation + SMS + email + **dialer** + funnels | **GoHighLevel** | One subscription replaces 4–5 tools; runs pipeline, nurture, calling, and reporting |
-| Cold-email sending + domain warm-up | **Instantly.ai** (or Smartlead) | Cheap per-seat, built-in warm-up, multi-inbox rotation |
+| **CRM + pipeline** | **HubSpot Free CRM** *(or Airtable/Notion)* | Purpose-built pipeline, free; single source of truth |
+| **Automation backbone** (the glue) | **Make.com** (free → low tier) | Triggers, routing, speed-to-lead, hot-lead alerts across every tool |
+| Email nurture | **Brevo** (free tier) *or Resend + Make* | Free early volume; Brevo also bundles SMS + automation |
+| SMS | Brevo SMS or **Twilio** (usage) | Urgent nudges only |
+| WhatsApp automation | **AiSensy / WATI / Interakt** *(or 360dialog API + Make)* | Dedicated WhatsApp tool — the spine in this market |
+| Cold-email sending + warm-up | **Instantly.ai** (or Smartlead) | Built-in warm-up, multi-inbox rotation |
 | B2B contact data (partnership arm) | **Apollo.io** (free/starter credits) | Verified work emails + phones for schools/corporates |
 | Email verification | Apollo built-in / **Neverbounce** free tier | Protects sender reputation |
-| Secondary sending domains + mailboxes | **Porkbun** domains + Google Workspace / Zoho | Keeps cold email off the primary domain; cheap |
-| WhatsApp Business API | **360dialog** (or Meta/Twilio) | Cost-effective automated WhatsApp at scale |
+| Secondary domains + mailboxes | **Porkbun** domains + Google Workspace / Zoho | Keeps cold email off the primary domain; cheap |
+| Cold-call dialer | **None yet** — click-to-call + log in HubSpot | No power dialer needed at low volume |
+| Landing pages / funnels | **React + Vite on Vercel** (agency stack) *or Meta Instant Forms* | In-house strength → ~$0; no-page option via Meta forms |
+| Booking | **Cal.com** (free) | Feeds reminder automations |
 | Paid ads | **Meta Ads** (primary) + **Google Search** | Highest-intent reach for B2C |
-| Landing pages | GHL funnels *(or React+Vite on Vercel — agency stack)* | No extra tool if GHL; custom route if data-ownership needed |
-| Tracking/analytics | Meta Pixel + CAPI, GTM, GHL dashboard | Free, closes the attribution loop |
+| Tracking / reporting | Meta Pixel + CAPI, GTM, **Looker Studio** (free) | Free; closes the attribution loop |
 
-> **Lean principle:** GoHighLevel is the backbone (it collapses CRM, SMS, email, calling, funnels, and automation into one bill). The only *added* outbound costs are Instantly (cold email), a few secondary domains/mailboxes, WhatsApp API usage, and ad spend — the last two billed to the client separately.
+> **Lean principle:** no single platform is the backbone — **Make.com is.** It keeps the promises intact (one CRM as source of truth, first touch <5 min, real-time hot-lead alerts) by syncing HubSpot ⇄ Brevo ⇄ WhatsApp ⇄ ads ⇄ cold-email replies. Most tools sit on free tiers; the only reliably paid pieces are the WhatsApp tool, Instantly, mailboxes, and ad spend.
+>
+> **Trade-off vs. an all-in-one:** more integration/maintenance work (Make is critical) and DIY reporting (Looker Studio) — accepted deliberately to stay lean and flexible early. Revisit an all-in-one only if we scale to many clients.
 
 ---
 
@@ -183,7 +194,7 @@ This is the system already defined in the [roadmap](implementation-roadmap.md) (
 
 ## 8. Rollout — 30 / 60 / 90 Days
 
-- **Days 0–30 (Foundation + fastest wins):** stand up CRM + tracking; launch Engine 1 paid ads (parent + student); run **Engine 2A database reactivation** (fastest ROI); build nurture sequences.
+- **Days 0–30 (Foundation + fastest wins):** stand up CRM + tracking + Make backbone; **launch Engine 2A database reactivation FIRST** (client's chosen priority — fastest, cheapest ROI from existing contacts); build nurture sequences; then bring Engine 1 paid ads (parent + student) online.
 - **Days 31–60 (Add outbound + optimize):** launch **Engine 2B partnership outbound** (Apollo lists + warmed domains + sequences) and **2C cold calling**; begin optimization loop; publish dashboard.
 - **Days 61–90 (Scale what works):** scale winning ad campaigns, double down on the best-converting engine, formalize partnerships, and lock the seasonal playbook for the next CAIE session.
 
@@ -197,3 +208,25 @@ This is the system already defined in the [roadmap](implementation-roadmap.md) (
 - **Slow human follow-up** → the #1 killer; hard SLA + escalation on hot leads.
 - **Over-reliance on one engine** → three engines by design; report per-engine and rebalance budget.
 - **Data/privacy** → no student data shared with partners without consent; secrets/keys server-side only ([SECURITY.md](../../SECURITY.md)).
+
+---
+
+## 10. Prioritized Enhancements (client-selected)
+
+Confirmed priorities to build on top of the core system:
+
+### 10.1 AI WhatsApp Assistant *(highest-impact upgrade)*
+A 24/7 AI agent on the WhatsApp line that **replies instantly, answers FAQs, qualifies the lead (subject, grade, target session), and books the free assessment** — then hands warm/hot leads to a human. This is the single biggest speed-to-lead and conversion lever (most leads are won or lost in the first minutes).
+- **How it fits:** sits at the front of Engine 3 (Capture/Nurture); the AI handles first response + qualification, Make routes to CRM, humans close.
+- **Build notes:** keys server-side; guardrails on tone, hallucination, and hard handoff for fees/commitments (per the agency automation filter — money/judgment stays human); log every conversation to the CRM.
+
+### 10.2 AI-Generated Ad Creative & Reels
+Use AI image/video tools to **mass-produce ad creative and student-facing Reels** ("1-minute exam tip", solved past-paper clips), keeping Engines 1 (paid) and organic fed without a production bottleneck.
+- **How it fits:** feeds Campaigns A/B and the organic cadence; test many hooks cheaply, scale winners.
+- **Human review** on every asset before publishing (brand + factual accuracy).
+
+### 10.3 Messaging Language Rule
+**Default to English; mirror in Roman Urdu only when the lead communicates in Roman Urdu.** Applies to WhatsApp/SMS nurture, the AI assistant, and call openers — natural and trust-building for this audience without over-complicating templates.
+
+### 10.4 Scope note — single branch, **online classes**
+One branch delivering **online**, so the system is built for a **single pipeline but nationwide + diaspora reach** (see Engine 1 geo tiers). No multi-branch routing needed yet; keep the foundation reusable if that changes.
