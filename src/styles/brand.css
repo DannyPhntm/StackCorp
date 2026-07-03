@@ -1,0 +1,24 @@
+/*
+ * StackCorp brand palette — CSS custom properties.
+ * Source of truth for colors; do not hardcode hex values elsewhere.
+ */
+
+:root {
+  /* --sc-blue: primary accent — links, buttons, interactive highlights */
+  --sc-blue: #416D8A;
+
+  /* --sc-ice: light background — page backgrounds, light-mode sections */
+  --sc-ice: #F1F4FF;
+
+  /* --sc-mist: light background alt — subtle section dividers, secondary light bg */
+  --sc-mist: #F0F1ED;
+
+  /* --sc-navy: dark background — dark-mode sections, header/footer, high-contrast text */
+  --sc-navy: #153243;
+
+  /* --sc-stone: neutral — cards, borders, dividers, muted UI elements */
+  --sc-stone: #D8D9D3;
+
+  /* --sc-black: primary text — body copy, headings on light backgrounds */
+  --sc-black: #20211C;
+}
