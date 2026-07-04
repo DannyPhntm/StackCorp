@@ -71,6 +71,34 @@ function DragTrack() {
     animate(x, target, { type: 'spring', stiffness: 220, damping: 32 })
   }
 
+  /*
+   * Translate vertical wheel/trackpad intent into horizontal motion
+   * while hovered, but only up to the track's own limits. At either
+   * end we deliberately do NOT preventDefault, so the wheel event
+   * falls through to normal page scroll instead of trapping the user.
+   *
+   * React's synthetic onWheel is registered passive, which silently
+   * no-ops preventDefault, so this needs a real native listener.
+   */
+  useEffect(() => {
+    const el = viewportRef.current
+    if (!el) return
+
+    const onWheelNative = (e) => {
+      const dy = Math.abs(e.deltaY)
+      const dx = Math.abs(e.deltaX)
+      const delta = dy > dx ? e.deltaY : e.deltaX
+      const current = x.get()
+      const next = Math.min(0, Math.max(-maxDrag, current - delta))
+      if (next === current) return
+      e.preventDefault()
+      x.set(next)
+    }
+
+    el.addEventListener('wheel', onWheelNative, { passive: false })
+    return () => el.removeEventListener('wheel', onWheelNative)
+  }, [maxDrag, x])
+
   return (
     <div className="process-carousel">
       <div className="process-viewport" ref={viewportRef}>

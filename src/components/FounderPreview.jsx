@@ -9,7 +9,7 @@ const founders = [
     img: '/assets/founders/daniyal-ali-cutout.png',
   },
   {
-    name: 'Affan',
+    name: 'Muhammad Affan Athar',
     role: 'Co-Founder, Technology & Systems',
     img: '/assets/founders/affan-cutout.png',
     tall: true,

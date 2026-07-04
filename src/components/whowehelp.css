@@ -7,21 +7,99 @@
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 14px;
   margin-top: 36px;
 }
 
-.who-list li {
-  padding: 12px 22px;
+.who-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px 14px 16px;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--surface-2), transparent 30%);
   color: var(--text-mid);
   font-size: 0.96rem;
   font-weight: 500;
-  transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+  overflow: hidden;
+  transition:
+    border-color 0.28s var(--ease-out),
+    background-color 0.28s var(--ease-out),
+    color 0.28s var(--ease-out),
+    transform 0.28s var(--ease-out),
+    box-shadow 0.28s var(--ease-out);
 }
 
-.who-list li:hover {
+.who-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--sc-blue), transparent 72%);
+  color: var(--accent-strong);
+  transition:
+    background-color 0.28s var(--ease-out),
+    transform 0.28s var(--ease-out);
+}
+
+.who-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.who-label {
+  transition: transform 0.28s var(--ease-out);
+}
+
+.who-card:hover,
+.who-card:focus-within {
   border-color: var(--accent-strong);
+  background: color-mix(in srgb, var(--sc-blue), var(--surface-2) 78%);
   color: var(--text-hi);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px -18px color-mix(in srgb, var(--sc-navy), #000 30%);
+}
+
+.who-card:hover .who-icon,
+.who-card:focus-within .who-icon {
+  background: var(--accent);
+  color: var(--sc-ice);
+  transform: scale(1.1);
+}
+
+.who-card:hover .who-label,
+.who-card:focus-within .who-label {
+  transform: translateX(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .who-card,
+  .who-icon,
+  .who-label {
+    transition: none;
+  }
+
+  .who-card:hover {
+    transform: none;
+  }
+
+  .who-card:hover .who-icon {
+    transform: none;
+  }
+
+  .who-card:hover .who-label {
+    transform: none;
+  }
+}
+
+@media (max-width: 540px) {
+  .who-card {
+    padding: 12px 18px 12px 14px;
+    font-size: 0.9rem;
+  }
 }

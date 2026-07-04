@@ -50,7 +50,7 @@
   font-family: var(--font-display);
   font-size: clamp(2.6rem, 4.6vw, 4.2rem);
   font-weight: 600;
-  letter-spacing: 0.005em;
+  letter-spacing: 0.014em;
   line-height: 1.02;
   margin-top: 10px;
   color: var(--text-hi);
@@ -139,7 +139,7 @@
   font-family: var(--font-display);
   font-size: 1.6rem;
   font-weight: 600;
-  letter-spacing: 0.005em;
+  letter-spacing: 0.014em;
 }
 
 .process-list p {

@@ -8,9 +8,17 @@ const fade = (delay) => ({
   transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] },
 })
 
+const calloutAnim = (originX, originY, delay) => ({
+  initial: { opacity: 0, x: originX, y: originY },
+  animate: { opacity: 1, x: 0, y: 0 },
+  transition: { duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] },
+})
+
 export default function Hero() {
   const reduce = useReducedMotion()
   const anim = (delay) => (reduce ? {} : fade(delay))
+  const callout = (originX, originY, delay) =>
+    reduce ? {} : calloutAnim(originX, originY, delay)
 
   return (
     <section className="hero" id="top">
@@ -18,7 +26,10 @@ export default function Hero() {
       <div className="container hero-inner">
         <div className="hero-copy">
           <motion.h1 {...anim(0.05)}>
-            Better websites. Smarter workflows.{' '}
+            Better websites.
+            <br />
+            Smarter workflows.
+            <br />
             <span className="hero-accent">Stronger businesses.</span>
           </motion.h1>
           <motion.p className="hero-sub" {...anim(0.18)}>
@@ -40,7 +51,27 @@ export default function Hero() {
         </div>
 
         <div className="hero-visual" aria-hidden="true">
-          <LogoStack size={340} />
+          <div className="hero-visual-inner">
+            <LogoStack size={340} />
+
+            <motion.div
+              className="hero-callout hero-callout--a"
+              {...callout(18, -14, 1.3)}
+            >
+              <span className="hero-callout-line" />
+              <span className="hero-callout-dot" />
+              <span className="hero-callout-label">Smarter Workflows</span>
+            </motion.div>
+
+            <motion.div
+              className="hero-callout hero-callout--b"
+              {...callout(-18, 14, 1.48)}
+            >
+              <span className="hero-callout-line" />
+              <span className="hero-callout-dot" />
+              <span className="hero-callout-label">Lower Costs</span>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>

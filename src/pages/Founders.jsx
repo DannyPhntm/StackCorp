@@ -9,7 +9,7 @@ const founders = [
     bio: 'Daniyal is a BSc Management Science student at LUMS with interests in digital strategy, business, product, and building practical systems for companies. He focuses on understanding client needs, positioning, user experience, and turning business problems into clear digital solutions.',
   },
   {
-    name: 'Affan',
+    name: 'Muhammad Affan Athar',
     role: 'Co-Founder, Technology & Systems',
     img: '/assets/founders/affan-cutout.png',
     tall: true,

@@ -7,19 +7,19 @@
 .hero-inner {
   position: relative;
   display: grid;
-  grid-template-columns: 1.2fr auto;
+  grid-template-columns: 1.4fr auto;
   align-items: center;
-  gap: clamp(40px, 6vw, 96px);
+  gap: clamp(40px, 5vw, 80px);
   min-height: calc(100dvh - 68px);
   padding-block: 48px;
 }
 
 .hero-copy h1 {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5.4vw, 4.4rem);
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
   font-weight: 600;
-  letter-spacing: 0.005em;
-  line-height: 1.06;
+  letter-spacing: 0.014em;
+  line-height: 1.12;
 }
 
 .hero-accent {
@@ -53,9 +53,75 @@
   filter: drop-shadow(0 24px 48px color-mix(in srgb, var(--logo-blue-deep), transparent 72%));
 }
 
+.hero-visual-inner {
+  position: relative;
+  display: inline-flex;
+}
+
 .hero-visual svg {
   width: clamp(240px, 24vw, 340px);
   height: auto;
+}
+
+/* ---------- Callout annotations ---------- */
+
+.hero-callout {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.hero-callout-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-strong);
+  flex-shrink: 0;
+}
+
+.hero-callout-line {
+  width: 26px;
+  height: 1px;
+  background: var(--line-strong);
+  flex-shrink: 0;
+}
+
+.hero-callout-label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+}
+
+.hero-callout--a {
+  top: 12%;
+  right: -6%;
+}
+
+.hero-callout--b {
+  bottom: 8%;
+  left: -8%;
+  flex-direction: row-reverse;
+}
+
+@media (max-width: 1180px) {
+  .hero-callout--a {
+    right: -2%;
+  }
+
+  .hero-callout--b {
+    left: -2%;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-callout {
+    display: none;
+  }
 }
 
 @media (max-width: 900px) {
@@ -74,5 +140,15 @@
   .hero-visual svg {
     width: 180px;
     height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Each clause (own line via <br/>) must fit narrow phones on one
+     line by itself; the vw-based clamp alone isn't aggressive enough
+     down here and "Smarter workflows." wraps a second time. */
+  .hero-copy h1 {
+    font-size: clamp(1.85rem, 8.6vw, 2.5rem);
+    line-height: 1.16;
   }
 }

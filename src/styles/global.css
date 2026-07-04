@@ -27,9 +27,11 @@
 
   /* Logo layer colors, sampled from the approved stackcorp-icon.png */
   --logo-blue: #2f6df0;
+  --logo-blue-hi: color-mix(in srgb, var(--logo-blue), var(--sc-ice) 38%);
   --logo-blue-deep: #1e56d6;
   --logo-panel: #26333e;
   --logo-panel-hi: #37485a;
+  --logo-panel-sheen: color-mix(in srgb, var(--logo-panel-hi), var(--sc-ice) 30%);
   --logo-panel-edge: #10181f;
 
   --font-sans: 'Outfit Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI',
@@ -113,7 +115,7 @@ button {
   font-family: var(--font-display);
   font-size: clamp(2rem, 4.2vw, 3.2rem);
   font-weight: 600;
-  letter-spacing: 0.005em;
+  letter-spacing: 0.014em;
   line-height: 1.12;
   color: var(--text-hi);
 }
