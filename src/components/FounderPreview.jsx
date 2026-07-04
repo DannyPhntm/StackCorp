@@ -7,12 +7,14 @@ const founders = [
     name: 'Daniyal Ali',
     role: 'Co-Founder, Strategy & Product',
     img: '/assets/founders/daniyal-ali-cutout.png',
+    linkedin: 'https://www.linkedin.com/in/daniyal-ali-846681395/?isSelfProfile=false',
   },
   {
     name: 'Muhammad Affan Athar',
     role: 'Co-Founder, Technology & Systems',
     img: '/assets/founders/affan-cutout.png',
     tall: true,
+    linkedin: 'https://www.linkedin.com/in/affan-athar-a3a7b6291/?isSelfProfile=false',
   },
 ]
 
@@ -45,6 +47,14 @@ export default function FounderPreview() {
                 </div>
                 <h3>{f.name}</h3>
                 <p>{f.role}</p>
+                <a
+                  href={f.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fp-linkedin-cta"
+                >
+                  View LinkedIn ↗
+                </a>
               </Reveal>
             ))}
           </div>

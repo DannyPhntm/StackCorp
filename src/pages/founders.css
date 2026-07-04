@@ -25,14 +25,17 @@
 }
 
 .fd-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  transition: border-color 0.25s var(--ease-out);
 }
 
 .fd-card:hover {
   transform: none;
+  border-color: var(--accent-strong);
 }
 
 .fd-photo {
@@ -101,6 +104,9 @@
 }
 
 .fd-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   padding: 26px 28px 30px;
 }
 
@@ -122,6 +128,42 @@
   margin-top: 14px;
   color: var(--text-mid);
   font-size: 0.97rem;
+}
+
+.fd-bio + .fd-bio {
+  margin-top: 12px;
+}
+
+.fd-linkedin-cta {
+  /* z-index works here without `position` set because this is a flex
+     item of .fd-body; the ::after stretched-link below deliberately
+     escapes to .fd-card (the nearest *positioned* ancestor) so it
+     covers the full card, not just this small pill. */
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 18px;
+  color: var(--accent-strong);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s var(--ease-out);
+}
+
+/* Stretched link: makes the whole card clickable while keeping the
+   link's accessible name short ("View LinkedIn") instead of the bio
+   text getting absorbed into one giant link label. */
+.fd-linkedin-cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.fd-card:hover .fd-linkedin-cta {
+  color: var(--text-hi);
 }
 
 .founders-approach {

@@ -54,21 +54,37 @@ export default function Hero() {
           <div className="hero-visual-inner">
             <LogoStack size={340} />
 
-            <motion.div
-              className="hero-callout hero-callout--a"
-              {...callout(18, -14, 1.3)}
-            >
-              <span className="hero-callout-line" />
-              <span className="hero-callout-dot" />
-              <span className="hero-callout-label">Smarter Workflows</span>
+            {/* Inner layer labels: what each layer represents, tight to
+                the icon's right edge so they read as structure, not
+                marketing copy. Timed to land just after each layer
+                itself settles (bottom layer lands first, then middle,
+                then top), so the labels build up with the stack. */}
+            <motion.div className="hero-layer-label hero-layer-label--bottom" {...callout(10, 0, 0.8)}>
+              <span className="hero-layer-tick" />
+              <span className="hero-layer-text">Systems</span>
+            </motion.div>
+            <motion.div className="hero-layer-label hero-layer-label--mid" {...callout(10, 0, 1.05)}>
+              <span className="hero-layer-tick" />
+              <span className="hero-layer-text">Automation</span>
+            </motion.div>
+            <motion.div className="hero-layer-label hero-layer-label--top" {...callout(10, 0, 1.3)}>
+              <span className="hero-layer-tick" />
+              <span className="hero-layer-text">Strategy</span>
             </motion.div>
 
-            <motion.div
-              className="hero-callout hero-callout--b"
-              {...callout(-18, 14, 1.48)}
-            >
+            {/* Outer callouts: anchored to the icon's actual top and
+                bottom vertices, reading as leader-line annotations
+                rather than floating text. Land last, once the stack
+                is fully assembled. */}
+            <motion.div className="hero-callout hero-callout--top" {...callout(0, -12, 1.5)}>
+              <span className="hero-callout-label">Smarter Workflows</span>
               <span className="hero-callout-line" />
               <span className="hero-callout-dot" />
+            </motion.div>
+
+            <motion.div className="hero-callout hero-callout--bottom" {...callout(0, 12, 1.65)}>
+              <span className="hero-callout-dot" />
+              <span className="hero-callout-line" />
               <span className="hero-callout-label">Lower Costs</span>
             </motion.div>
           </div>

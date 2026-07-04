@@ -21,8 +21,39 @@
 }
 
 .fp-card {
+  position: relative;
   padding: 18px 18px 22px;
   text-align: center;
+  transition: border-color 0.25s var(--ease-out);
+}
+
+.card.fp-card:hover {
+  border-color: var(--accent-strong);
+}
+
+.fp-linkedin-cta {
+  /* Deliberately left position:static: the ::after below must escape
+     to .fp-card (the nearest *positioned* ancestor) to cover the full
+     card, not just this small pill. */
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s var(--ease-out);
+}
+
+/* Stretched link: makes the whole card clickable while keeping the
+   link's accessible name short ("View LinkedIn"). */
+.fp-linkedin-cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.fp-card:hover .fp-linkedin-cta {
+  color: var(--text-hi);
 }
 
 .fp-card:nth-child(2) {

@@ -14,8 +14,8 @@
 
   /* Text on dark */
   --text-hi: var(--sc-ice);
-  --text-mid: color-mix(in srgb, var(--sc-ice), var(--sc-navy) 32%);
-  --text-low: color-mix(in srgb, var(--sc-ice), var(--sc-navy) 52%);
+  --text-mid: color-mix(in srgb, var(--sc-ice), var(--sc-navy) 16%);
+  --text-low: color-mix(in srgb, var(--sc-ice), var(--sc-navy) 34%);
 
   /* Accent */
   --accent: var(--sc-blue);

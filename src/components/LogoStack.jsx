@@ -99,6 +99,9 @@ export default function LogoStack({ size = 340, animate = true }) {
         <filter id="sc-layer-shadow" x="-30%" y="-30%" width="160%" height="180%">
           <feDropShadow dx="0" dy="9" stdDeviation="7" floodColor="#050a10" floodOpacity="0.4" />
         </filter>
+        <filter id="sc-contact-blur" x="-15%" y="-120%" width="130%" height="340%">
+          <feGaussianBlur stdDeviation="7" />
+        </filter>
       </defs>
 
       {/* Bottom dark chevron */}
@@ -112,7 +115,11 @@ export default function LogoStack({ size = 340, animate = true }) {
       </motion.g>
 
       {/* Top frame with blue core */}
-      <motion.g {...layerProps('top', 0.68)} filter="url(#sc-layer-shadow)">
+      <motion.g {...layerProps('top', 0.68)}>
+        {/* Contact shadow: grounds the frame onto the chevron below it
+            instead of leaving a floating gap between the two layers. */}
+        <ellipse cx="100" cy="102" rx="78" ry="10" fill="#04070a" opacity="0.5" filter="url(#sc-contact-blur)" />
+        <g filter="url(#sc-layer-shadow)">
         {/* Open frame: outer diamond with diamond cutout */}
         <path
           d="M100 4 L184 52 L100 100 L16 52 Z M100 34 L47 52 L100 82 L153 52 Z"
@@ -136,6 +143,7 @@ export default function LogoStack({ size = 340, animate = true }) {
         />
         {/* Blue core diamond with soft top-left sheen */}
         <polygon points="100,38 128,52 100,68 72,52" fill="url(#sc-core-grad)" />
+        </g>
       </motion.g>
     </motion.svg>
   )
