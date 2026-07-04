@@ -275,6 +275,22 @@ Do not:
 - expose business verification documents
 - merge automatically
 
+## Security Skills
+
+### vibesec-skill
+
+Secure-coding guide for web applications. Use when writing or touching any web app code (frontend or backend), or when a scan/audit of existing code for common vulnerabilities is requested. Bug-hunter mindset: defense in depth, fail closed, least privilege.
+
+Source: https://github.com/BehiSecc/VibeSec-Skill
+
+### owasp-security
+
+OWASP Top 10:2025, ASVS 5.0, LLM Top 10 (2025), and Agentic AI security (2026) reference. Use when reviewing code for security vulnerabilities, implementing auth/authorization, handling user input, or discussing web app security in depth (audits, security-focused code review). Ships reference files (`languages.md` for 20+ language-specific quirks, `owasp-report.md` for full standards deep-dive) loaded on demand — cheaper to reach for than re-deriving OWASP guidance from memory.
+
+Source: https://github.com/agamm/claude-code-owasp
+
+Installed 2026-07-04 from the `awesome-claude-skills` curated list (https://github.com/BehiSecc/awesome-claude-skills), per Daniyal's request. Both installed to `~/.claude/skills/` (global, all projects). `webapp-testing` (Playwright test toolkit) was also on the shortlist but was already available via the `example-skills` plugin — not reinstalled.
+
 ## Skills Not Fully Cataloged Yet
 
 This catalog is based on Daniyal’s saved skills list.
