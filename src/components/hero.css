@@ -40,11 +40,48 @@
   flex-wrap: wrap;
 }
 
-.hero-tagline {
-  margin-top: 28px;
-  font-size: 0.92rem;
-  color: var(--text-low);
-  max-width: 44ch;
+/* Supporting brand line: a bordered strip so it reads as an
+   intentional statement, not trailing muted copy. Quieter than the
+   headline/subhead/CTAs (smaller, no fill), but clearly present. */
+.hero-motto {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 32px;
+  padding: 12px 20px;
+  max-width: 46ch;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--surface-2), transparent 55%);
+}
+
+.hero-motto-mark {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-strong);
+  flex-shrink: 0;
+}
+
+.hero-motto p {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--text-hi), transparent 12%);
+}
+
+.hero-motto strong {
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+@media (max-width: 480px) {
+  .hero-motto {
+    padding: 10px 16px;
+  }
+
+  .hero-motto p {
+    font-size: 0.84rem;
+  }
 }
 
 .hero-visual {
@@ -138,17 +175,17 @@
 }
 
 .hero-layer-tick {
-  width: 10px;
+  width: 14px;
   height: 1px;
-  background: var(--line-strong);
+  background: color-mix(in srgb, var(--text-hi), transparent 45%);
   flex-shrink: 0;
 }
 
 .hero-layer-text {
-  font-size: 0.64rem;
+  font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.01em;
-  color: color-mix(in srgb, var(--text-hi), transparent 52%);
+  color: color-mix(in srgb, var(--text-hi), transparent 18%);
 }
 
 .hero-layer-label--top {

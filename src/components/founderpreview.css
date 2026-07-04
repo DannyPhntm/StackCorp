@@ -56,10 +56,6 @@
   color: var(--text-hi);
 }
 
-.fp-card:nth-child(2) {
-  margin-top: 34px;
-}
-
 .fp-photo {
   position: relative;
   border-radius: 10px;
@@ -148,10 +144,6 @@
   .fp-layout {
     grid-template-columns: 1fr;
     gap: 40px;
-  }
-
-  .fp-card:nth-child(2) {
-    margin-top: 0;
   }
 }
 

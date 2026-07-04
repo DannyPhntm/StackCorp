@@ -134,6 +134,23 @@
   margin-top: 12px;
 }
 
+.fd-focus {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.fd-focus li {
+  padding: 6px 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  color: var(--text-mid);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
 .fd-linkedin-cta {
   /* z-index works here without `position` set because this is a flex
      item of .fd-body; the ::after stretched-link below deliberately

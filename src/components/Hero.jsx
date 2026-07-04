@@ -44,10 +44,13 @@ export default function Hero() {
               View Our Work
             </a>
           </motion.div>
-          <motion.p className="hero-tagline" {...anim(0.42)}>
-            From websites to workflows, we help businesses build the stack they need
-            to grow.
-          </motion.p>
+          <motion.div className="hero-motto" {...anim(0.42)}>
+            <span className="hero-motto-mark" aria-hidden="true" />
+            <p>
+              From websites to workflows — we help businesses build{' '}
+              <strong>the stack they need to grow</strong>.
+            </p>
+          </motion.div>
         </div>
 
         <div className="hero-visual" aria-hidden="true">

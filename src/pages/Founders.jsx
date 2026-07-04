@@ -12,6 +12,7 @@ const founders = [
       'Before StackCorp, he explored digital marketing, content, and strategy through student societies and independent projects. He is now focused on helping businesses turn scattered ideas, weak online presence, and manual workflows into cleaner digital systems.',
       'At StackCorp, Daniyal works closely with clients to understand the business problem first — then shapes the positioning, user experience, and product direction around what will actually help.',
     ],
+    focus: ['Strategy', 'Product Thinking', 'Digital Marketing', 'Positioning'],
   },
   {
     name: 'Muhammad Affan Athar',
@@ -22,6 +23,7 @@ const founders = [
     bio: [
       'Affan focuses on the technical side of StackCorp, including websites, systems, automation workflows, and implementation. He works on turning ideas and client requirements into reliable digital products.',
     ],
+    focus: ['Websites', 'Systems', 'Automation', 'Implementation'],
   },
 ]
 
@@ -69,6 +71,11 @@ export default function Founders() {
                     {paragraph}
                   </p>
                 ))}
+                <ul className="fd-focus">
+                  {f.focus.map((tag) => (
+                    <li key={tag}>{tag}</li>
+                  ))}
+                </ul>
                 {/* Stretched link: the whole card is clickable, but the
                     accessible name stays short ("View LinkedIn") instead
                     of swallowing the bio into one giant link label. */}
