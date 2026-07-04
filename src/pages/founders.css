@@ -1,0 +1,165 @@
+.founders-hero {
+  position: relative;
+  background: linear-gradient(180deg, var(--surface-0), var(--surface-1));
+  overflow: hidden;
+  padding-block: 110px 72px;
+}
+
+.founders-hero .container {
+  position: relative;
+}
+
+.founders-title {
+  max-width: 18ch;
+}
+
+.founders-cards {
+  padding-top: 24px;
+}
+
+.fd-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.fd-card {
+  overflow: hidden;
+}
+
+.fd-card:hover {
+  transform: none;
+}
+
+.fd-photo {
+  position: relative;
+  aspect-ratio: 16 / 13;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* Brand panel behind the transparent cutouts. */
+  background:
+    radial-gradient(
+      110% 85% at 50% 100%,
+      color-mix(in srgb, var(--sc-blue), var(--sc-navy) 30%) 0%,
+      var(--surface-2) 72%
+    );
+}
+
+/* Editorial arch behind the subject. */
+.fd-photo::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(62%, 340px);
+  aspect-ratio: 1 / 1.3;
+  border-radius: 999px 999px 0 0;
+  background: color-mix(in srgb, var(--sc-blue), var(--sc-ice) 22%);
+  opacity: 0.28;
+  border: 1px solid color-mix(in srgb, var(--sc-ice), transparent 70%);
+}
+
+.fd-photo img {
+  position: relative;
+  height: 94%;
+  width: auto;
+  max-width: 86%;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 20px 34px color-mix(in srgb, var(--sc-navy), #000 40%));
+}
+
+/* Full-body shots: zoom to the upper body so faces read at card size. */
+.fd-photo img.is-tall {
+  height: 150%;
+  align-self: flex-start;
+  object-position: top center;
+}
+
+.fd-body {
+  padding: 26px 28px 30px;
+}
+
+.fd-body h2 {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+}
+
+.fd-role {
+  margin-top: 4px;
+  color: var(--accent-strong);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.fd-bio {
+  margin-top: 14px;
+  color: var(--text-mid);
+  font-size: 0.97rem;
+}
+
+.founders-approach {
+  background: var(--surface-0);
+  border-block: 1px solid var(--line);
+}
+
+.fd-approach-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  margin-top: 44px;
+}
+
+.fd-approach-item span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-strong);
+  letter-spacing: 0.06em;
+}
+
+.fd-approach-item p {
+  margin-top: 10px;
+  font-size: 1.06rem;
+  font-weight: 550;
+  color: var(--text-hi);
+  padding-top: 12px;
+  border-top: 1px solid var(--line-strong);
+}
+
+.founders-cta .fd-cta-box {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.founders-cta .section-title {
+  max-width: 22ch;
+}
+
+@media (max-width: 900px) {
+  .fd-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fd-approach-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .founders-hero {
+    padding-block: 72px 48px;
+  }
+}
+
+@media (max-width: 540px) {
+  .fd-approach-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

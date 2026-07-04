@@ -1,0 +1,60 @@
+.footer {
+  background: var(--surface-0);
+  border-top: 1px solid var(--line);
+  padding-top: 56px;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.footer-mark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.14rem;
+}
+
+.footer-brand p {
+  margin-top: 14px;
+  color: var(--text-mid);
+  font-size: 0.94rem;
+  max-width: 34ch;
+}
+
+.footer-email {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--accent-strong);
+  font-size: 0.94rem;
+  font-weight: 550;
+}
+
+.footer-email:hover {
+  text-decoration: underline;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 0.94rem;
+  color: var(--text-mid);
+}
+
+.footer-links a:hover {
+  color: var(--text-hi);
+}
+
+.footer-bottom {
+  margin-top: 44px;
+  padding-block: 22px;
+  border-top: 1px solid var(--line);
+  color: var(--text-low);
+  font-size: 0.84rem;
+}

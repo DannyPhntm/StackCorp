@@ -1,0 +1,27 @@
+.who {
+  background: var(--surface-0);
+  border-block: 1px solid var(--line);
+}
+
+.who-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 36px;
+}
+
+.who-list li {
+  padding: 12px 22px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  color: var(--text-mid);
+  font-size: 0.96rem;
+  font-weight: 500;
+  transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+}
+
+.who-list li:hover {
+  border-color: var(--accent-strong);
+  color: var(--text-hi);
+}

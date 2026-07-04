@@ -1,0 +1,54 @@
+.svc-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 18px;
+  margin-top: 44px;
+}
+
+.svc-card {
+  padding: 30px 28px;
+}
+
+/* Asymmetric bento: 7/5 then 5/7 */
+.svc-0 { grid-column: span 7; }
+.svc-1 { grid-column: span 5; }
+.svc-2 { grid-column: span 5; }
+.svc-3 { grid-column: span 7; }
+
+.svc-card h3 {
+  font-size: 1.3rem;
+  font-weight: 650;
+  margin-top: 20px;
+  letter-spacing: -0.01em;
+}
+
+.svc-card p {
+  margin-top: 10px;
+  color: var(--text-mid);
+  font-size: 0.98rem;
+  max-width: 46ch;
+}
+
+.svc-glyph {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 4px;
+  width: 46px;
+}
+
+.svc-glyph span {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+  opacity: 0.85;
+}
+
+.svc-card:hover .svc-glyph span {
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .svc-0, .svc-1, .svc-2, .svc-3 {
+    grid-column: span 12;
+  }
+}

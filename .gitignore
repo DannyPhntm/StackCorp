@@ -2,3 +2,13 @@
 # Local animation reference videos
 references/animation-inspiration/videos/*.mov
 references/animation-inspiration/videos/*.mp4
+
+# Dependencies / build output
+node_modules/
+dist/
+
+# Generated knowledge graph
+graphify-out/
+
+# macOS
+.DS_Store

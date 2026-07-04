@@ -1,0 +1,31 @@
+/*
+ * Melodrama — StackCorp brand display font.
+ * Licensed via Fontshare (Indian Type Foundry). Self-hosted woff2 only;
+ * source files live in src/assets/fonts/Fonts/, web subset copied to
+ * src/assets/fonts/melodrama/. Used for display text (headings, hero,
+ * section titles); body copy stays on Outfit for readability.
+ */
+
+@font-face {
+  font-family: 'Melodrama';
+  src: url('../assets/fonts/melodrama/Melodrama-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Melodrama';
+  src: url('../assets/fonts/melodrama/Melodrama-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Melodrama';
+  src: url('../assets/fonts/melodrama/Melodrama-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}

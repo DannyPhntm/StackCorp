@@ -1,0 +1,108 @@
+.founders-preview {
+  background: var(--surface-0);
+  border-block: 1px solid var(--line);
+}
+
+.fp-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.fp-cta {
+  margin-top: 28px;
+}
+
+.fp-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.fp-card {
+  padding: 18px 18px 22px;
+  text-align: center;
+}
+
+.fp-card:nth-child(2) {
+  margin-top: 34px;
+}
+
+.fp-photo {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* Brand panel behind the transparent cutouts. */
+  background:
+    radial-gradient(
+      110% 85% at 50% 100%,
+      color-mix(in srgb, var(--sc-blue), var(--sc-navy) 30%) 0%,
+      var(--surface-2) 72%
+    );
+  aspect-ratio: 4 / 4.6;
+}
+
+.fp-photo::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 68%;
+  aspect-ratio: 1 / 1.35;
+  border-radius: 999px 999px 0 0;
+  background: color-mix(in srgb, var(--sc-blue), var(--sc-ice) 22%);
+  opacity: 0.28;
+  border: 1px solid color-mix(in srgb, var(--sc-ice), transparent 70%);
+}
+
+.fp-photo img {
+  position: relative;
+  height: 94%;
+  width: auto;
+  max-width: 88%;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 14px 24px color-mix(in srgb, var(--sc-navy), #000 40%));
+}
+
+/* Full-body shots: zoom to the upper body so faces read at card size. */
+.fp-photo img.is-tall {
+  height: 150%;
+  align-self: flex-start;
+  object-position: top center;
+}
+
+.fp-card h3 {
+  margin-top: 16px;
+  font-family: var(--font-display);
+  font-size: 1.16rem;
+  font-weight: 600;
+}
+
+.fp-card p {
+  margin-top: 4px;
+  color: var(--text-mid);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .fp-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .fp-card:nth-child(2) {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .fp-cards {
+    grid-template-columns: 1fr;
+  }
+}

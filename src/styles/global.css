@@ -1,0 +1,236 @@
+/*
+ * StackCorp website global styles.
+ * Palette comes from brand.css tokens; surfaces below are shades mixed
+ * from those tokens only (no colors outside the brand palette).
+ * Logo layer colors (--logo-*) are sampled from the approved logo asset.
+ */
+
+:root {
+  /* Surfaces: navy family, darkest to lightest */
+  --surface-0: color-mix(in srgb, var(--sc-navy), #000 42%);
+  --surface-1: color-mix(in srgb, var(--sc-navy), #000 24%);
+  --surface-2: var(--sc-navy);
+  --surface-3: color-mix(in srgb, var(--sc-navy), var(--sc-blue) 18%);
+
+  /* Text on dark */
+  --text-hi: var(--sc-ice);
+  --text-mid: color-mix(in srgb, var(--sc-ice), var(--sc-navy) 32%);
+  --text-low: color-mix(in srgb, var(--sc-ice), var(--sc-navy) 52%);
+
+  /* Accent */
+  --accent: var(--sc-blue);
+  --accent-strong: color-mix(in srgb, var(--sc-blue), var(--sc-ice) 22%);
+
+  /* Borders */
+  --line: color-mix(in srgb, var(--sc-stone), transparent 82%);
+  --line-strong: color-mix(in srgb, var(--sc-stone), transparent 62%);
+
+  /* Logo layer colors, sampled from the approved stackcorp-icon.png */
+  --logo-blue: #2f6df0;
+  --logo-blue-deep: #1e56d6;
+  --logo-panel: #26333e;
+  --logo-panel-hi: #37485a;
+  --logo-panel-edge: #10181f;
+
+  --font-sans: 'Outfit Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
+  /* Melodrama: brand display font for headings/hero/section titles only;
+     body copy stays on the sans for readability. */
+  --font-display: 'Melodrama', Georgia, 'Times New Roman', serif;
+
+  --radius: 14px;
+  --radius-pill: 999px;
+
+  --container: 1320px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--surface-1);
+  color: var(--text-hi);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--sc-ice);
+}
+
+/* ---------- Layout primitives ---------- */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 4.5vw, 48px);
+}
+
+.section {
+  padding-block: 96px;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding-block: 64px;
+  }
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  line-height: 1.12;
+  color: var(--text-hi);
+}
+
+.section-sub {
+  margin-top: 14px;
+  max-width: 58ch;
+  color: var(--text-mid);
+  font-size: 1.05rem;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  margin-bottom: 14px;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 26px;
+  border-radius: var(--radius-pill);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: 1px solid transparent;
+  transition:
+    transform 0.2s var(--ease-out),
+    background-color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out),
+    color 0.2s var(--ease-out);
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--sc-ice);
+}
+
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--sc-blue), var(--sc-ice) 14%);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-hi);
+  border-color: var(--line-strong);
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent-strong);
+  color: var(--accent-strong);
+}
+
+.btn:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.btn:focus-visible {
+  border-radius: var(--radius-pill);
+}
+
+/* ---------- Cards ---------- */
+
+.card {
+  background: color-mix(in srgb, var(--surface-2), transparent 35%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition:
+    border-color 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out),
+    background-color 0.25s var(--ease-out);
+}
+
+.card:hover {
+  border-color: var(--line-strong);
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover {
+    transform: none;
+  }
+  .btn:active {
+    transform: none;
+  }
+}
+
+/* ---------- Subtle background grid (hero + contact) ---------- */
+
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 30%, transparent 75%);
+  opacity: 0.5;
+}

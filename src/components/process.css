@@ -1,0 +1,175 @@
+.process {
+  background: var(--surface-0);
+  border-block: 1px solid var(--line);
+  overflow: hidden;
+}
+
+/* ---------- Desktop draggable track ---------- */
+
+.process-desktop {
+  display: none;
+}
+
+.process-carousel {
+  margin-top: 56px;
+}
+
+.process-viewport {
+  overflow: hidden;
+  /* Track starts flush with the container's left edge, bleeds off-screen right. */
+  padding-left: max(clamp(20px, 4.5vw, 48px), calc((100vw - var(--container)) / 2 + clamp(20px, 4.5vw, 48px)));
+}
+
+.process-track {
+  display: flex;
+  gap: clamp(48px, 5vw, 88px);
+  cursor: grab;
+  will-change: transform;
+  width: max-content;
+  padding-right: 12vw;
+}
+
+.process-track:active {
+  cursor: grabbing;
+}
+
+.process-step {
+  flex-shrink: 0;
+  width: min(460px, 36vw);
+  user-select: none;
+}
+
+.process-n {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent-strong);
+  letter-spacing: 0.08em;
+}
+
+.process-step h3 {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 4.6vw, 4.2rem);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  line-height: 1.02;
+  margin-top: 10px;
+  color: var(--text-hi);
+}
+
+.process-step p {
+  margin-top: 16px;
+  color: var(--text-mid);
+  font-size: 1.02rem;
+  max-width: 40ch;
+}
+
+.process-controls {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 4.5vw, 48px);
+  margin-top: 44px;
+}
+
+.process-progress {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  border-radius: 2px;
+  max-width: 420px;
+}
+
+.process-progress span {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+}
+
+.process-arrows {
+  display: flex;
+  gap: 10px;
+}
+
+.process-arrow {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--text-hi);
+  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color 0.2s var(--ease-out),
+    color 0.2s var(--ease-out);
+}
+
+.process-arrow:hover {
+  border-color: var(--accent-strong);
+  color: var(--accent-strong);
+}
+
+/* ---------- Mobile / reduced-motion timeline ---------- */
+
+.process-list {
+  list-style: none;
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.process-list li {
+  display: flex;
+  gap: 20px;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.process-list li:last-child {
+  border-bottom: none;
+}
+
+.process-list h3 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+}
+
+.process-list p {
+  margin-top: 6px;
+  color: var(--text-mid);
+  font-size: 0.97rem;
+}
+
+/* Desktop gets the drag track; mobile gets the list. Reduced motion
+   forces the list at every width. */
+@media (min-width: 901px) {
+  .process-desktop {
+    display: block;
+  }
+
+  .process-mobile {
+    display: none;
+  }
+
+  .process-mobile.is-forced {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .process-desktop {
+    display: none;
+  }
+
+  .process-mobile {
+    display: block;
+  }
+}
