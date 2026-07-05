@@ -12,14 +12,54 @@
  */
 
 const REQUIRED_FIELDS = ['name', 'business', 'phone', 'email', 'help', 'message']
-const MAX_FIELD_LENGTH = 2000
+const MAX_FIELD_LENGTH = 300
 const MAX_MESSAGE_LENGTH = 5000
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const RESEND_TIMEOUT_MS = 8000
+
+// Best-effort rate limit: per-IP fixed window held in instance memory.
+// Resets on cold start and is per-region, so it is a stopgap against
+// naive spam scripts, not a hard guarantee — Vercel WAF / a KV-backed
+// limiter is the durable fix.
+const RATE_LIMIT_MAX = 5
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000
+const rateWindows = new Map()
+
+function isRateLimited(ip) {
+  const now = Date.now()
+  for (const [key, entry] of rateWindows) {
+    if (now - entry.start > RATE_LIMIT_WINDOW_MS) rateWindows.delete(key)
+  }
+  const entry = rateWindows.get(ip)
+  if (!entry || now - entry.start > RATE_LIMIT_WINDOW_MS) {
+    rateWindows.set(ip, { start: now, count: 1 })
+    return false
+  }
+  entry.count += 1
+  return entry.count > RATE_LIMIT_MAX
+}
+
+// Strip control characters (incl. CR/LF) so user input can never shape
+// email headers/subject lines.
+function clean(value) {
+  // eslint-disable-next-line no-control-regex
+  return value.replace(/[\u0000-\u001F\u007F]/g, ' ').trim()
+}
 
 export default async function handler(req, res) {
+  res.setHeader('Cache-Control', 'no-store')
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
     return res.status(405).json({ error: 'Method not allowed.' })
+  }
+
+  const forwarded = req.headers['x-forwarded-for']
+  const ip = (typeof forwarded === 'string' && forwarded.split(',')[0].trim()) || 'unknown'
+  if (isRateLimited(ip)) {
+    return res.status(429).json({
+      error: 'Too many messages from your connection. Please try again in a few minutes.',
+    })
   }
 
   const body = req.body || {}
@@ -42,8 +82,12 @@ export default async function handler(req, res) {
     }
   }
 
-  const { name, business, phone, email, help, message } = body
-  const cleanEmail = email.trim()
+  const name = clean(body.name)
+  const business = clean(body.business)
+  const phone = clean(body.phone)
+  const help = clean(body.help)
+  const message = body.message.replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g, ' ').trim()
+  const cleanEmail = clean(body.email)
 
   if (!EMAIL_PATTERN.test(cleanEmail)) {
     return res.status(400).json({ error: 'Please enter a valid email address.' })
@@ -79,6 +123,7 @@ export default async function handler(req, res) {
   try {
     const resendRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
+      signal: AbortSignal.timeout(RESEND_TIMEOUT_MS),
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
