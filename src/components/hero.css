@@ -41,6 +41,28 @@
   flex-wrap: wrap;
 }
 
+/* Primary hero CTA: a soft blue glow at rest that intensifies on hover, to
+   match the logo's light. Paired with the magnetic pull in MagneticButton.
+   Scoped to the hero only — other .btn-primary buttons are unchanged. */
+.hero-cta-primary {
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--logo-blue-deep), transparent 72%);
+  transition:
+    box-shadow 0.28s var(--ease-out),
+    background-color 0.2s var(--ease-out);
+}
+
+.hero-cta-primary:hover {
+  box-shadow:
+    0 0 22px color-mix(in srgb, var(--logo-blue), transparent 56%),
+    0 8px 26px color-mix(in srgb, var(--logo-blue-deep), transparent 58%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cta-primary {
+    transition: box-shadow 0.28s var(--ease-out);
+  }
+}
+
 /* Supporting brand line: a bordered strip so it reads as an
    intentional statement, not trailing muted copy. Quieter than the
    headline/subhead/CTAs (smaller, no fill), but clearly present. */

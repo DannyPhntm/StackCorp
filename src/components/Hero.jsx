@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { motion, useMotionValue, useSpring, useReducedMotion } from 'framer-motion'
 import LogoStack from './LogoStack.jsx'
 import AmbientField from './AmbientField.jsx'
+import MagneticButton from './MagneticButton.jsx'
 import './hero.css'
 
 const fade = (delay) => ({
@@ -72,9 +73,9 @@ export default function Hero() {
             sharper, capture more inquiries, and run smoother.
           </motion.p>
           <motion.div className="hero-ctas" {...anim(0.3)}>
-            <a href="#contact" className="btn btn-primary">
+            <MagneticButton href="#contact" className="btn btn-primary hero-cta-primary">
               Request a Free Audit
-            </a>
+            </MagneticButton>
             <a href="#work" className="btn btn-ghost">
               View Our Work
             </a>
