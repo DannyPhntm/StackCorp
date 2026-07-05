@@ -76,9 +76,9 @@ export default function Hero() {
             <MagneticButton href="#contact" className="btn btn-primary hero-cta-primary">
               Request a Free Audit
             </MagneticButton>
-            <a href="#work" className="btn btn-ghost">
+            <MagneticButton href="#work" className="btn btn-ghost">
               View Our Work
-            </a>
+            </MagneticButton>
           </motion.div>
           <motion.div className="hero-motto" {...anim(0.42)}>
             <span className="hero-motto-mark" aria-hidden="true" />

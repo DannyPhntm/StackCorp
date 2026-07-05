@@ -55,6 +55,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* Fallback base color; the living backdrop is painted by GlobalAmbient
+     (fixed, z-index -1) which body lets show through. */
+  background: var(--surface-1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -65,7 +68,9 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background: var(--surface-1);
+  /* Transparent so the fixed GlobalAmbient backdrop shows through the
+     (transparent) sections consistently across the whole page. */
+  background: transparent;
   color: var(--text-hi);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -209,8 +214,15 @@ textarea:focus-visible {
 }
 
 .card:hover {
-  border-color: var(--line-strong);
+  border-color: color-mix(in srgb, var(--accent-strong), transparent 55%);
   transform: translateY(-3px);
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--logo-blue-deep), transparent 78%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-strong), transparent 70%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
+import GlobalAmbient from './components/GlobalAmbient.jsx'
+import CursorGlow from './components/CursorGlow.jsx'
 import Home from './pages/Home.jsx'
 import Founders from './pages/Founders.jsx'
 
@@ -25,6 +27,8 @@ function ScrollManager() {
 export default function App() {
   return (
     <>
+      <GlobalAmbient />
+      <CursorGlow />
       <ScrollManager />
       <Navbar />
       <Routes>
