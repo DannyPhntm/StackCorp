@@ -102,7 +102,33 @@ export default function LogoStack({ size = 340, animate = true }) {
         <filter id="sc-contact-blur" x="-15%" y="-120%" width="130%" height="340%">
           <feGaussianBlur stdDeviation="7" />
         </filter>
+        {/* Blue light bloom that sits behind the layers so the icon reads
+            as emitting light rather than being lit from outside. */}
+        <radialGradient id="sc-glow-grad" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="var(--logo-blue-hi)" stopOpacity="0.9" />
+          <stop offset="45%" stopColor="var(--logo-blue)" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="var(--logo-blue)" stopOpacity="0" />
+        </radialGradient>
+        <filter id="sc-glow-blur" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="10" />
+        </filter>
       </defs>
+
+      {/* Emission glow — behind everything. Gently pulses when motion is on
+          (a slow "light breath"), static otherwise. */}
+      <motion.ellipse
+        cx="100"
+        cy="104"
+        rx="104"
+        ry="96"
+        fill="url(#sc-glow-grad)"
+        filter="url(#sc-glow-blur)"
+        initial={false}
+        animate={play ? { opacity: [0.45, 0.75, 0.45] } : { opacity: 0.5 }}
+        transition={
+          play ? { duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.9 } : { duration: 0 }
+        }
+      />
 
       {/* Bottom dark chevron */}
       <motion.g {...layerProps('bottom', 0.15)} filter="url(#sc-layer-shadow)">

@@ -6,6 +6,7 @@
 
 .hero-inner {
   position: relative;
+  z-index: 1; /* above the ambient background field */
   display: grid;
   grid-template-columns: 1.4fr auto;
   align-items: center;
@@ -40,6 +41,28 @@
   flex-wrap: wrap;
 }
 
+/* Primary hero CTA: a soft blue glow at rest that intensifies on hover, to
+   match the logo's light. Paired with the magnetic pull in MagneticButton.
+   Scoped to the hero only — other .btn-primary buttons are unchanged. */
+.hero-cta-primary {
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--logo-blue-deep), transparent 72%);
+  transition:
+    box-shadow 0.28s var(--ease-out),
+    background-color 0.2s var(--ease-out);
+}
+
+.hero-cta-primary:hover {
+  box-shadow:
+    0 0 22px color-mix(in srgb, var(--logo-blue), transparent 56%),
+    0 8px 26px color-mix(in srgb, var(--logo-blue-deep), transparent 58%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cta-primary {
+    transition: box-shadow 0.28s var(--ease-out);
+  }
+}
+
 /* Supporting brand line: a bordered strip so it reads as an
    intentional statement, not trailing muted copy. Quieter than the
    headline/subhead/CTAs (smaller, no fill), but clearly present. */
@@ -50,9 +73,10 @@
   margin-top: 32px;
   padding: 12px 20px;
   max-width: 46ch;
-  border: 1px solid var(--line-strong);
+  border: 1px solid color-mix(in srgb, var(--accent-strong), transparent 60%);
   border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--surface-2), transparent 55%);
+  background: color-mix(in srgb, var(--surface-2), transparent 40%);
+  backdrop-filter: blur(4px);
 }
 
 .hero-motto-mark {
@@ -64,9 +88,9 @@
 }
 
 .hero-motto p {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   line-height: 1.45;
-  color: color-mix(in srgb, var(--text-hi), transparent 12%);
+  color: var(--text-hi);
 }
 
 .hero-motto strong {
@@ -87,12 +111,22 @@
 .hero-visual {
   display: flex;
   justify-content: center;
+  perspective: 1200px; /* depth for the desktop pointer-tilt */
   filter: drop-shadow(0 24px 48px color-mix(in srgb, var(--logo-blue-deep), transparent 72%));
 }
 
 .hero-visual-inner {
   position: relative;
   display: inline-flex;
+  will-change: transform; /* soft float loop */
+}
+
+/* Wrapper the pointer-tilt is applied to; kept tight to the logo so the
+   callouts (anchored to hero-visual-inner) stay aligned. */
+.hero-logo-tilt {
+  display: inline-flex;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .hero-visual svg {
