@@ -67,6 +67,112 @@
   background: var(--accent);
 }
 
+.work-stats {
+  margin-top: 30px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+
+.work-stats--unavailable {
+  color: var(--text-mid);
+  font-size: 0.88rem;
+}
+
+.work-stats-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.work-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent), transparent 40%);
+  animation: work-live-pulse 2.4s ease-out infinite;
+}
+
+@keyframes work-live-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent), transparent 40%);
+  }
+  70% {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent), transparent 100%);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent), transparent 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-live-dot {
+    animation: none;
+  }
+}
+
+.work-stats-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+}
+
+.work-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 18px 24px;
+  margin-top: 18px;
+}
+
+.work-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.work-stat-value {
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
+}
+
+.work-stat-skeleton {
+  display: block;
+  width: 56px;
+  height: 1.7rem;
+  border-radius: 6px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--surface-3), transparent 45%),
+    color-mix(in srgb, var(--surface-3), transparent 15%),
+    color-mix(in srgb, var(--surface-3), transparent 45%));
+  background-size: 200% 100%;
+  animation: work-stat-shimmer 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-stat-skeleton {
+    animation: none;
+  }
+}
+
+@keyframes work-stat-shimmer {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+.work-stat-label {
+  font-size: 0.85rem;
+  color: var(--text-mid);
+}
+
 .work-cta {
   margin-top: 34px;
 }
