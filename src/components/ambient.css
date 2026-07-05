@@ -1,0 +1,102 @@
+/* Hero ambient background — see AmbientField.jsx. Palette tokens only;
+   blue is used as a controlled, low-opacity glow (never a wash). */
+
+.ambient {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---------- Drifting grid ---------- */
+/* Oversized so a slow translate never exposes an edge; masked to fade
+   out toward the sides so the lines read as depth, not a table. */
+.ambient-grid {
+  position: absolute;
+  inset: -25%;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  opacity: 0.5;
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 32%, #000 25%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 32%, #000 25%, transparent 72%);
+  animation: ambient-grid-drift 34s linear infinite alternate;
+  will-change: transform;
+}
+
+@keyframes ambient-grid-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-48px, -32px, 0); }
+}
+
+/* ---------- Soft glow fields ---------- */
+.ambient-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  will-change: transform, opacity;
+}
+
+/* Primary glow sits behind the logo side (right on desktop) — the light
+   that appears to come from the hero object. */
+.ambient-glow--primary {
+  width: 46vw;
+  height: 46vw;
+  max-width: 620px;
+  max-height: 620px;
+  right: -6%;
+  top: 8%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--logo-blue), transparent 62%) 0%,
+    color-mix(in srgb, var(--logo-blue), transparent 84%) 42%,
+    transparent 70%
+  );
+  opacity: 0.55;
+  animation: ambient-drift-a 24s ease-in-out infinite alternate;
+}
+
+/* Secondary glow, cooler steel, drifts on the opposite rhythm for depth. */
+.ambient-glow--secondary {
+  width: 40vw;
+  height: 40vw;
+  max-width: 520px;
+  max-height: 520px;
+  left: -10%;
+  bottom: -12%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--sc-blue), transparent 74%) 0%,
+    transparent 68%
+  );
+  opacity: 0.4;
+  animation: ambient-drift-b 30s ease-in-out infinite alternate;
+}
+
+@keyframes ambient-drift-a {
+  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0.42; }
+  100% { transform: translate3d(-34px, 26px, 0) scale(1.12); opacity: 0.6; }
+}
+
+@keyframes ambient-drift-b {
+  0%   { transform: translate3d(0, 0, 0) scale(1.05); opacity: 0.3; }
+  100% { transform: translate3d(30px, -22px, 0) scale(0.92); opacity: 0.46; }
+}
+
+/* Lighter footprint on phones: the primary glow does the work, grid
+   drift and the second glow are dropped to keep the hero calm + cheap. */
+@media (max-width: 600px) {
+  .ambient-glow--secondary { display: none; }
+  .ambient-glow--primary { opacity: 0.42; }
+}
+
+/* Motion off: keep the static depth (grid + glows), drop all animation. */
+@media (prefers-reduced-motion: reduce) {
+  .ambient-grid,
+  .ambient-glow--primary,
+  .ambient-glow--secondary {
+    animation: none;
+  }
+}

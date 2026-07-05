@@ -1,5 +1,7 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { useEffect, useRef } from 'react'
+import { motion, useMotionValue, useSpring, useReducedMotion } from 'framer-motion'
 import LogoStack from './LogoStack.jsx'
+import AmbientField from './AmbientField.jsx'
 import './hero.css'
 
 const fade = (delay) => ({
@@ -20,9 +22,42 @@ export default function Hero() {
   const callout = (originX, originY, delay) =>
     reduce ? {} : calloutAnim(originX, originY, delay)
 
+  // Desktop pointer-tilt for the logo. Motion values feed a spring so the
+  // object eases toward the cursor and settles back — subtle (≤10°), never a
+  // spin. Disabled for reduced-motion and for coarse (touch) pointers.
+  const rx = useMotionValue(0)
+  const ry = useMotionValue(0)
+  const rotateX = useSpring(rx, { stiffness: 120, damping: 20, mass: 0.4 })
+  const rotateY = useSpring(ry, { stiffness: 120, damping: 20, mass: 0.4 })
+  const finePointer = useRef(false)
+
+  useEffect(() => {
+    finePointer.current = window.matchMedia?.('(pointer: fine)')?.matches ?? false
+  }, [])
+
+  const tiltOn = !reduce
+  const handleMove = (e) => {
+    if (!tiltOn || !finePointer.current) return
+    const r = e.currentTarget.getBoundingClientRect()
+    const px = (e.clientX - r.left) / r.width - 0.5 // -0.5 … 0.5
+    const py = (e.clientY - r.top) / r.height - 0.5
+    ry.set(px * 10)
+    rx.set(-py * 8)
+  }
+  const handleLeave = () => {
+    rx.set(0)
+    ry.set(0)
+  }
+
+  // Continuous soft float after the stack assembles (starts once the layers
+  // have settled). Low amplitude so it reads as "alive", not busy.
+  const float = tiltOn
+    ? { animate: { y: [0, -10, 0] }, transition: { duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1.6 } }
+    : {}
+
   return (
     <section className="hero" id="top">
-      <div className="grid-bg" aria-hidden="true" />
+      <AmbientField />
       <div className="container hero-inner">
         <div className="hero-copy">
           <motion.h1 {...anim(0.05)}>
@@ -54,8 +89,15 @@ export default function Hero() {
         </div>
 
         <div className="hero-visual" aria-hidden="true">
-          <div className="hero-visual-inner">
-            <LogoStack size={340} />
+          <motion.div
+            className="hero-visual-inner"
+            onPointerMove={handleMove}
+            onPointerLeave={handleLeave}
+            {...float}
+          >
+            <motion.div className="hero-logo-tilt" style={tiltOn ? { rotateX, rotateY } : undefined}>
+              <LogoStack size={340} />
+            </motion.div>
 
             {/* Inner layer labels: what each layer represents, tight to
                 the icon's right edge so they read as structure, not
@@ -90,7 +132,7 @@ export default function Hero() {
               <span className="hero-callout-line" />
               <span className="hero-callout-label">Lower Costs</span>
             </motion.div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
