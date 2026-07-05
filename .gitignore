@@ -7,6 +7,11 @@ references/animation-inspiration/videos/*.mp4
 node_modules/
 dist/
 
+# Env files — real values live only in the host platform (SECURITY.md)
+.env
+.env.*
+!.env.example
+
 # Generated knowledge graph
 graphify-out/
 
