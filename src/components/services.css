@@ -1,3 +1,74 @@
+.svc-section {
+  overflow: hidden;
+}
+
+/* ---------- Decorative keyword rail ---------- */
+
+.svc-rail {
+  margin-top: 40px;
+  overflow: hidden;
+  /* Soft fade at both edges so the loop never shows a hard cut. */
+  mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+}
+
+.svc-rail-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: svc-rail-scroll 46s linear infinite;
+}
+
+.svc-rail:hover .svc-rail-track {
+  animation-play-state: paused;
+}
+
+.svc-rail-row {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  flex-shrink: 0;
+}
+
+.svc-rail-row li {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: 0.014em;
+  color: var(--text-low);
+  white-space: nowrap;
+  transition: color 0.3s var(--ease-out);
+}
+
+.svc-rail:hover .svc-rail-row li {
+  color: var(--text-mid);
+}
+
+.svc-rail-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent-strong), transparent 35%);
+  margin-inline: clamp(22px, 2.6vw, 40px);
+}
+
+@keyframes svc-rail-scroll {
+  to {
+    /* Track holds two identical rows; -50% lands exactly on the seam. */
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-rail {
+    display: none;
+  }
+}
+
+/* ---------- Services grid ---------- */
+
 .svc-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -9,11 +80,32 @@
   padding: 30px 28px;
 }
 
-/* Asymmetric bento: 7/5 then 5/7 */
+/* Asymmetric bento: 7/5, 5/7, then 4/4/4 */
 .svc-0 { grid-column: span 7; }
 .svc-1 { grid-column: span 5; }
 .svc-2 { grid-column: span 5; }
 .svc-3 { grid-column: span 7; }
+.svc-4 { grid-column: span 4; }
+.svc-5 { grid-column: span 4; }
+.svc-6 { grid-column: span 4; }
+
+.svc-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.svc-index {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-low);
+  transition: color 0.25s var(--ease-out);
+}
+
+.svc-card:hover .svc-index {
+  color: var(--accent-strong);
+}
 
 .svc-card h3 {
   font-size: 1.3rem;
@@ -38,17 +130,35 @@
 
 .svc-glyph span {
   height: 6px;
+  width: 100%;
   border-radius: 3px;
   background: linear-gradient(90deg, var(--accent), var(--accent-strong));
   opacity: 0.85;
+  transform: scaleX(var(--bar-scale, 1));
+  transform-origin: left center;
+  transition:
+    transform 0.35s var(--ease-out),
+    opacity 0.35s var(--ease-out);
+  /* Stagger: bottom bar first, one tick per layer. */
+  transition-delay: calc(var(--bar-i, 0) * 40ms);
 }
 
 .svc-card:hover .svc-glyph span {
   opacity: 1;
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-glyph span {
+    transition: none;
+  }
+  .svc-card:hover .svc-glyph span {
+    transform: scaleX(var(--bar-scale, 1));
+  }
 }
 
 @media (max-width: 900px) {
-  .svc-0, .svc-1, .svc-2, .svc-3 {
+  .svc-0, .svc-1, .svc-2, .svc-3, .svc-4, .svc-5, .svc-6 {
     grid-column: span 12;
   }
 }
