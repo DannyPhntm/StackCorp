@@ -15,5 +15,8 @@ dist/
 # Generated knowledge graph
 graphify-out/
 
+# Large reference media (design inspiration recordings — kept local only)
+*.mov
+
 # macOS
 .DS_Store
