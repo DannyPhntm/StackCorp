@@ -5,6 +5,15 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
   align-items: stretch;
+  /* The deck-reveal start pose translates each card ±42px (dx) toward centre.
+     On mobile (single column, full-width cards) that transient offset pokes
+     past the viewport edge → horizontal page overflow. Clip the horizontal
+     bleed; `visible` on the block axis keeps it out of a scroll container so
+     nothing traps vertical scroll or sticky ancestors. At rest x=0, so the
+     cards align to the grid edges and nothing is visibly cut. Clip only the
+     inline axis; the block axis stays visible so nothing traps vertical scroll
+     or sticky ancestors. */
+  overflow-x: clip;
 }
 
 .fp-card {
