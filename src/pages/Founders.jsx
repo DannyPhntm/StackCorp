@@ -182,7 +182,7 @@ export default function Founders() {
         <div className="container">
           <Reveal className="fd-cta-box">
             <h2 className="section-title">Ready to see what your business can improve?</h2>
-            <a href="/#contact" className="btn btn-primary">
+            <a href="/#contact" className="btn btn-primary" data-haptic="confirm">
               Request a Free Audit
             </a>
           </Reveal>

@@ -187,8 +187,18 @@ p {
   white-space: nowrap;
 }
 
+/* Tactile press: a slightly firmer compress on tap/click so buttons feel
+   physical, paired with the haptic tap (data-haptic). Neutralised under
+   reduced-motion below. */
 .btn:active {
-  transform: translateY(1px) scale(0.99);
+  transform: translateY(1px) scale(0.97);
+}
+
+/* A soft glow pulse on the primary CTA the moment it is pressed. */
+.btn-primary:active {
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--accent-strong), transparent 60%),
+    0 8px 26px color-mix(in srgb, var(--accent), transparent 52%);
 }
 
 .btn-primary {
@@ -258,6 +268,9 @@ textarea:focus-visible {
   }
   .btn:active {
     transform: none;
+  }
+  .btn-primary:active {
+    box-shadow: none;
   }
 }
 

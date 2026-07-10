@@ -37,10 +37,10 @@ export default function Hero3D() {
             <span className="hero3d-accent">Stronger businesses.</span>
           </motion.h1>
           <motion.div className="hero3d-ctas" {...fade(0.34)}>
-            <MagneticButton href="#contact" className="btn btn-primary hero3d-cta">
+            <MagneticButton href="#contact" className="btn btn-primary hero3d-cta" data-haptic="confirm">
               Request a Free Audit
             </MagneticButton>
-            <MagneticButton href="#work" className="btn btn-ghost">
+            <MagneticButton href="#work" className="btn btn-ghost" data-haptic="tap">
               View Our Work
             </MagneticButton>
           </motion.div>

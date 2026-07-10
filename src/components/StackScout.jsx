@@ -208,7 +208,7 @@ export default function StackScout() {
           </div>
           <div className="ss2-cta">
             <p>Want a system like this for your business?</p>
-            <MagneticButton href="#contact" className="btn btn-primary">
+            <MagneticButton href="#contact" className="btn btn-primary" data-haptic="confirm">
               Request a Free Audit
             </MagneticButton>
           </div>

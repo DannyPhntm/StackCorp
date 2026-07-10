@@ -5,6 +5,15 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
   align-items: stretch;
+  /* The deck-reveal start pose translates each card ±42px (dx) toward centre.
+     On mobile (single column, full-width cards) that transient offset pokes
+     past the viewport edge → horizontal page overflow. Clip the horizontal
+     bleed; `visible` on the block axis keeps it out of a scroll container so
+     nothing traps vertical scroll or sticky ancestors. At rest x=0, so the
+     cards align to the grid edges and nothing is visibly cut. Clip only the
+     inline axis; the block axis stays visible so nothing traps vertical scroll
+     or sticky ancestors. */
+  overflow-x: clip;
 }
 
 .fp-card {
@@ -156,6 +165,12 @@
 
 .fp-card:hover .fp-linkedin-cta {
   color: var(--text-hi);
+}
+
+/* Tactile press flash — non-transform (the card's transform is framer-owned by
+   the deck reveal, so a CSS scale here would fight the motion value). */
+.fp-linkedin-cta:active {
+  color: var(--sc-ice);
 }
 
 .fp-foot {
