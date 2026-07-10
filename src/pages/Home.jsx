@@ -175,8 +175,12 @@ export default function Home({ playIntro = false, onIntroDone }) {
     if (veilRef.current) introTl.to(veilRef.current, { opacity: 0, duration: 1.15 }, 0.85)
 
     // Skip affordance: any user input fast-forwards to the settled hero.
+    // progress(1) snaps the visuals but GSAP does not reliably fire onComplete
+    // when seeking, so call finishIntro directly — it is idempotent (guarded by
+    // introFinishedRef), so a later onComplete is a harmless no-op.
     const onSkip = () => {
-      introTl.progress(1) // snap visuals; onComplete fires finishIntro
+      introTl.progress(1)
+      finishIntro()
     }
     window.addEventListener('wheel', onSkip, { passive: true })
     window.addEventListener('touchmove', onSkip, { passive: true })
