@@ -34,7 +34,7 @@ const MODEL_ROT = { x: 0, y: -1.42, z: 0.05 }
  * Idle float + mouse parallax are disabled for reduced-motion and coarse
  * pointers. Everything is disposed on unmount.
  */
-export default function Scene3D({ onReady }) {
+export default function Scene3D({ onReady, onError }) {
   const mountRef = useRef(null)
   const [loaded, setLoaded] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -187,7 +187,10 @@ export default function Scene3D({ onReady }) {
         if (evt.total) setProgress(Math.round((evt.loaded / evt.total) * 100))
       },
       () => {
-        if (!disposed) setFailed(true)
+        if (!disposed) {
+          setFailed(true)
+          onError?.()
+        }
       },
     )
 
@@ -267,7 +270,7 @@ export default function Scene3D({ onReady }) {
       renderer.dispose()
       if (renderer.domElement.parentNode === mount) mount.removeChild(renderer.domElement)
     }
-  }, [onReady])
+  }, [onReady, onError])
 
   return (
     <div className="scene3d" aria-hidden="true">
