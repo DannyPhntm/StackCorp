@@ -16,6 +16,9 @@
   overflow: hidden;
   /* Track starts flush with the container's left edge, bleeds off-screen right. */
   padding-left: max(clamp(20px, 4.5vw, 48px), calc((100vw - var(--container)) / 2 + clamp(20px, 4.5vw, 48px)));
+  /* Soft fade at the right edge hints that more steps live off-screen. */
+  mask-image: linear-gradient(90deg, black, black calc(100% - 140px), transparent);
+  -webkit-mask-image: linear-gradient(90deg, black, black calc(100% - 140px), transparent);
 }
 
 .process-track {
@@ -71,6 +74,19 @@
   margin-top: 44px;
 }
 
+.process-counter {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-low);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.process-counter-current {
+  color: var(--accent-strong);
+}
+
 .process-progress {
   flex: 1;
   height: 2px;
@@ -110,6 +126,13 @@
 .process-arrow:hover {
   border-color: var(--accent-strong);
   color: var(--accent-strong);
+}
+
+.process-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+  border-color: var(--line);
+  color: var(--text-low);
 }
 
 /* ---------- Mobile / reduced-motion timeline ---------- */

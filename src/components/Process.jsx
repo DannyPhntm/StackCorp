@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { animate, motion, useMotionValue, useTransform, useReducedMotion } from 'framer-motion'
+import {
+  animate,
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useTransform,
+  useReducedMotion,
+} from 'framer-motion'
 import Reveal from './Reveal.jsx'
 import './story.css'
 import './process.css'
@@ -47,8 +54,18 @@ function DragTrack() {
   const viewportRef = useRef(null)
   const trackRef = useRef(null)
   const [maxDrag, setMaxDrag] = useState(0)
+  const [current, setCurrent] = useState(0)
   const x = useMotionValue(0)
   const progress = useTransform(x, [0, -Math.max(maxDrag, 1)], ['6%', '100%'])
+
+  /* Map the drag fraction onto the step range for the counter, and
+     track the exact ends so the arrows can disable. */
+  const [ends, setEnds] = useState({ start: true, end: false })
+  useMotionValueEvent(x, 'change', (v) => {
+    const fraction = maxDrag > 0 ? Math.min(1, Math.max(0, -v / maxDrag)) : 0
+    setCurrent(Math.round(fraction * (steps.length - 1)))
+    setEnds({ start: -v <= 2, end: maxDrag > 0 && -v >= maxDrag - 2 })
+  })
 
   const measure = useCallback(() => {
     if (!viewportRef.current || !trackRef.current) return
@@ -73,10 +90,11 @@ function DragTrack() {
   }
 
   /*
-   * Translate vertical wheel/trackpad intent into horizontal motion
-   * while hovered, but only up to the track's own limits. At either
-   * end we deliberately do NOT preventDefault, so the wheel event
-   * falls through to normal page scroll instead of trapping the user.
+   * Horizontal trackpad swipes (deltaX) pan the track — that gesture
+   * already means "move sideways", so consuming it is expected and we
+   * preventDefault only then (also stops browser back/forward swipe).
+   * Vertical wheel/trackpad scrolling is NEVER captured: deltaY always
+   * falls through to normal page scroll, so the section cannot trap.
    *
    * React's synthetic onWheel is registered passive, which silently
    * no-ops preventDefault, so this needs a real native listener.
@@ -86,11 +104,9 @@ function DragTrack() {
     if (!el) return
 
     const onWheelNative = (e) => {
-      const dy = Math.abs(e.deltaY)
-      const dx = Math.abs(e.deltaX)
-      const delta = dy > dx ? e.deltaY : e.deltaX
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
       const current = x.get()
-      const next = Math.min(0, Math.max(-maxDrag, current - delta))
+      const next = Math.min(0, Math.max(-maxDrag, current - e.deltaX))
       if (next === current) return
       e.preventDefault()
       x.set(next)
@@ -123,6 +139,13 @@ function DragTrack() {
       </div>
 
       <div className="process-controls">
+        <span className="process-counter" aria-live="polite">
+          <span className="process-counter-current">
+            {String(current + 1).padStart(2, '0')}
+          </span>
+          {' / '}
+          {String(steps.length).padStart(2, '0')}
+        </span>
         <div className="process-progress" aria-hidden="true">
           <motion.span style={{ width: progress }} />
         </div>
@@ -131,6 +154,7 @@ function DragTrack() {
             type="button"
             className="process-arrow"
             aria-label="Previous steps"
+            disabled={ends.start}
             onClick={() => nudge(1)}
           >
             &#8592;
@@ -139,6 +163,7 @@ function DragTrack() {
             type="button"
             className="process-arrow"
             aria-label="Next steps"
+            disabled={ends.end}
             onClick={() => nudge(-1)}
           >
             &#8594;
