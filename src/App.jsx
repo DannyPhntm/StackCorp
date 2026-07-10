@@ -1,26 +1,25 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
 import GlobalAmbient from './components/GlobalAmbient.jsx'
 import CursorGlow from './components/CursorGlow.jsx'
-import IntroOverlay from './components/IntroOverlay.jsx'
 import Home from './pages/Home.jsx'
 import Founders from './pages/Founders.jsx'
 
-// The opening intro plays only on the first home-page load of a session, and
-// never for reduced-motion. Decided synchronously so the overlay is present on
-// the very first paint (no flash of the hero before it covers up).
-function introShouldSkip() {
-  if (typeof window === 'undefined' || !window.matchMedia) return true
+// The 3D dolly intro plays only on the first home-page load of a session, and
+// never for reduced-motion. Decided synchronously so the navbar starts hidden
+// and no hero flashes before the veil (rendered by Home) covers it.
+function shouldPlayIntro() {
+  if (typeof window === 'undefined' || !window.matchMedia) return false
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   let seen = false
   try {
-    seen = sessionStorage.getItem('sc_intro_seen_v1') === '1'
+    seen = sessionStorage.getItem('sc_intro_seen_v2') === '1'
   } catch {
     seen = false
   }
-  return reduce || seen || window.location.pathname !== '/'
+  return !reduce && !seen && window.location.pathname === '/'
 }
 
 function ScrollManager() {
@@ -41,17 +40,21 @@ function ScrollManager() {
 }
 
 export default function App() {
-  const [introDone, setIntroDone] = useState(introShouldSkip)
+  const [playIntro] = useState(shouldPlayIntro)
+  const [introDone, setIntroDone] = useState(() => !shouldPlayIntro())
+  const handleIntroDone = useCallback(() => setIntroDone(true), [])
 
   return (
     <>
-      {!introDone && <IntroOverlay onComplete={() => setIntroDone(true)} />}
       <GlobalAmbient />
       <CursorGlow />
       <ScrollManager />
       <Navbar hidden={!introDone} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={<Home playIntro={playIntro} onIntroDone={handleIntroDone} />}
+        />
         <Route path="/founders" element={<Founders />} />
       </Routes>
       <Footer />
