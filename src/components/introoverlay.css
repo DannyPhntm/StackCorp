@@ -1,0 +1,60 @@
+/* Full-screen black opening overlay. Sits above the navbar (z above nav's
+   sticky). Pure black so nothing behind reads through. */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.intro-stage {
+  position: relative;
+  width: min(1100px, 92vw);
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.intro-logo {
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  filter: drop-shadow(0 30px 60px color-mix(in srgb, var(--logo-blue-deep), transparent 62%));
+}
+
+.intro-logo svg {
+  width: clamp(150px, 20vw, 230px);
+  height: auto;
+}
+
+/* Wordmark revealed during the leftward swipe. Centered behind the logo so it
+   emerges to the logo's right as the logo travels left. */
+.intro-word {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: 50%;
+  translate: -28% -50%;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 8vw, 5.5rem);
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--sc-ice);
+  text-shadow: 0 0 48px color-mix(in srgb, var(--logo-blue), transparent 48%);
+  opacity: 0;
+  transform: translateX(-24px);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+@media (max-width: 640px) {
+  .intro-word {
+    font-size: clamp(2rem, 12vw, 3.4rem);
+    translate: -22% -50%;
+  }
+}

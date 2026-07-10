@@ -8,6 +8,7 @@ import {
   useReducedMotion,
 } from 'framer-motion'
 import Reveal from './Reveal.jsx'
+import './story.css'
 import './process.css'
 
 const steps = [
@@ -177,13 +178,21 @@ export default function Process() {
   const reduce = useReducedMotion()
 
   return (
-    <section className="process section" id="process">
+    <section className="process section story-section" id="process">
       <div className="container">
-        <Reveal>
-          <h2 className="section-title">How we work</h2>
-          <p className="section-sub">
-            A clear six-step process, from first conversation to ongoing improvement.
-          </p>
+        <Reveal className="story-head">
+          <span className="story-node" aria-hidden="true">
+            <span className="story-node-top" />
+            <span className="story-node-mid" />
+            <span className="story-node-bot" />
+          </span>
+          <div className="story-head-text">
+            <p className="story-kicker">How we work</p>
+            <h2 className="section-title">A clear path, first call to launch.</h2>
+            <p className="section-sub story-sub">
+              A six-step process, from first conversation to ongoing improvement.
+            </p>
+          </div>
         </Reveal>
       </div>
 

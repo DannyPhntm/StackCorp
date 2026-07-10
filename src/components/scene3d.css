@@ -1,0 +1,121 @@
+/* Fixed transparent 3D canvas behind all content, with a soft blue glow bed. */
+.scene3d {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none; /* never intercept scroll/clicks */
+}
+
+/* Page content sits above the fixed 3D canvas. */
+.home3d {
+  position: relative;
+  z-index: 1;
+}
+
+/* A subtle fixed veil between the 3D canvas and the content: dims the bright
+   model just enough that text always reads over it, while keeping the dark
+   cinematic feel. Sits above the canvas (which is in its own z:0 context) but
+   below the section content (painted after this ::before within .home3d). */
+.home3d::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--surface-0), transparent 62%);
+}
+
+/* Steel-blue ambient glow behind the model (the "bloom" without postprocessing). */
+.scene3d::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  translate: -50% -50%;
+  width: min(760px, 78vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--logo-blue), transparent 62%),
+    color-mix(in srgb, var(--logo-blue), transparent 84%) 42%,
+    transparent 70%
+  );
+  filter: blur(30px);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.scene3d-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.scene3d-canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Loading screen — full black until the model is ready. */
+.scene3d-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+}
+
+.scene3d-loader-mark {
+  width: 30px;
+  height: 30px;
+  rotate: 45deg;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--logo-blue-hi), var(--logo-blue-deep));
+  box-shadow: 0 0 30px color-mix(in srgb, var(--logo-blue), transparent 40%);
+  animation: scene3d-pulse 1.4s ease-in-out infinite;
+}
+
+.scene3d-loader-bar {
+  width: 180px;
+  height: 2px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--sc-stone), transparent 82%);
+  overflow: hidden;
+}
+
+.scene3d-loader-bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--logo-blue-hi), var(--logo-blue-deep));
+  transition: width 0.2s ease-out;
+}
+
+.scene3d-loader p {
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-low);
+}
+
+@keyframes scene3d-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.14);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene3d-loader-mark {
+    animation: none;
+  }
+}

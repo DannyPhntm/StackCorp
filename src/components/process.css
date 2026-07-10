@@ -1,6 +1,4 @@
 .process {
-  background: var(--surface-0);
-  border-block: 1px solid var(--line);
   overflow: hidden;
 }
 

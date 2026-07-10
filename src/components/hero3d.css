@@ -1,0 +1,131 @@
+/* Hero copy over the fixed 3D canvas. Transparent — the model shows through. */
+.hero3d {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  /* Anchor the copy toward the upper-left rather than dead-centre — fills the
+     top space and lets "StackCorp" read as a strong premium title up top. */
+  align-items: flex-start;
+  padding-top: clamp(120px, 19vh, 230px);
+}
+
+.hero3d-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.hero3d-copy {
+  max-width: 46ch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(26px, 3.6vh, 46px);
+  /* Text shadow so copy stays legible over the model/glow. */
+  text-shadow: 0 2px 24px color-mix(in srgb, #000, transparent 30%);
+}
+
+.hero3d-brand {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(3rem, 6vw, 5.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  color: var(--text-hi);
+  text-shadow: 0 2px 22px color-mix(in srgb, #04070c, transparent 45%);
+}
+
+.hero3d-motto {
+  font-size: clamp(1rem, 1.15vw, 1.16rem);
+  line-height: 1.55;
+  color: var(--text-mid);
+  max-width: 44ch;
+}
+
+.hero3d-motto strong {
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.hero3d-headline {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.1vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.006em;
+  color: var(--text-hi);
+}
+
+.hero3d-accent {
+  color: var(--accent-strong);
+}
+
+.hero3d-ctas {
+  display: flex;
+  gap: 14px;
+  margin-top: 4px;
+  /* Desktop: both CTAs sit on one line (copy is wide enough to hold them).
+     Mobile stacks — see the max-width:760 block. */
+  flex-wrap: nowrap;
+}
+
+.hero3d-cta {
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--logo-blue-deep), transparent 72%);
+  transition:
+    box-shadow 0.28s var(--ease-out),
+    background-color 0.2s var(--ease-out);
+}
+
+.hero3d-cta:hover {
+  box-shadow:
+    0 0 22px color-mix(in srgb, var(--logo-blue), transparent 56%),
+    0 8px 26px color-mix(in srgb, var(--logo-blue-deep), transparent 58%);
+}
+
+.hero3d-hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(16px, 3vh, 30px);
+  translate: -50% 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-low);
+}
+
+.hero3d-hint-line {
+  width: 1px;
+  height: 26px;
+  background: linear-gradient(180deg, var(--line-strong), transparent);
+}
+
+/* On phones the model sits center; move copy to the lower half so they don't
+   fight, and center it. */
+@media (max-width: 760px) {
+  .hero3d {
+    align-items: flex-end;
+    padding-top: 0;
+    padding-bottom: 12vh;
+  }
+
+  .hero3d-copy {
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero3d-ctas {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero3d-hint {
+    display: none;
+  }
+}
