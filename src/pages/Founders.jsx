@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react'
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import Reveal from '../components/Reveal.jsx'
 import './founders.css'
 
@@ -7,10 +9,13 @@ const founders = [
     role: 'Co-Founder, Strategy & Product',
     img: '/assets/founders/daniyal-ali-cutout.png',
     linkedin: 'https://www.linkedin.com/in/daniyal-ali-846681395/?isSelfProfile=false',
+    // Per-founder photo framing so both faces sit level and read at the same
+    // size despite the source crops differing (Daniyal is head-to-waist; Affan
+    // is a full-body graduation shot). `ph` = image height vs. panel; `py` =
+    // vertical nudge (px) to seat the face on the shared line.
+    frame: { ph: '152%', py: '14px' },
     bio: [
-      'Daniyal is a BSc Management Science student at LUMS and Co-Founder of StackCorp. His work sits at the intersection of business, digital strategy, product thinking, and practical technology.',
-      'Before StackCorp, he explored digital marketing, content, and strategy through student societies and independent projects. He is now focused on helping businesses turn scattered ideas, weak online presence, and manual workflows into cleaner digital systems.',
-      'At StackCorp, Daniyal works closely with clients to understand the business problem first — then shapes the positioning, user experience, and product direction around what will actually help.',
+      "Business has always fascinated me, not just how companies operate, but why some grow while others don't. I'm passionate about building practical AI solutions that solve real business problems, and documenting the journey of turning StackCorp into a company that proudly represents Pakistan on a global stage.",
     ],
     focus: ['Strategy', 'Product Thinking', 'Digital Marketing', 'Positioning'],
   },
@@ -18,10 +23,10 @@ const founders = [
     name: 'Muhammad Affan Athar',
     role: 'Co-Founder, Technology & Systems',
     img: '/assets/founders/affan-cutout.png',
-    tall: true,
     linkedin: 'https://www.linkedin.com/in/affan-athar-a3a7b6291/?isSelfProfile=false',
+    frame: { ph: '290%', py: '10px' },
     bio: [
-      'Affan focuses on the technical side of StackCorp, including websites, systems, automation workflows, and implementation. He works on turning ideas and client requirements into reliable digital products.',
+      "A builder at heart, I love learning by creating. From freelancing in design to engineering AI-powered systems, I'm passionate about turning ideas into products that solve real problems and deliver measurable value.",
     ],
     focus: ['Websites', 'Systems', 'Automation', 'Implementation'],
   },
@@ -34,7 +39,58 @@ const approach = [
   'Improve after launch',
 ]
 
+/*
+ * FounderCard — one founder as a card in the deck. The two cards start gathered
+ * toward the centre (a stacked pair) and fan out to their layout as the section
+ * enters, one after the other (stagger). Only transform + opacity animate — no
+ * per-frame blur — and the driving progress is spring-smoothed, so the open
+ * eases in smoothly rather than snapping to raw scroll.
+ */
+function FounderCard({ progress, i, n, dx, dy, tilt, reduce, children }) {
+  const start = i * 0.14
+  const lp = useTransform(progress, [start, start + 0.62], [0, 1], { clamp: true })
+
+  const x = useTransform(lp, (v) => dx * (1 - v))
+  const y = useTransform(lp, (v) => dy * (1 - v))
+  const rotate = useTransform(lp, (v) => tilt * (1 - v))
+  const scale = useTransform(lp, [0, 1], [0.92, 1])
+  const opacity = useTransform(lp, [0, 0.8], [0.2, 1])
+
+  const style = reduce ? undefined : { x, y, rotate, scale, opacity, zIndex: n - i }
+
+  return (
+    <motion.article className="card fd-card" style={style}>
+      {children}
+    </motion.article>
+  )
+}
+
 export default function Founders() {
+  const reduce = useReducedMotion()
+  const gridRef = useRef(null)
+
+  const [cols, setCols] = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth <= 900 ? 1 : 2,
+  )
+  useEffect(() => {
+    const calc = () => setCols(window.innerWidth <= 900 ? 1 : 2)
+    calc()
+    window.addEventListener('resize', calc)
+    return () => window.removeEventListener('resize', calc)
+  }, [])
+
+  const { scrollYProgress } = useScroll({
+    target: gridRef,
+    // Wider scroll window so the deck opens more gradually as you scroll in.
+    offset: ['start 0.95', 'start 0.3'],
+  })
+  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 26, restDelta: 0.0004 })
+
+  const n = founders.length
+  const rows = Math.ceil(n / cols)
+  const centerCol = (cols - 1) / 2
+  const centerRow = (rows - 1) / 2
+
   return (
     <main className="founders-page">
       <section className="section founders-hero">
@@ -53,43 +109,56 @@ export default function Founders() {
       </section>
 
       <section className="section founders-cards">
-        <div className="container fd-grid">
-          {founders.map((f, i) => (
-            <Reveal key={f.name} delay={i * 0.14} className="card fd-card">
-              <div className="fd-photo">
-                <img
-                  src={f.img}
-                  alt={`${f.name}, ${f.role} of StackCorp`}
-                  className={f.tall ? 'is-tall' : undefined}
-                />
-              </div>
-              <div className="fd-body">
-                <h2>{f.name}</h2>
-                <p className="fd-role">{f.role}</p>
-                {f.bio.map((paragraph, pi) => (
-                  <p className="fd-bio" key={pi}>
-                    {paragraph}
-                  </p>
-                ))}
-                <ul className="fd-focus">
-                  {f.focus.map((tag) => (
-                    <li key={tag}>{tag}</li>
+        <div className="container fd-grid" ref={gridRef}>
+          {founders.map((f, i) => {
+            const col = i % cols
+            const row = Math.floor(i / cols)
+            const dx = (centerCol - col) * (cols === 2 ? 90 : 0)
+            const dy = (centerRow - row) * (cols === 2 ? 0 : 64)
+            const tilt = cols === 2 ? (col - centerCol) * -3.2 : 0
+            return (
+              <FounderCard
+                key={f.name}
+                progress={progress}
+                i={i}
+                n={n}
+                dx={dx}
+                dy={dy}
+                tilt={tilt}
+                reduce={reduce}
+              >
+                <div className="fd-photo">
+                  <img
+                    src={f.img}
+                    alt={`${f.name}, ${f.role} of StackCorp`}
+                    style={{ '--ph': f.frame.ph, '--py': f.frame.py }}
+                  />
+                </div>
+                <div className="fd-body">
+                  <h2>{f.name}</h2>
+                  <p className="fd-role">{f.role}</p>
+                  {f.bio.map((paragraph, pi) => (
+                    <p className="fd-bio" key={pi}>
+                      {paragraph}
+                    </p>
                   ))}
-                </ul>
-                {/* Stretched link: the whole card is clickable, but the
-                    accessible name stays short ("View LinkedIn") instead
-                    of swallowing the bio into one giant link label. */}
-                <a
-                  href={f.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="fd-linkedin-cta"
-                >
-                  View LinkedIn ↗
-                </a>
-              </div>
-            </Reveal>
-          ))}
+                  <ul className="fd-focus">
+                    {f.focus.map((tag) => (
+                      <li key={tag}>{tag}</li>
+                    ))}
+                  </ul>
+                  <a
+                    href={f.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="fd-linkedin-cta"
+                  >
+                    View LinkedIn ↗
+                  </a>
+                </div>
+              </FounderCard>
+            )
+          })}
         </div>
       </section>
 

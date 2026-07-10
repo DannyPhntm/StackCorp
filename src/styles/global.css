@@ -6,20 +6,23 @@
  */
 
 :root {
-  /* Surfaces: navy family, darkest to lightest */
-  --surface-0: color-mix(in srgb, var(--sc-navy), #000 42%);
-  --surface-1: color-mix(in srgb, var(--sc-navy), #000 24%);
-  --surface-2: var(--sc-navy);
-  --surface-3: color-mix(in srgb, var(--sc-navy), var(--sc-blue) 18%);
+  /* Surfaces: deep navy → near-black charcoal, darkest to lightest. Blended
+     with a cool near-black (#04070c) for a richer, more cinematic base than
+     flat navy — the whole site reads darker and deeper. */
+  --surface-0: color-mix(in srgb, var(--sc-navy), #04070c 68%);
+  --surface-1: color-mix(in srgb, var(--sc-navy), #04070c 48%);
+  --surface-2: color-mix(in srgb, var(--sc-navy), #04070c 20%);
+  --surface-3: color-mix(in srgb, var(--surface-1), var(--sc-blue) 12%);
 
-  /* Text on dark */
+  /* Text on dark — a touch brighter than before to hold contrast on the
+     deeper background. */
   --text-hi: var(--sc-ice);
-  --text-mid: color-mix(in srgb, var(--sc-ice), var(--sc-navy) 16%);
-  --text-low: color-mix(in srgb, var(--sc-ice), var(--sc-navy) 34%);
+  --text-mid: color-mix(in srgb, var(--sc-ice), var(--sc-navy) 13%);
+  --text-low: color-mix(in srgb, var(--sc-ice), var(--sc-navy) 30%);
 
   /* Accent */
   --accent: var(--sc-blue);
-  --accent-strong: color-mix(in srgb, var(--sc-blue), var(--sc-ice) 22%);
+  --accent-strong: color-mix(in srgb, var(--sc-blue), var(--sc-ice) 32%);
 
   /* Borders */
   --line: color-mix(in srgb, var(--sc-stone), transparent 82%);
@@ -118,18 +121,39 @@ button {
 
 .section-title {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4.2vw, 3.2rem);
+  font-size: clamp(2.05rem, 4.3vw, 3.3rem);
   font-weight: 600;
-  letter-spacing: 0.014em;
-  line-height: 1.12;
+  letter-spacing: -0.008em;
+  line-height: 1.06;
   color: var(--text-hi);
+  text-wrap: balance;
 }
 
 .section-sub {
-  margin-top: 14px;
-  max-width: 58ch;
+  margin-top: 16px;
+  max-width: 56ch;
   color: var(--text-mid);
   font-size: 1.05rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* Editorial rhythm site-wide: balance display headings (no orphan words),
+   let body copy wrap cleanly, and use tabular figures for data. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+.work-stat-value,
+.hs-rail-ticks,
+.ss-flow-label {
+  font-variant-numeric: tabular-nums;
 }
 
 .eyebrow {
@@ -226,7 +250,10 @@ textarea:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card:hover {
+  .card:hover,
+  .who-card:hover,
+  .fp-card:hover,
+  .ss-tile:hover {
     transform: none;
   }
   .btn:active {

@@ -1,54 +1,179 @@
-.svc-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 18px;
-  margin-top: 44px;
-}
+/* "Empowering growth through practical AI" — stacked accordion panels. */
 
-.svc-card {
-  padding: 30px 28px;
-}
-
-/* Asymmetric bento: 7/5 then 5/7 */
-.svc-0 { grid-column: span 7; }
-.svc-1 { grid-column: span 5; }
-.svc-2 { grid-column: span 5; }
-.svc-3 { grid-column: span 7; }
-
-.svc-card h3 {
-  font-size: 1.3rem;
-  font-weight: 650;
-  margin-top: 20px;
-  letter-spacing: -0.01em;
-}
-
-.svc-card p {
-  margin-top: 10px;
-  color: var(--text-mid);
-  font-size: 0.98rem;
-  max-width: 46ch;
-}
-
-.svc-glyph {
+.ep-panels {
   display: flex;
-  flex-direction: column-reverse;
-  gap: 4px;
-  width: 46px;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 900px;
 }
 
-.svc-glyph span {
-  height: 6px;
-  border-radius: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
-  opacity: 0.85;
+.ep-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface-2), transparent 34%);
+  overflow: hidden;
+  transition:
+    border-color 0.3s var(--ease-out),
+    background-color 0.3s var(--ease-out);
 }
 
-.svc-card:hover .svc-glyph span {
-  opacity: 1;
+.ep-panel.is-open {
+  border-color: color-mix(in srgb, var(--accent-strong), transparent 46%);
+  background: color-mix(in srgb, var(--surface-2), transparent 20%);
+  box-shadow: 0 18px 44px color-mix(in srgb, var(--logo-blue-deep), transparent 82%);
 }
 
-@media (max-width: 900px) {
-  .svc-0, .svc-1, .svc-2, .svc-3 {
-    grid-column: span 12;
+.ep-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.4vw, 26px);
+  padding: clamp(18px, 2.4vw, 26px) clamp(18px, 2.6vw, 30px);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+}
+
+.ep-index {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  font-weight: 600;
+  color: var(--text-low);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s var(--ease-out);
+}
+
+.ep-panel.is-open .ep-index {
+  color: var(--accent-strong);
+}
+
+.ep-titles {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-right: auto;
+  min-width: 0;
+}
+
+.ep-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--text-hi);
+  transition: color 0.24s var(--ease-out);
+}
+
+.ep-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  padding: 4px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent-strong), transparent 62%);
+  border-radius: var(--radius-pill);
+}
+
+/* Plus / minus toggle glyph. */
+.ep-plus {
+  position: relative;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+}
+
+.ep-plus::before,
+.ep-plus::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: var(--text-mid);
+  transition:
+    transform 0.3s var(--ease-out),
+    background-color 0.3s var(--ease-out);
+}
+
+.ep-plus::before {
+  width: 15px;
+  height: 1.5px;
+  transform: translate(-50%, -50%);
+}
+
+.ep-plus::after {
+  width: 1.5px;
+  height: 15px;
+  transform: translate(-50%, -50%);
+}
+
+.ep-panel.is-open .ep-plus::after {
+  transform: translate(-50%, -50%) scaleY(0);
+}
+
+.ep-panel.is-open .ep-plus::before {
+  background: var(--accent-strong);
+}
+
+.ep-head:hover .ep-title {
+  color: var(--accent-strong);
+}
+
+.ep-body {
+  overflow: hidden;
+}
+
+.ep-body-inner {
+  padding: 0 clamp(18px, 2.6vw, 30px) clamp(22px, 2.6vw, 28px) clamp(50px, 6vw, 78px);
+}
+
+.ep-desc {
+  font-size: 1.04rem;
+  line-height: 1.55;
+  color: var(--text-mid);
+  max-width: 58ch;
+  margin-bottom: 20px;
+}
+
+.ep-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 24px;
+}
+
+.ep-list li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.96rem;
+  line-height: 1.4;
+  color: var(--text-hi);
+}
+
+.ep-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 8px;
+  height: 8px;
+  rotate: 45deg;
+  border-radius: 2px;
+  background: linear-gradient(135deg, var(--logo-blue-hi), var(--logo-blue-deep));
+}
+
+@media (max-width: 640px) {
+  .ep-list {
+    grid-template-columns: 1fr;
+  }
+
+  .ep-body-inner {
+    padding-left: clamp(18px, 5vw, 24px);
+  }
+
+  .ep-titles {
+    gap: 8px 12px;
   }
 }

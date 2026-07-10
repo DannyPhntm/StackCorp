@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion, useTransform, useMotionValue } from 'framer-motion'
 
 /*
  * Layered SVG recreation of the approved StackCorp icon
@@ -57,12 +57,29 @@ function Chevron({ y, fill, edge, sheen }) {
   )
 }
 
-export default function LogoStack({ size = 340, animate = true }) {
+export default function LogoStack({ size = 340, animate = true, unfold }) {
   const reduce = useReducedMotion()
   const play = animate && !reduce
 
+  // Scroll-driven "opening" mode. When a MotionValue (0→1) is passed as
+  // `unfold`, the three layers spread apart like a lid lifting off a box —
+  // the top frame (the lid) rises, the base chevron drops, the blue core
+  // brightens. This overrides the mount-assemble animation. Hooks below run
+  // unconditionally (a zero fallback keeps the layers at rest when unused),
+  // so callers that don't pass `unfold` get exactly the old behavior.
+  const _zero = useMotionValue(0)
+  const u = unfold ?? _zero
+  const scrub = !!unfold
+
+  const topY = useTransform(u, [0, 1], [0, -150])
+  const topRot = useTransform(u, [0, 1], [0, -4])
+  const midY = useTransform(u, [0, 1], [0, -14])
+  const midScale = useTransform(u, [0, 1], [1, 1.05])
+  const botY = useTransform(u, [0, 1], [0, 118])
+  const glowScrub = useTransform(u, [0, 1], [0.5, 0.9])
+
   const layerProps = (name, delay) =>
-    play
+    play && !scrub
       ? {
           initial: layers[name].initial,
           animate: layers[name].animate,
@@ -124,24 +141,50 @@ export default function LogoStack({ size = 340, animate = true }) {
         fill="url(#sc-glow-grad)"
         filter="url(#sc-glow-blur)"
         initial={false}
-        animate={play ? { opacity: [0.45, 0.75, 0.45] } : { opacity: 0.5 }}
+        style={scrub ? { opacity: glowScrub } : undefined}
+        animate={
+          scrub ? undefined : play ? { opacity: [0.45, 0.75, 0.45] } : { opacity: 0.5 }
+        }
         transition={
-          play ? { duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.9 } : { duration: 0 }
+          scrub
+            ? undefined
+            : play
+            ? { duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.9 }
+            : { duration: 0 }
         }
       />
 
       {/* Bottom dark chevron */}
-      <motion.g {...layerProps('bottom', 0.15)} filter="url(#sc-layer-shadow)">
+      <motion.g
+        {...layerProps('bottom', 0.15)}
+        style={scrub ? { y: botY, opacity: 1 } : undefined}
+        filter="url(#sc-layer-shadow)"
+      >
         <Chevron y={140} fill="url(#sc-panel-grad)" edge="var(--logo-panel-edge)" sheen="var(--logo-panel-sheen)" />
       </motion.g>
 
       {/* Middle blue chevron */}
-      <motion.g {...layerProps('middle', 0.4)} filter="url(#sc-layer-shadow)">
+      <motion.g
+        {...layerProps('middle', 0.4)}
+        style={
+          scrub
+            ? { y: midY, scale: midScale, opacity: 1, transformBox: 'fill-box', transformOrigin: 'center' }
+            : undefined
+        }
+        filter="url(#sc-layer-shadow)"
+      >
         <Chevron y={96} fill="url(#sc-blue-grad)" edge="var(--logo-blue-deep)" sheen="var(--logo-blue-hi)" />
       </motion.g>
 
-      {/* Top frame with blue core */}
-      <motion.g {...layerProps('top', 0.68)}>
+      {/* Top frame with blue core — the "lid" that lifts on unfold */}
+      <motion.g
+        {...layerProps('top', 0.68)}
+        style={
+          scrub
+            ? { y: topY, rotate: topRot, opacity: 1, transformBox: 'fill-box', transformOrigin: 'center' }
+            : undefined
+        }
+      >
         {/* Contact shadow: grounds the frame onto the chevron below it
             instead of leaving a floating gap between the two layers. */}
         <ellipse cx="100" cy="102" rx="78" ry="10" fill="#04070a" opacity="0.5" filter="url(#sc-contact-blur)" />

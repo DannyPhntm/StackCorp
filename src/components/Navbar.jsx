@@ -11,7 +11,7 @@ const links = [
   { label: 'Contact', anchor: '#contact' },
 ]
 
-export default function Navbar() {
+export default function Navbar({ hidden = false }) {
   const [open, setOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
@@ -27,7 +27,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className="nav">
+    <header className={`nav ${hidden ? 'nav--intro-hidden' : ''}`} aria-hidden={hidden}>
       <div className="container nav-inner">
         <Link to="/" className="nav-brand" onClick={() => setOpen(false)}>
           <LogoMark size={30} />

@@ -42,7 +42,9 @@ Best for:
 - improving generic AI-looking layouts
 
 Note:
-`taste-skill-v1` is legacy. Use only for exact backward compatibility.
+`taste-skill` installs under the name `design-taste-frontend` (v2, experimental). `taste-skill-v1` (`design-taste-frontend-v1`) is the legacy v1 — use only for exact backward compatibility.
+
+Source: https://github.com/leonxlnx/taste-skill — a bundle of 13 design/taste skills (taste-skill, taste-skill-v1, soft-skill, redesign-skill, minimalist-skill, brutalist-skill, stitch-skill, gpt-tasteskill, brandkit, output-skill, image-to-code-skill, imagegen-frontend-web, imagegen-frontend-mobile). Verified 2026-07-08: all 13 already installed in `~/.claude/skills/` (global, all projects) and byte-identical to this repo — no reinstall needed.
 
 ### gpt-tasteskill
 

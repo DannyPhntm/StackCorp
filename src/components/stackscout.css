@@ -1,0 +1,339 @@
+/* StackScout case study — premium, over the shared dark canvas. */
+
+.ss2 {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(30px, 4vw, 52px);
+}
+
+.ss2-eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  margin-bottom: 12px;
+}
+
+/* ---------- Problem + pull quote ---------- */
+.ss2-top {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(20px, 3vw, 44px);
+  align-items: center;
+}
+
+.ss2-problem p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-mid);
+  max-width: 52ch;
+}
+
+.ss2-quote {
+  padding-left: clamp(18px, 2vw, 26px);
+  border-left: 2px solid color-mix(in srgb, var(--accent-strong), transparent 55%);
+}
+
+.ss2-quote p {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1.8vw, 1.55rem);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-hi);
+}
+
+.ss2-quote strong {
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+
+/* ---------- Pipeline ---------- */
+.ss2-flow {
+  position: relative;
+}
+
+.ss2-pipe {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ss2-node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: clamp(16px, 1.6vw, 22px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface-2), transparent 36%);
+  transition:
+    border-color 0.28s var(--ease-out),
+    transform 0.28s var(--ease-out),
+    background-color 0.28s var(--ease-out);
+}
+
+.ss2-node:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--accent-strong), transparent 45%);
+  background: color-mix(in srgb, var(--surface-2), transparent 22%);
+}
+
+/* Connector between stages. */
+.ss2-node:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  top: 44px;
+  right: 100%;
+  width: 12px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-strong));
+}
+
+.ss2-node-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  color: var(--logo-blue-hi);
+  background: color-mix(in srgb, var(--logo-blue), transparent 82%);
+  border: 1px solid color-mix(in srgb, var(--accent-strong), transparent 62%);
+}
+
+.ss2-node-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.ss2-node-step {
+  margin-top: 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-low);
+  font-variant-numeric: tabular-nums;
+}
+
+.ss2-node-label {
+  font-family: var(--font-display);
+  font-size: 1.14rem;
+  font-weight: 600;
+  color: var(--text-hi);
+}
+
+.ss2-node-tool {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent-strong);
+}
+
+.ss2-node-body {
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: var(--text-mid);
+  margin-top: 2px;
+}
+
+/* ---------- What it does + Stack ---------- */
+.ss2-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.ss2-panel {
+  padding: clamp(20px, 2.4vw, 30px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface-2), transparent 32%);
+}
+
+.ss2-panel h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-hi);
+  margin-bottom: 16px;
+}
+
+.ss2-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ss2-list li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  color: var(--text-hi);
+}
+
+.ss2-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 8px;
+  height: 8px;
+  rotate: 45deg;
+  border-radius: 2px;
+  background: linear-gradient(135deg, var(--logo-blue-hi), var(--logo-blue-deep));
+}
+
+.ss2-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ss2-chips li {
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text-hi);
+  padding: 7px 14px;
+  border: 1px solid color-mix(in srgb, var(--accent-strong), transparent 60%);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--logo-blue), transparent 88%);
+}
+
+.ss2-target {
+  margin-top: 16px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--text-mid);
+}
+
+/* ---------- Status ---------- */
+.ss2-status {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.ss2-status-col {
+  padding: clamp(18px, 2vw, 26px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface-2), transparent 36%);
+}
+
+.ss2-status-col--built {
+  border-color: color-mix(in srgb, var(--accent-strong), transparent 55%);
+}
+
+.ss2-status-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-hi);
+  margin-bottom: 14px;
+}
+
+.ss2-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-low);
+  flex-shrink: 0;
+}
+
+.ss2-dot--on {
+  background: var(--logo-blue-hi);
+  box-shadow: 0 0 12px var(--logo-blue);
+}
+
+.ss2-status-col ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+.ss2-status-col li {
+  font-size: 0.94rem;
+  color: var(--text-mid);
+}
+
+.ss2-status-col--built li {
+  color: var(--text-hi);
+}
+
+/* ---------- Value + CTA ---------- */
+.ss2-value {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: clamp(20px, 3vw, 44px);
+  align-items: center;
+  padding: clamp(24px, 3vw, 38px);
+  border: 1px solid color-mix(in srgb, var(--accent-strong), transparent 55%);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface-2), transparent 26%);
+}
+
+.ss2-value h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-hi);
+  margin-bottom: 16px;
+}
+
+.ss2-list--value {
+  gap: 8px;
+}
+
+.ss2-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.ss2-cta p {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-hi);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .ss2-top,
+  .ss2-cols,
+  .ss2-status,
+  .ss2-value {
+    grid-template-columns: 1fr;
+  }
+
+  .ss2-quote {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 2px solid color-mix(in srgb, var(--accent-strong), transparent 55%);
+    padding-top: 16px;
+  }
+
+  /* Pipeline goes vertical. */
+  .ss2-pipe {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .ss2-node:not(:first-child)::before {
+    top: -10px;
+    left: 34px;
+    right: auto;
+    width: 1px;
+    height: 10px;
+    background: linear-gradient(180deg, transparent, var(--accent-strong));
+  }
+}

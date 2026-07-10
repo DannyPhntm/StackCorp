@@ -2,6 +2,36 @@
 
 Read this before changing the homepage motion, hero, or scroll story. It records what the design must feel like, decisions already made, and technical traps that already cost time. Update it when you learn something new.
 
+## Aesthetic bar & taste filter (READ FIRST — the owner cares about this most)
+
+The owner holds StackCorp to a **much higher visual standard than a normal landing page**. The recurring, explicit feedback:
+
+- **Do NOT ship generic, "AI-looking" work.** This is the #1 rejection. If it reads as a template or an AI default, it's wrong even if it "works".
+- The bar is **premium · dark · cinematic · cohesive · subtle-but-impressive · clean-but-not-boring · futuristic-but-believable · visually rich without becoming messy.**
+- **Sections must feel linked** — one continuous, evolving story, not disconnected blocks. Background tone should evolve as you scroll; the 3D stack is the connective storytelling device.
+- **The hero 3D object must feel intentional and believable** — elegant, centered/considered, never cheap or fake. It stays the main focus. Mostly front-facing; a *subtle* twist on scroll — do not overcomplicate the motion, no awkward spinning.
+- **Motion must enhance the story**, not just exist. Smooth, physically believable, never gimmicky or hijacking.
+- **Darker is better.** Deep navy / charcoal / deep slate from the palette. Not bright, not flat.
+
+**What "generic" means in this project (avoid all of these):**
+- Template-SaaS layouts; three equal feature cards in a row; symmetric everything-centered.
+- Bright or flat sections; a lone light section dropped into a dark page (or vice-versa) — use a *shade* of the same palette, never a jarring jump.
+- The purple/blue "AI gradient", oversaturated accents, more than one accent colour.
+- Default/`Inter`-everywhere type, all-caps on every subhead, weak hierarchy, orphan words, clustered letters.
+- Flat vector surfaces with zero texture (add grain), even 45° linear gradients (prefer radial/mesh/tone-drift), pure-black shadows (tint them).
+- A 3D object that looks like a cheap placeholder, spins aimlessly, or sits at an unflattering angle (e.g. edge-on so it reads flat).
+
+**What went right (keep doing):**
+- One continuous dark canvas (`GlobalAmbient`) with layered depth: tone-drift on scroll + a slow glow + faint grid + a fixed grain overlay. Grain + tinted shadows are the biggest "not-AI" levers.
+- The stack model as the through-line; camera + subtle turn carry the story (single-mesh model — no fake layer separation).
+- Editorial type: Melodrama display with tight tracking + `text-wrap: balance`, tabular figures for data.
+- Founders: a clean **light plate behind the photo cutouts** reads as a deliberate studio treatment against the dark card — cards kept level and balanced.
+- Glass depth via inner catch-light + tinted shadow + hover spotlight ring (no `backdrop-filter`, so scrubbed decks stay smooth).
+
+**What went wrong / cost time (don't repeat):**
+- Over-flattening the hero camera to "front-facing" put the model **edge-on → flat**. The model reads dimensional only when the camera is **elevated enough to see its face**; keep a moderate 3/4, view from slightly left so it sits upright rather than leaning right. Tune `MODEL_ROT` + the hero camera (`Scene3D.jsx`) by iterating on screenshots.
+- Semi-transparent content cards let the bright model **bleed through** — keep section cards opaque enough that content always wins over the model behind (the model is atmosphere, not foreground).
+
 ## What the site must feel like
 
 - **One continuous, unfolding experience** — not separate stacked sections. The StackCorp layered logo/stack is the through-line that visually links everything. Sections should feel like *pages opening one after another* (they are technically sections; never call them pages in UI copy).
@@ -49,6 +79,45 @@ Palette: `#416D8A` steel-blue · `#F1F4FF` ice · `#F0F1ED` mist · `#153243` na
 - **SVG group transforms** (`scale`/`rotate` on `<g>`) need `transformBox: fill-box; transformOrigin: center`, else they pivot on the SVG's 0,0.
 - **`global.css` sets `html{scroll-behavior:smooth}`** — in Playwright, `window.scrollTo` then animates, so screenshots/measurements land mid-scroll. Inject `html,*{scroll-behavior:auto!important}` via `addStyleTag` and settle ~500ms.
 - **Vite HMR websocket** means Playwright `waitUntil:'networkidle'` never fires — use `'load'`. Import playwright from the project's absolute `node_modules` path when running a script from a scratch dir.
+
+## 3D model / Three.js + GSAP (cinematic scroll build)
+
+- **Model:** `public/model/stackcorp-logo.glb` — glTF 2.0, ~13KB, 12 meshes, **no baked animation**, no textures. Named meshes: `stackcorp_layer_1/2/3` (the stack — separable for "opening"), eight `*_blue_light` emitters, `inner_blue_core`. Drive everything from JS; there is no AnimationMixer clip to play.
+- **`Scene3D.jsx`** = a fixed, **transparent** WebGL canvas (`z-index:0`, `pointer-events:none`) behind all content. GLTFLoader + `RoomEnvironment`/PMREM for reflections (no HDR asset needed). Lighting: ambient + white key + steel-blue rim + fill. Make the `*_blue_light`/`inner_blue_core` meshes emissive (`toneMapped:false`) — glow comes from emissive materials + the CSS radial glow behind the canvas; **no post-processing bloom** (keeps the canvas transparent and cheap).
+- **Camera:** hero is a 3/4 isometric pose with `lookTarget` biased left (`x:-0.8`) so the model sits right-of-centre and the left hero copy stays clear; GSAP re-centres `lookTarget` on the first scroll. Call `camera.lookAt(lookTarget)` every frame so GSAP can pan by tweening the target.
+- **Scroll:** GSAP `ScrollTrigger` **scrub** on the `<main>` (`start top top`, `end bottom bottom`) — reads scroll, never pins/hijacks (no trap). One timeline moves `camera.position` + `lookTarget` through ~6 poses and tweens a `spread` proxy that separates the three layers (`applySpread` offsets each layer's base `y`). Wrap in `gsap.context(fn, mainRef)` and `revert()` on unmount.
+- **Readability:** the bright model competes with content — dim it (`emissiveIntensity` ~1.3 strips / 2.0 core, `toneMappingExposure` ~1.05) and keep it modest in scale (`targetSize` ~2.9). Content sits at `z-index:1` over the canvas (`.home3d > *:not(.scene3d)`).
+- **Float/parallax** move a **group** wrapper (not the model) so they never fight GSAP's model/layer transforms. Both are gated off for reduced-motion + coarse pointers.
+- **`Clock` is deprecated** in recent three — use `performance.now()` for elapsed time to avoid console noise.
+- **Reduced-motion:** skip the GSAP timeline entirely (static hero pose, sections scroll normally); Scene3D also drops float/parallax.
+- **Dispose** everything on unmount (rAF, listeners, geometries/materials, PMREM, renderer) — React re-mounts otherwise leak GL contexts.
+- **The intro is still the 2D `IntroOverlay`** (the user likes it); it crossfades (logo stays centred) into the centered 3D hero model. A fully-3D intro was intentionally not built.
+- **Perf:** three.js adds ~600KB to the bundle (chunk-size warning). `Scene3D` is code-split via a state-based dynamic `import()` in `Home` (NOT `React.lazy`/Suspense — the fallback swap remounts the sections and cancels Work's live-stats fetch). Headless WebGL verification needs Playwright launched with `--use-gl=angle --use-angle=swiftshader --ignore-gpu-blocklist`, and a long wait for the model to load.
+- **Swapping the GLB:** keep the path `public/model/stackcorp-logo.glb` (Scene3D loads it directly; no import to change). **Inspect first** (parse the GLB JSON chunk): mesh count, names, animations, textures.
+  - **Single mesh (e.g. a Tripo/AI-generated model):** there are no named layers, so **do not fake layer separation** — the "unfold" comes from camera movement + a gentle model turn (`model.rotation.y` tween per pose in `Home`, never a spin). Home must NOT early-return on `layers.length === 0`.
+  - **Preserve the model's own materials** when it's textured (`mat.map`/normal/roughness) — only style the starter model's named accent meshes.
+  - **Base orientation:** raw exports often sit at an odd angle — apply `MODEL_ROT` (radians) and centre/scale from the *rotated* bounds. Tune it by iterating on hero screenshots.
+  - **File size is a real risk:** a textured GLB can be tens of MB (the current one is ~55MB). **Compress it (Draco/meshopt) before production** — it can drop to a few MB. Beyond slow load, in local `vite dev` the 55MB download can queue/starve the same-origin `/api/mcb-stats` middleware requests until they hit the 8s abort → the live-stats strip shows "unavailable" in dev even though production (static model + real serverless endpoint) returns 1/3/11 fine. Don't mistake that dev artifact for a stats regression; verify stats on the production build / warm endpoint.
+  - **Motion perf (from review):** pause the Three rAF loop on `visibilitychange` (no GPU on hidden tabs) and render a single frame under reduced-motion instead of looping; debounce the resize handler (mobile URL-bar fires resize on scroll). Never animate `scale`/`opacity` on a `filter: blur()` glow layer — translate only. Cache `scrollHeight` (don't read it per scroll frame). Spring-scrub the deck at ~`stiffness 160 / damping 26` (90/30 is over-damped and trails).
+  - **Anti-generic (from review):** no always-on `box-shadow`/`text-shadow` glow on resting icons/dots/brand text — glow is a hover event, not a default. Large serif display wants ≤0 letter-spacing. The founders light plate must be cooled off pure-white and given an inset vignette so it blends into the dark card rather than reading as a bright slab.
+
+## Case studies (proof of systems thinking)
+
+- **Integrate real case studies as proof**, not decoration. They show StackCorp builds AI **systems** (agents, workflows, automation pipelines) — not just websites. Sit them in the Work/Proof area next to Malir Cantt Bazaar. Current two: MCB (live product) + **StackScout** (internal AI workflow agent).
+- **Structure every case study as Problem → System → Business Value.** Lead with the manual pain, show the pipeline as the system, close with what it proves for the client. `StackScout.jsx` follows this: problem + pull-quote → 5-stage pipeline (Discover → Enrich → Research → Score → Outreach prep) → what it does + stack → honest status → business value + CTA.
+- **Explain the business workflow — never vague "AI agent" wording.** Name the stack (Trigger.dev, TypeScript, Google Sheets, Apify, Apollo.io, Anthropic Claude, Zod) and what each stage does. A pipeline diagram beats an "AI robot" visual (which is banned).
+- **Honesty is mandatory:** label internal builds as internal / proof-of-capability, never as a paid client engagement unless explicitly stated. State what's built vs. planned (StackScout: Phases 1–2 built + tested, 3–4 next). Real documented numbers (e.g. "20–30 min/lead manually", "~$0.02/lead", "fit score 0–10") are fine; invented metrics are not.
+- Reuse the shared `StorySection` header + palette so a case study reads as part of the one scroll story, not a bolted-on page.
+
+## Scroll-driven "deck" cards (stack opening)
+
+The "Built for businesses ready to modernize" cards fan out of a stacked deck as the section enters (`WhoWeHelp.jsx`). Pattern that stays robust: each card keeps its **real grid cell** the whole time (grid never reflows), and a Framer `useScroll`(section) + per-card `useTransform` gathers it toward the deck centre at progress 0 (translate toward centre + rotate + scale 0.9 + blur + low opacity) and releases it to its cell at progress 1. A per-card **stagger** (offset the transform's input window by index) makes it deal out card by card — elegant/product-like, not a card trick. Keep the scroll transform on an **outer cell** and the visual+hover on an **inner card**, so hover (`translateY`) never fights the scroll transform. Cards gather *inward*, so there's no horizontal overflow.
+
+**Desktop timing = a controlled sticky pin** (the case where a pin is genuinely warranted): wrap the section in a tall track (`height: 220vh`) with a `position: sticky` inner stage (`top:0; height:100vh`), and drive the deck from `useScroll(track, ['start start','end end'])`. This makes the section **fill the screen first**, hold the deck stacked (a `delay` before the first card's window), then open **slowly** over the extra scroll (larger `span`), finishing just before it unpins. It's a sticky child of a tall wrapper, so the page still scrolls normally — no wheel hijack, no trap. **Mobile / reduced-motion: no pin** — the track collapses to normal height and the deck is a lighter reveal-on-enter (fewer columns, smaller offsets) or, for reduced-motion, the final grid directly.
+
+## 3D readability (content over the model)
+
+The bright 3D model competes with text in content sections. Fix used: a **subtle fixed veil** (`.home3d::before`, `color-mix(surface-0, transparent ~62%)`) sitting above the canvas and below the content — it dims the model just enough for text to read everywhere while keeping the cinematic feel. Tune the transparency: too opaque kills the hero's punch, too light and text over the model is hard to read. Combine with dimmer emissive + lower exposure (see the 3D section) rather than relying on the veil alone.
 
 ## Verification checklist
 

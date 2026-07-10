@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Reveal from './Reveal.jsx'
+import './story.css'
 import './work.css'
 
 const features = [
@@ -97,15 +98,24 @@ function LiveStats() {
 
 export default function Work() {
   return (
-    <section className="section work" id="work">
+    <section className="section story-section work" id="work">
       <div className="container">
-        <Reveal>
-          <span className="eyebrow">Proof of work</span>
-          <h2 className="section-title">First live product: Malir Cantt Bazaar</h2>
-          <p className="section-sub">
-            Malir Cantt Bazaar is a local marketplace and shops directory built for
-            residents and businesses in Malir Cantt.
-          </p>
+        <Reveal className="story-head">
+          <span className="story-node" aria-hidden="true">
+            <span className="story-node-top" />
+            <span className="story-node-mid" />
+            <span className="story-node-bot" />
+          </span>
+          <div className="story-head-text">
+            <p className="story-kicker">
+              <b>03</b>Proof of work
+            </p>
+            <h2 className="section-title">First live product: Malir Cantt Bazaar</h2>
+            <p className="section-sub story-sub">
+              Malir Cantt Bazaar is a local marketplace and shops directory built for
+              residents and businesses in Malir Cantt.
+            </p>
+          </div>
         </Reveal>
 
         <Reveal delay={0.12} className="work-panel card">

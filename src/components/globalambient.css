@@ -1,6 +1,6 @@
-/* Site-wide ambient backdrop — see GlobalAmbient.jsx. Sits behind all
-   content (body is transparent; html holds the fallback color). Palette
-   tokens only; blue stays a faint controlled accent. */
+/* Site-wide ambient backdrop — see GlobalAmbient.jsx. Fixed behind all content
+   (body transparent; html holds the fallback color). Palette tokens only;
+   blue stays a faint controlled accent. Deep, layered, atmospheric. */
 
 .global-ambient {
   position: fixed;
@@ -8,23 +8,44 @@
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
-  /* Opaque living base so it fully paints the page backdrop. */
-  background: linear-gradient(180deg, var(--surface-1) 0%, var(--surface-0) 100%);
+  --sp: 0;
+  /* Deep base under the drift layer. */
+  background: var(--surface-0);
 }
 
-/* Very faint drifting grid — half the strength of the hero's, so the page
-   reads as "alive" without turning into a visible table. */
+/* Scroll-linked tone drift: a tall multi-tone gradient that shifts up as the
+   user scrolls, so the dominant shade evolves (deep navy → slate → charcoal).
+   This is what makes the whole page feel like one evolving surface. */
+.global-ambient-drift {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -34vh;
+  height: 200vh;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--sc-navy), #04070c 44%) 0%,
+    color-mix(in srgb, var(--sc-navy), var(--sc-blue) 9%) 24%,
+    color-mix(in srgb, #191c26, #04070c 34%) 52%,
+    color-mix(in srgb, var(--sc-navy), #04070c 58%) 76%,
+    color-mix(in srgb, #04070c, var(--sc-navy) 34%) 100%
+  );
+  transform: translate3d(0, calc(var(--sp) * -28vh), 0);
+}
+
+/* Very faint drifting grid — reads as "alive" without becoming a visible
+   table. Fades out toward the middle so it never competes with content. */
 .global-ambient-grid {
   position: absolute;
   inset: -20%;
   background-image:
-    linear-gradient(color-mix(in srgb, var(--sc-stone), transparent 90%) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--sc-stone), transparent 90%) 1px, transparent 1px);
-  background-size: 88px 88px;
-  opacity: 0.6;
-  mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, #000 40%, transparent 90%);
-  -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, #000 40%, transparent 90%);
-  animation: global-grid-drift 60s linear infinite alternate;
+    linear-gradient(color-mix(in srgb, var(--sc-stone), transparent 92%) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--sc-stone), transparent 92%) 1px, transparent 1px);
+  background-size: 92px 92px;
+  opacity: 0.5;
+  mask-image: radial-gradient(ellipse 100% 90% at 50% 0%, #000 34%, transparent 88%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 90% at 50% 0%, #000 34%, transparent 88%);
+  animation: global-grid-drift 68s linear infinite alternate;
   will-change: transform;
 }
 
@@ -33,39 +54,74 @@
   to   { transform: translate3d(-56px, -40px, 0); }
 }
 
-/* One slow steel/blue glow that breathes and drifts — the ambient light. */
+/* Ambient glows — the atmospheric light. Primary steel-blue, high; a second
+   deep glow lower that drifts up slightly as you scroll for parallax depth. */
 .global-ambient-glow {
   position: absolute;
-  top: 12%;
-  left: 58%;
-  width: 60vw;
-  height: 60vw;
-  max-width: 780px;
-  max-height: 780px;
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(90px);
+}
+
+.global-ambient-glow--primary {
+  top: 8%;
+  left: 60%;
+  width: 58vw;
+  height: 58vw;
+  max-width: 760px;
+  max-height: 760px;
   background: radial-gradient(
     circle at 50% 50%,
-    color-mix(in srgb, var(--sc-blue), transparent 82%) 0%,
+    color-mix(in srgb, var(--sc-blue), transparent 80%) 0%,
+    transparent 66%
+  );
+  opacity: 0.45;
+  animation: global-glow-drift 52s ease-in-out infinite alternate;
+}
+
+.global-ambient-glow--deep {
+  bottom: -6%;
+  left: 6%;
+  width: 52vw;
+  height: 52vw;
+  max-width: 680px;
+  max-height: 680px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--surface-3), transparent 62%) 0%,
     transparent 68%
   );
   opacity: 0.5;
-  animation: global-glow-drift 46s ease-in-out infinite alternate;
-  will-change: transform, opacity;
+  transform: translate3d(0, calc(var(--sp) * -12vh), 0);
 }
 
 @keyframes global-glow-drift {
-  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0.4; }
-  100% { transform: translate3d(-8vw, 10vh, 0) scale(1.15); opacity: 0.58; }
+  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0.36; }
+  100% { transform: translate3d(-7vw, 9vh, 0) scale(1.14); opacity: 0.5; }
+}
+
+/* Fixed grain overlay — the premium texture that breaks digital flatness.
+   Tiny SVG fractal-noise tile, very low opacity, soft-light blended. */
+.global-ambient-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
 }
 
 @media (max-width: 600px) {
-  .global-ambient-glow { opacity: 0.36; }
+  .global-ambient-glow--primary { opacity: 0.32; }
+  .global-ambient-glow--deep { opacity: 0.38; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .global-ambient-grid,
-  .global-ambient-glow {
+  .global-ambient-glow--primary {
     animation: none;
+  }
+  .global-ambient-drift,
+  .global-ambient-glow--deep {
+    transform: none;
   }
 }

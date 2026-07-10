@@ -1,105 +1,150 @@
-.who {
-  background: var(--surface-0);
-  border-block: 1px solid var(--line);
+/* Business types — a deck of premium cards that fans out into the grid on
+   scroll. The grid lays out .who-cell items (which carry the scroll
+   transform); each holds a .who-card (the visual + hover). Transparent over
+   the shared canvas so the page reads as one surface. */
+
+/* Pin: a tall track whose inner stage pins (fills the screen) while the extra
+   scroll opens the deck. Sticky child of a tall wrapper — the page scrolls
+   normally, never trapped. Flow (mobile / reduced): normal height, no pin. */
+.who-track {
+  position: relative;
+  height: 220vh;
 }
 
-.who-list {
-  list-style: none;
+.who-track--flow {
+  height: auto;
+}
+
+.who-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Trim the section's own padding while pinned so the header + grid fit one
+   screen even on shorter desktop windows. */
+.who-sticky > .section {
+  width: 100%;
+  padding-block: clamp(28px, 5vh, 60px);
+}
+
+.who-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
-  margin-top: 36px;
+}
+
+.who-cell {
+  position: relative; /* for z-index layering while stacked */
+  display: flex;
+  transform-origin: center;
+  will-change: transform, opacity;
 }
 
 .who-card {
-  position: relative;
+  flex: 1;
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 22px 14px 16px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--surface-2), transparent 30%);
-  color: var(--text-mid);
-  font-size: 0.96rem;
-  font-weight: 500;
+  flex-direction: column;
+  gap: 16px;
+  padding: clamp(18px, 2vw, 26px);
+  min-height: 148px;
+  border: 1px solid color-mix(in srgb, var(--sc-stone), transparent 80%);
+  border-radius: var(--radius);
+  /* Glass depth without backdrop-filter (keeps the scrolling deck smooth): a
+     soft vertical fill, a top catch-light, and a tinted deep shadow. */
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--surface-3), transparent 34%),
+    color-mix(in srgb, var(--surface-0), transparent 14%)
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--sc-ice), transparent 90%),
+    0 10px 30px color-mix(in srgb, #04070c, transparent 48%);
+  position: relative;
   overflow: hidden;
   transition:
     border-color 0.28s var(--ease-out),
-    background-color 0.28s var(--ease-out),
-    color 0.28s var(--ease-out),
     transform 0.28s var(--ease-out),
     box-shadow 0.28s var(--ease-out);
+}
+
+/* Soft corner glow that grows on hover. */
+.who-card::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -30%;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--logo-blue), transparent 62%),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+  pointer-events: none;
+}
+
+.who-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--accent-strong), transparent 42%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--sc-ice), transparent 82%),
+    0 0 0 1px color-mix(in srgb, var(--accent-strong), transparent 72%),
+    0 18px 42px color-mix(in srgb, var(--logo-blue-deep), transparent 60%);
+}
+
+.who-card:hover::before {
+  opacity: 1;
 }
 
 .who-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--sc-blue), transparent 72%);
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   color: var(--accent-strong);
+  background: color-mix(in srgb, var(--logo-blue), transparent 84%);
+  border: 1px solid color-mix(in srgb, var(--accent-strong), transparent 66%);
   transition:
-    background-color 0.28s var(--ease-out),
-    transform 0.28s var(--ease-out);
+    color 0.28s var(--ease-out),
+    background-color 0.28s var(--ease-out);
+}
+
+.who-card:hover .who-icon {
+  color: var(--logo-blue-hi);
+  background: color-mix(in srgb, var(--logo-blue), transparent 72%);
 }
 
 .who-icon svg {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
 }
 
 .who-label {
-  transition: transform 0.28s var(--ease-out);
-}
-
-.who-card:hover,
-.who-card:focus-within {
-  border-color: var(--accent-strong);
-  background: color-mix(in srgb, var(--sc-blue), var(--surface-2) 78%);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.3;
   color: var(--text-hi);
-  transform: translateY(-3px);
-  box-shadow: 0 14px 28px -18px color-mix(in srgb, var(--sc-navy), #000 30%);
+  margin-top: auto;
 }
 
-.who-card:hover .who-icon,
-.who-card:focus-within .who-icon {
-  background: var(--accent);
-  color: var(--sc-ice);
-  transform: scale(1.1);
-}
-
-.who-card:hover .who-label,
-.who-card:focus-within .who-label {
-  transform: translateX(2px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .who-card,
-  .who-icon,
-  .who-label {
-    transition: none;
-  }
-
-  .who-card:hover {
-    transform: none;
-  }
-
-  .who-card:hover .who-icon {
-    transform: none;
-  }
-
-  .who-card:hover .who-label {
-    transform: none;
+@media (max-width: 900px) {
+  .who-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 540px) {
+@media (max-width: 420px) {
   .who-card {
-    padding: 12px 18px 12px 14px;
-    font-size: 0.9rem;
+    min-height: 128px;
+    padding: 16px;
   }
 }
