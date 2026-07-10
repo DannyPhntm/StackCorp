@@ -124,7 +124,7 @@ export default function Contact() {
               <p>
                 We've received your request and will get back to you at {sentEmail} shortly.
               </p>
-              <button type="button" className="btn btn-ghost" onClick={() => setStatus('idle')}>
+              <button type="button" className="btn btn-ghost" onClick={() => setStatus('idle')} data-haptic="tap">
                 Send another request
               </button>
             </div>
@@ -222,7 +222,7 @@ export default function Contact() {
                 </p>
               )}
 
-              <button type="submit" className="btn btn-primary cf-submit" disabled={sending}>
+              <button type="submit" className="btn btn-primary cf-submit" disabled={sending} data-haptic="confirm">
                 {sending ? 'Sending…' : 'Request a Free Audit'}
               </button>
               <p className="cf-note">We'll reply to the email you provide above.</p>

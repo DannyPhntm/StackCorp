@@ -8,13 +8,73 @@
 }
 
 .ep-panel {
+  position: relative; /* anchors the glow-sweep overlay */
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: color-mix(in srgb, var(--surface-2), transparent 34%);
   overflow: hidden;
   transition:
     border-color 0.3s var(--ease-out),
-    background-color 0.3s var(--ease-out);
+    background-color 0.3s var(--ease-out),
+    transform 0.18s var(--ease-out);
+}
+
+/* Tactile press: the whole panel compresses a touch while its head is held. */
+.ep-panel:has(.ep-head:active) {
+  transform: scale(0.994);
+}
+
+/* User-initiated open (is-opening set only on tap, never on load): a soft glow
+   line sweeps through the card and it settles with a subtle snap — synced with
+   the hapticOpen pulse. */
+.ep-panel.is-opening {
+  animation: ep-snap 0.36s var(--ease-out);
+}
+
+.ep-panel.is-opening::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 34%,
+    color-mix(in srgb, var(--accent-strong), transparent 66%) 50%,
+    transparent 66%
+  );
+  transform: translateX(-130%);
+  animation: ep-sweep 0.72s var(--ease-out);
+}
+
+@keyframes ep-sweep {
+  from {
+    transform: translateX(-130%);
+  }
+  to {
+    transform: translateX(130%);
+  }
+}
+
+@keyframes ep-snap {
+  0% {
+    transform: scale(0.986);
+  }
+  55% {
+    transform: scale(1.005);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ep-panel:has(.ep-head:active) {
+    transform: none;
+  }
+  .ep-panel.is-opening,
+  .ep-panel.is-opening::after {
+    animation: none;
+  }
 }
 
 .ep-panel.is-open {

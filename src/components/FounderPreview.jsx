@@ -105,6 +105,7 @@ export default function FounderPreview() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="fp-linkedin-cta"
+                  data-haptic="tap"
                 >
                   View LinkedIn ↗
                 </a>
@@ -115,7 +116,7 @@ export default function FounderPreview() {
       </div>
 
       <div className="fp-foot">
-        <Link to="/founders" className="btn btn-ghost">
+        <Link to="/founders" className="btn btn-ghost" data-haptic="tap">
           Meet the founders
         </Link>
       </div>

@@ -29,7 +29,7 @@ export default function Navbar({ hidden = false }) {
   return (
     <header className={`nav ${hidden ? 'nav--intro-hidden' : ''}`} aria-hidden={hidden}>
       <div className="container nav-inner">
-        <Link to="/" className="nav-brand" onClick={() => setOpen(false)}>
+        <Link to="/" className="nav-brand" onClick={() => setOpen(false)} data-haptic="tap">
           <LogoMark size={30} />
           <span>StackCorp</span>
         </Link>
@@ -37,11 +37,11 @@ export default function Navbar({ hidden = false }) {
         <nav className={`nav-links ${open ? 'is-open' : ''}`} aria-label="Main navigation">
           {links.map((l) =>
             l.to ? (
-              <Link key={l.label} to={l.to} onClick={() => setOpen(false)}>
+              <Link key={l.label} to={l.to} onClick={() => setOpen(false)} data-haptic="tap">
                 {l.label}
               </Link>
             ) : (
-              <a key={l.label} href={`/${l.anchor}`} onClick={goToAnchor(l.anchor)}>
+              <a key={l.label} href={`/${l.anchor}`} onClick={goToAnchor(l.anchor)} data-haptic="tap">
                 {l.label}
               </a>
             ),
@@ -50,6 +50,7 @@ export default function Navbar({ hidden = false }) {
             href="/#contact"
             onClick={goToAnchor('#contact')}
             className="btn btn-primary nav-cta-mobile"
+            data-haptic="confirm"
           >
             Request a Free Audit
           </a>
@@ -59,6 +60,7 @@ export default function Navbar({ hidden = false }) {
           href="/#contact"
           onClick={goToAnchor('#contact')}
           className="btn btn-primary nav-cta"
+          data-haptic="confirm"
         >
           Request a Free Audit
         </a>
@@ -68,6 +70,7 @@ export default function Navbar({ hidden = false }) {
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
           onClick={() => setOpen(!open)}
+          data-haptic="tap"
         >
           <span />
           <span />

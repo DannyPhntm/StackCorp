@@ -141,6 +141,7 @@ export default function Work() {
             href="https://malircanttbazaar.com"
             target="_blank"
             rel="noopener noreferrer"
+            data-haptic="tap"
           >
             View Live Project
           </a>

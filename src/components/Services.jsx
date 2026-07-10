@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import StorySection from './StorySection.jsx'
 import './services.css'
@@ -59,7 +59,22 @@ const pillars = [
 export default function Services() {
   const reduce = useReducedMotion()
   const [active, setActive] = useState(0)
+  // Tracks the panel a user just opened by tapping, so the glow-sweep + snap
+  // play ONLY on that intentional action — never on page load (panel 0 is open
+  // by default). Cleared shortly after the sweep finishes.
+  const [opening, setOpening] = useState(-1)
   const dur = reduce ? 0 : 0.42
+
+  const openPanel = (i) => {
+    setActive(i)
+    setOpening(i)
+  }
+
+  useEffect(() => {
+    if (opening < 0) return
+    const t = setTimeout(() => setOpening(-1), 720)
+    return () => clearTimeout(t)
+  }, [opening])
 
   return (
     <StorySection
@@ -73,12 +88,16 @@ export default function Services() {
         {pillars.map((p, i) => {
           const open = active === i
           return (
-            <div key={p.title} className={`ep-panel ${open ? 'is-open' : ''}`}>
+            <div
+              key={p.title}
+              className={`ep-panel ${open ? 'is-open' : ''} ${opening === i ? 'is-opening' : ''}`}
+            >
               <button
                 type="button"
                 className="ep-head"
                 aria-expanded={open}
-                onClick={() => setActive(i)}
+                onClick={() => openPanel(i)}
+                data-haptic="open"
               >
                 <span className="ep-index">{String(i + 1).padStart(2, '0')}</span>
                 <span className="ep-titles">

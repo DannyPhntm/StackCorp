@@ -4,6 +4,7 @@ import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
 import GlobalAmbient from './components/GlobalAmbient.jsx'
 import CursorGlow from './components/CursorGlow.jsx'
+import { initHaptics } from './utils/haptics.js'
 import Home from './pages/Home.jsx'
 import Founders from './pages/Founders.jsx'
 
@@ -43,6 +44,10 @@ export default function App() {
   const [playIntro] = useState(shouldPlayIntro)
   const [introDone, setIntroDone] = useState(() => !shouldPlayIntro())
   const handleIntroDone = useCallback(() => setIntroDone(true), [])
+
+  // Single delegated haptics listener for the whole app (progressive; a no-op
+  // where the Vibration API is unavailable). Elements opt in via data-haptic.
+  useEffect(() => initHaptics(), [])
 
   return (
     <>

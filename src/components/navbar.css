@@ -82,6 +82,27 @@
   border-radius: 2px;
 }
 
+/* Tactile press on the menu icon button — compress + a faint glow ring. */
+.nav-toggle {
+  transition:
+    transform 0.16s var(--ease-out),
+    border-color 0.16s var(--ease-out),
+    box-shadow 0.16s var(--ease-out);
+}
+
+.nav-toggle:active {
+  transform: scale(0.92);
+  border-color: var(--accent-strong);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-strong), transparent 74%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-toggle:active {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
 @media (max-width: 900px) {
   .nav-cta {
     display: none;
