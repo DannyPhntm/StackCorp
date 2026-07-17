@@ -12,7 +12,7 @@ Form POST /api/contact
 ├─ (sync)  instant templated ack email to the lead          [new]
 ├─ (sync)  200 returned to the browser
 └─ (background, via waitUntil)
-     ├─ Claude Haiku analysis → { score, brief, draft reply }
+     ├─ Gemini analysis → { score, brief, draft reply }
      ├─ Notion "StackCorp Leads" row (fields + message + brief + draft)
      └─ internal email to stackcorp7@gmail.com (submission + brief + score)
 ```
@@ -33,7 +33,7 @@ Form POST /api/contact
 
 - [api/contact.js](../api/contact.js) — handler and orchestration
 - [api/_lib/ack-email.js](../api/_lib/ack-email.js) — lead-facing template (edit pitches here)
-- [api/_lib/ai.js](../api/_lib/ai.js) — Claude Haiku call (model `claude-haiku-4-5`, strict JSON schema, ~1 cent per lead or less)
+- [api/_lib/ai.js](../api/_lib/ai.js) — Gemini call (model `gemini-2.5-flash`, free tier, structured JSON output)
 - [api/_lib/notion.js](../api/_lib/notion.js) — Notion lead row
 - [api/_lib/internal-email.js](../api/_lib/internal-email.js) — internal notification
 - [api/_lib/resend.js](../api/_lib/resend.js) — shared Resend send helper
@@ -51,7 +51,7 @@ CONTACT_FROM_EMAIL=<verified sender>
 New — the pipeline degrades gracefully while these are unset:
 
 ```
-ANTHROPIC_API_KEY=<anthropic api key>        # enables AI brief + draft
+GEMINI_API_KEY=<google gemini api key>       # enables AI brief + draft
 NOTION_API_KEY=<notion integration secret>   # enables Notion logging
 NOTION_LEADS_DB_ID=<leads database id>       # enables Notion logging
 BOOKING_URL=<cal.com event link>             # optional booking CTA in the ack
@@ -59,7 +59,7 @@ BOOKING_URL=<cal.com event link>             # optional booking CTA in the ack
 
 ## One-time setup runbook
 
-1. **Anthropic API key** — create at console.anthropic.com (billing must be enabled; Haiku costs roughly a cent or less per lead). Add as `ANTHROPIC_API_KEY` in Vercel.
+1. **Gemini API key** — create a free key at aistudio.google.com (no billing needed). Add as `GEMINI_API_KEY` in Vercel. Free-tier notes: rate limits are modest (~10 requests/min — far above our lead volume) and Google may use free-tier data to improve its products; upgrade to a paid key if that ever becomes a concern for lead data.
 2. **Notion** — the "StackCorp Leads" database already exists:
    https://app.notion.com/p/9345c23360544b56adb3c3fbdc6b66ca
    1. Go to notion.so/my-integrations → create an internal integration (e.g. "StackCorp Website") with *Insert content* capability.

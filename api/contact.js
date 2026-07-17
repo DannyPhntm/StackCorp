@@ -5,7 +5,7 @@
  *   validate → honeypot → rate-limit → send instant templated ack to the lead
  *
  * Background path (via waitUntil, after the response):
- *   Claude Haiku lead analysis → Notion lead row (with draft reply)
+ *   Gemini lead analysis → Notion lead row (with draft reply)
  *   → internal email to CONTACT_TO_EMAIL (submission + AI brief + score)
  *
  * Failure isolation: the internal email always sends (without the AI brief
@@ -15,7 +15,7 @@
  * Required env vars (Vercel project settings, never committed):
  *   RESEND_API_KEY, CONTACT_TO_EMAIL, CONTACT_FROM_EMAIL
  * Optional (enable AI / Notion / booking link):
- *   ANTHROPIC_API_KEY, NOTION_API_KEY, NOTION_LEADS_DB_ID, BOOKING_URL
+ *   GEMINI_API_KEY, NOTION_API_KEY, NOTION_LEADS_DB_ID, BOOKING_URL
  */
 
 import { waitUntil } from '@vercel/functions'
