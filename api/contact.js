@@ -1,26 +1,39 @@
 /*
- * Vercel serverless function: POST /api/contact
+ * Vercel serverless function: POST /api/contact  — "speed to lead" pipeline.
  *
- * Sends the "Request a Free Audit" form to StackCorp via Resend's HTTP
- * API (plain fetch — no SDK dependency needed). Secrets are read from
- * server-side env vars only; never exposed to the frontend bundle.
+ * Sync path (before the 200 response):
+ *   validate → honeypot → rate-limit → send instant templated ack to the lead
  *
- * Required env vars (set in Vercel project settings, not committed):
- *   RESEND_API_KEY      - Resend API key
- *   CONTACT_TO_EMAIL     - inbox that receives submissions (stackcorp7@gmail.com)
- *   CONTACT_FROM_EMAIL   - verified sender address for the Resend domain
+ * Background path (via waitUntil, after the response):
+ *   Claude Haiku lead analysis → Notion lead row (with draft reply)
+ *   → internal email to CONTACT_TO_EMAIL (submission + AI brief + score)
+ *
+ * Failure isolation: the internal email always sends (without the AI brief
+ * if the AI call fails); Notion failures are logged only; ack failures never
+ * block anything. AI output is never sent to the lead without human review.
+ *
+ * Required env vars (Vercel project settings, never committed):
+ *   RESEND_API_KEY, CONTACT_TO_EMAIL, CONTACT_FROM_EMAIL
+ * Optional (enable AI / Notion / booking link):
+ *   ANTHROPIC_API_KEY, NOTION_API_KEY, NOTION_LEADS_DB_ID, BOOKING_URL
  */
+
+import { waitUntil } from '@vercel/functions'
+import { sendEmail } from './_lib/resend.js'
+import { buildAckEmail } from './_lib/ack-email.js'
+import { analyzeLead } from './_lib/ai.js'
+import { createLeadRow } from './_lib/notion.js'
+import { buildInternalEmail } from './_lib/internal-email.js'
 
 const REQUIRED_FIELDS = ['name', 'business', 'phone', 'email', 'help', 'message']
 const MAX_FIELD_LENGTH = 300
 const MAX_MESSAGE_LENGTH = 5000
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const RESEND_TIMEOUT_MS = 8000
 
 // Best-effort rate limit: per-IP fixed window held in instance memory.
 // Resets on cold start and is per-region, so it is a stopgap against
 // naive spam scripts, not a hard guarantee — Vercel WAF / a KV-backed
-// limiter is the durable fix.
+// limiter is the durable fix. It also caps AI spend per IP.
 const RATE_LIMIT_MAX = 5
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000
 const rateWindows = new Map()
@@ -44,6 +57,37 @@ function isRateLimited(ip) {
 function clean(value) {
   // eslint-disable-next-line no-control-regex
   return value.replace(/[\u0000-\u001F\u007F]/g, ' ').trim()
+}
+
+function runInBackground(promise) {
+  try {
+    waitUntil(promise)
+  } catch {
+    // Outside Vercel (local dev/tests) waitUntil may be unavailable —
+    // fall back to fire-and-forget so the request still completes.
+    promise.catch((err) => console.error('background task failed:', err))
+  }
+}
+
+async function processLead(lead, { toEmail, fromEmail }) {
+  try {
+    const ai = await analyzeLead(lead)
+    const notionLogged = await createLeadRow(lead, ai)
+    const internal = buildInternalEmail(lead, ai, { notionLogged })
+    const sent = await sendEmail({
+      from: fromEmail,
+      to: toEmail,
+      replyTo: lead.email,
+      subject: internal.subject,
+      text: internal.text,
+    })
+    if (!sent) {
+      // Loud log: this is the one failure that can lose a lead's visibility.
+      console.error('LEAD ALERT: internal email failed for', lead.email, '— check Notion/Vercel logs')
+    }
+  } catch (err) {
+    console.error('processLead: unexpected failure:', err)
+  }
 }
 
 export default async function handler(req, res) {
@@ -82,71 +126,46 @@ export default async function handler(req, res) {
     }
   }
 
-  const name = clean(body.name)
-  const business = clean(body.business)
-  const phone = clean(body.phone)
-  const help = clean(body.help)
-  const message = body.message.replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g, ' ').trim()
-  const cleanEmail = clean(body.email)
+  const lead = {
+    name: clean(body.name),
+    business: clean(body.business),
+    phone: clean(body.phone),
+    help: clean(body.help),
+    message: body.message.replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g, ' ').trim(),
+    email: clean(body.email),
+  }
 
-  if (!EMAIL_PATTERN.test(cleanEmail)) {
+  if (!EMAIL_PATTERN.test(lead.email)) {
     return res.status(400).json({ error: 'Please enter a valid email address.' })
   }
 
-  const apiKey = process.env.RESEND_API_KEY
   const toEmail = process.env.CONTACT_TO_EMAIL
   const fromEmail = process.env.CONTACT_FROM_EMAIL
 
-  if (!apiKey || !toEmail || !fromEmail) {
+  if (!process.env.RESEND_API_KEY || !toEmail || !fromEmail) {
     console.error('Contact form: RESEND_API_KEY / CONTACT_TO_EMAIL / CONTACT_FROM_EMAIL not configured')
     return res.status(500).json({
       error: 'The contact form is not fully set up yet. Please email us directly in the meantime.',
     })
   }
 
-  const timestamp = new Date().toISOString()
-  const text = [
-    `Name: ${name.trim()}`,
-    `Business name: ${business.trim()}`,
-    `Phone/WhatsApp: ${phone.trim()}`,
-    `Email: ${cleanEmail}`,
-    `Needs help with: ${help.trim()}`,
-    '',
-    'Message:',
-    message.trim(),
-    '',
-    '---',
-    'Submitted from the StackCorp website contact form',
-    `Submitted at: ${timestamp}`,
-  ].join('\n')
-
-  try {
-    const resendRes = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      signal: AbortSignal.timeout(RESEND_TIMEOUT_MS),
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: fromEmail,
-        to: toEmail,
-        reply_to: cleanEmail,
-        subject: `Free audit request from ${name.trim()}`,
-        text,
-      }),
-    })
-
-    if (!resendRes.ok) {
-      console.error('Resend API responded with', resendRes.status)
-      return res.status(502).json({
-        error: 'We could not send your message right now. Please try again shortly.',
-      })
-    }
-
-    return res.status(200).json({ ok: true })
-  } catch (err) {
-    console.error('Contact form send failed:', err)
-    return res.status(500).json({ error: 'Something went wrong. Please try again shortly.' })
+  // Speed-to-lead: instant templated acknowledgment. Best-effort — a
+  // failed ack must never block the internal notification.
+  const ack = buildAckEmail(lead)
+  const ackSent = await sendEmail({
+    from: fromEmail,
+    to: lead.email,
+    replyTo: toEmail,
+    subject: ack.subject,
+    text: ack.text,
+  })
+  if (!ackSent) {
+    console.error('Contact form: ack email failed for', lead.email)
   }
+
+  // Heavy lifting (AI brief, Notion row, internal email) continues after
+  // the response so the form stays fast.
+  runInBackground(processLead(lead, { toEmail, fromEmail }))
+
+  return res.status(200).json({ ok: true })
 }

@@ -122,7 +122,8 @@ export default function Contact() {
             <div className="cf-success" role="status">
               <h3>Thanks, that's in.</h3>
               <p>
-                We've received your request and will get back to you at {sentEmail} shortly.
+                We've received your request and sent a confirmation to {sentEmail} —
+                check your inbox for what happens next.
               </p>
               <button type="button" className="btn btn-ghost" onClick={() => setStatus('idle')} data-haptic="tap">
                 Send another request
