@@ -2,6 +2,8 @@
 
 Responds to every enquiry from the stackcorp.org contact form within seconds, and turns the internal notification into a pre-qualified, action-ready lead package.
 
+> Full narrative walkthrough and client-facing case study: [CASE_STUDY_SPEED_TO_LEAD.md](CASE_STUDY_SPEED_TO_LEAD.md)
+
 ## What happens on every submission
 
 ```
