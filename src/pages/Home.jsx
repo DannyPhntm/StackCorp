@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Hero3D from '../components/Hero3D.jsx'
-import Services from '../components/Services.jsx'
+import ServicesEditorial from '../components/ServicesEditorial.jsx'
 import WhoWeHelp from '../components/WhoWeHelp.jsx'
 import Work from '../components/Work.jsx'
 import StackScout from '../components/StackScout.jsx'
@@ -144,6 +144,7 @@ export default function Home({ playIntro = false, onIntroDone }) {
     const finishIntro = () => {
       if (introFinishedRef.current) return
       introFinishedRef.current = true
+      clearTimeout(introSafety)
       try {
         sessionStorage.setItem('sc_intro_seen_v2', '1')
       } catch {
@@ -163,6 +164,12 @@ export default function Home({ playIntro = false, onIntroDone }) {
     gsap.set(camera.position, { x: introStart.x, y: introStart.y, z: introStart.z })
     gsap.set(lookTarget, { x: introStart.lookX })
     if (model) gsap.set(model.rotation, { y: introStart.rotY })
+
+    // Hard safety net: on a struggling GPU the page can drop to a few FPS and
+    // GSAP's lag smoothing stretches the 2.2s dolly into a near-permanent black
+    // veil (the "intro disappeared" hang). Whatever happens, release the page.
+    // finishIntro is idempotent, so the timeline's own onComplete stays a no-op.
+    const introSafety = setTimeout(finishIntro, 4600)
 
     const introTl = gsap.timeline({
       defaults: { ease: 'power3.out' },
@@ -219,7 +226,7 @@ export default function Home({ playIntro = false, onIntroDone }) {
       )}
       <main ref={mainRef} className="home3d">
         <Hero3D />
-        <Services />
+        <ServicesEditorial />
         <WhoWeHelp />
         <Work />
         <StackScout />

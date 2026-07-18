@@ -1,24 +1,56 @@
 /*
  * StackCorp brand palette — CSS custom properties.
  * Source of truth for colors; do not hardcode hex values elsewhere.
+ *
+ * 2026-07 palette refresh:
+ *   Cool Steel #8FA1B8 · Deep Twilight #0A1960 · White #FFFFFF ·
+ *   Deep Accent Blue #05297D · Lavender #E1ECFF
+ * Legacy token names are kept (many files reference them) but now map
+ * onto the new palette so the whole site updates from here.
  */
 
 :root {
-  /* --sc-blue: primary accent — links, buttons, interactive highlights */
-  --sc-blue: #416D8A;
+  /* --sc-persian: primary accent — links, buttons, interactive highlights,
+     and the editorial services scene. A controlled deep blue, not a bright
+     full-screen blue. (Token name kept for compatibility.) */
+  --sc-persian: #05297D;
 
-  /* --sc-ice: light background — page backgrounds, light-mode sections */
-  --sc-ice: #F1F4FF;
+  /* Transparent accent steps — the ONLY approved lighter states of the accent.
+     Do not invent additional blue shades. */
+  --sc-accent-a08: rgba(5, 41, 125, 0.08);
+  --sc-accent-a15: rgba(5, 41, 125, 0.15);
+  --sc-accent-a30: rgba(5, 41, 125, 0.3);
+  --sc-accent-a65: rgba(5, 41, 125, 0.65);
 
-  /* --sc-mist: light background alt — subtle section dividers, secondary light bg */
+  /* --sc-twilight: deep base — dark surfaces are mixed from this, not near-black teal */
+  --sc-twilight: #0A1960;
+
+  /* --sc-steel: supporting surfaces, secondary text, borders */
+  --sc-steel: #8FA1B8;
+
+  /* --sc-lavender: bright text on dark, light panels, visual pauses */
+  --sc-lavender: #E1ECFF;
+
+  /* --sc-white: pure white — headlines on vivid surfaces */
+  --sc-white: #FFFFFF;
+
+  /* ---- Legacy names (kept so existing rules keep working) ---- */
+
+  /* --sc-blue: primary accent (now Persian Blue) */
+  --sc-blue: var(--sc-persian);
+
+  /* --sc-ice: light text/background tone (now Lavender) */
+  --sc-ice: var(--sc-lavender);
+
+  /* --sc-mist: light background alt — subtle dividers, secondary light bg */
   --sc-mist: #F0F1ED;
 
-  /* --sc-navy: dark background — dark-mode sections, header/footer, high-contrast text */
-  --sc-navy: #153243;
+  /* --sc-navy: dark background base (now Deep Twilight) */
+  --sc-navy: var(--sc-twilight);
 
-  /* --sc-stone: neutral — cards, borders, dividers, muted UI elements */
-  --sc-stone: #D8D9D3;
+  /* --sc-stone: neutral — cards, borders, dividers (now Cool Steel) */
+  --sc-stone: var(--sc-steel);
 
-  /* --sc-black: primary text — body copy, headings on light backgrounds */
+  /* --sc-black: primary text on light backgrounds */
   --sc-black: #20211C;
 }

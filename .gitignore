@@ -20,3 +20,8 @@ graphify-out/
 
 # macOS
 .DS_Store
+
+# Local business docs — contain client files and API-key exports; never commit
+Documents-StackCorp/
+# Word lock files
+~$*
