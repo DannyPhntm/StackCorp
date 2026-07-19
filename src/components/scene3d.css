@@ -119,32 +119,3 @@
     animation: none;
   }
 }
-
-/* 3D intro veil — opaque cover over first paint; GSAP fades its opacity as the
-   camera dollies the model into the hero pose. Sits above the navbar. */
-.intro-veil {
-  position: fixed;
-  inset: 0;
-  z-index: 2147483000; /* above navbar + all content */
-  background: #04070c; /* matches the site's cool near-black surface base */
-  display: grid;
-  place-items: center;
-  will-change: opacity;
-}
-
-.intro-veil-mark {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, rgba(120, 170, 255, 0.55), rgba(120, 170, 255, 0) 70%);
-  animation: intro-veil-pulse 1.4s ease-in-out infinite;
-}
-
-@keyframes intro-veil-pulse {
-  0%, 100% { transform: scale(0.7); opacity: 0.35; }
-  50% { transform: scale(1); opacity: 0.9; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .intro-veil-mark { animation: none; }
-}

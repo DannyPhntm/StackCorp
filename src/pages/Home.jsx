@@ -9,14 +9,9 @@ import FounderPreview from '../components/FounderPreview.jsx'
 import SmarterSystems from '../components/SmarterSystems.jsx'
 import Contact from '../components/Contact.jsx'
 
-export default function Home({ playIntro = false, onIntroDone }) {
+export default function Home() {
   const mainRef = useRef(null)
   const ctxRef = useRef(null)
-  const veilRef = useRef(null)
-  const introFinishedRef = useRef(false)
-  // Veil is present on the very first render (synchronous from the prop) so the
-  // hero never flashes before it. It unmounts once the dolly finishes.
-  const [veilOn, setVeilOn] = useState(playIntro)
 
   // Three.js (~600KB) is code-split via a dynamic import and mounted only after
   // first paint. A React.lazy/Suspense boundary was avoided on purpose: its
@@ -119,94 +114,10 @@ export default function Home({ playIntro = false, onIntroDone }) {
       window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true })
     }
 
-    // Direct path (reduced-motion is already returned above; this is the
-    // already-seen-this-session case): no intro, hero is live immediately.
-    if (!playIntro) {
-      buildScrollTimeline()
-      onIntroDone?.()
-      return
-    }
-
-    // ---- Intro path: dolly the camera from INTRO_START into the hero pose. ----
-    const prevOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-
-    // INTRO_START derived from the hero pose so it survives Scene3D pose tweaks:
-    // pulled back, offset left, slightly low, with a small extra turn to settle.
-    const introStart = {
-      x: heroCam.x - 3.0,
-      y: heroCam.y - 0.8,
-      z: heroCam.z + 3.5,
-      lookX: heroLookX - 1.2,
-      rotY: baseRotY + 0.5,
-    }
-
-    const finishIntro = () => {
-      if (introFinishedRef.current) return
-      introFinishedRef.current = true
-      clearTimeout(introSafety)
-      try {
-        sessionStorage.setItem('sc_intro_seen_v2', '1')
-      } catch {
-        /* private mode — replay next load, harmless */
-      }
-      document.body.style.overflow = prevOverflow
-      window.removeEventListener('wheel', onSkip)
-      window.removeEventListener('touchmove', onSkip)
-      window.removeEventListener('keydown', onSkip)
-      window.removeEventListener('pointerdown', onSkip)
-      setVeilOn(false)
-      buildScrollTimeline()
-      onIntroDone?.()
-    }
-
-    // Snap to the start pose while still hidden by the veil.
-    gsap.set(camera.position, { x: introStart.x, y: introStart.y, z: introStart.z })
-    gsap.set(lookTarget, { x: introStart.lookX })
-    if (model) gsap.set(model.rotation, { y: introStart.rotY })
-
-    // Hard safety net: on a struggling GPU the page can drop to a few FPS and
-    // GSAP's lag smoothing stretches the 2.2s dolly into a near-permanent black
-    // veil (the "intro disappeared" hang). Whatever happens, release the page.
-    // finishIntro is idempotent, so the timeline's own onComplete stays a no-op.
-    const introSafety = setTimeout(finishIntro, 4600)
-
-    const introTl = gsap.timeline({
-      defaults: { ease: 'power3.out' },
-      onComplete: finishIntro,
-    })
-    introTl
-      .to(camera.position, { x: heroCam.x, y: heroCam.y, z: heroCam.z, duration: 2.2 }, 0)
-      .to(lookTarget, { x: heroLookX, duration: 2.2 }, 0)
-    if (model) introTl.to(model.rotation, { y: baseRotY, duration: 2.2 }, 0)
-    if (veilRef.current) introTl.to(veilRef.current, { opacity: 0, duration: 1.15 }, 0.85)
-
-    // Skip affordance: any user input fast-forwards to the settled hero.
-    // progress(1) snaps the visuals but GSAP does not reliably fire onComplete
-    // when seeking, so call finishIntro directly — it is idempotent (guarded by
-    // introFinishedRef), so a later onComplete is a harmless no-op.
-    const onSkip = () => {
-      introTl.progress(1)
-      finishIntro()
-    }
-    window.addEventListener('wheel', onSkip, { passive: true })
-    window.addEventListener('touchmove', onSkip, { passive: true })
-    window.addEventListener('keydown', onSkip)
-    window.addEventListener('pointerdown', onSkip)
-  }, [playIntro, onIntroDone])
-
-  // If the 55MB GLB fails to load, don't strand the user on a black veil:
-  // drop the veil, unlock scroll, reveal the navbar. Page works without 3D.
-  const handleSceneError = useCallback(() => {
-    try {
-      sessionStorage.setItem('sc_intro_seen_v2', '1')
-    } catch {
-      /* ignore */
-    }
-    document.body.style.overflow = ''
-    setVeilOn(false)
-    onIntroDone?.()
-  }, [onIntroDone])
+    // The swipe IntroOverlay (mounted by App) covers the page while this loads,
+    // so the hero is simply live underneath once the model is ready.
+    buildScrollTimeline()
+  }, [])
 
   useEffect(
     () => () => {
@@ -218,12 +129,7 @@ export default function Home({ playIntro = false, onIntroDone }) {
 
   return (
     <>
-      {Scene3D && <Scene3D onReady={handleReady} onError={handleSceneError} />}
-      {veilOn && (
-        <div className="intro-veil" ref={veilRef} aria-hidden="true">
-          <div className="intro-veil-mark" />
-        </div>
-      )}
+      {Scene3D && <Scene3D onReady={handleReady} />}
       <main ref={mainRef} className="home3d">
         <Hero3D />
         <ServicesEditorial />
