@@ -176,7 +176,9 @@ export default function ServicesEditorial() {
             // fully assembled by the time the section pins — no blank arrival.
             start: 'top 45%',
             end: 'bottom bottom',
-            scrub: 0.7,
+            // Tight scrub so the scene answers the wheel almost immediately —
+            // higher values read as the page swallowing scroll input.
+            scrub: 0.35,
             onUpdate: (self) => {
               // Progress markers + counter follow the dominant stage.
               const t = self.progress * tl.duration()
@@ -201,7 +203,10 @@ export default function ServicesEditorial() {
           .to(tints[0], { autoAlpha: 0, duration: 0.55 }, 0.25)
           .to(texts[0], { autoAlpha: 1, y: 0, duration: 0.5 }, 0.25)
 
-        let pos = 1.5 // hold on stage 0 before the first transition
+        // Timing note: every timeline unit maps to real scroll distance, so
+        // holds are scroll the user spends with nothing moving. Keep them to
+        // short readable beats (~0.25u) — long holds read as a frozen page.
+        let pos = 1.1 // brief hold on stage 0 before the first transition
         for (let i = 1; i < stages.length; i++) {
           stageStarts.push(pos + 0.45)
           // Outgoing text lifts away first.
@@ -229,10 +234,10 @@ export default function ServicesEditorial() {
           if (i >= 2) tl.to(cards[i - 2], { autoAlpha: 0, duration: 0.5 }, pos + 0.25)
           // Incoming text.
           tl.to(texts[i], { autoAlpha: 1, y: 0, duration: 0.5 }, pos + 0.45)
-          pos += 1.8
+          pos += 1.25
         }
-        // Settle hold so the last stage breathes before unpinning.
-        tl.to({}, { duration: 0.6 }, pos)
+        // Short settle so the last stage lands before unpinning.
+        tl.to({}, { duration: 0.25 }, pos)
 
         ScrollTrigger.refresh()
       }, trackRef)

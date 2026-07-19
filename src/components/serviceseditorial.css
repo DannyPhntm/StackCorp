@@ -22,9 +22,11 @@
   );
 }
 
-/* Desktop pinned mode: the track supplies the scroll distance, the stage sticks. */
+/* Desktop pinned mode: the track supplies the scroll distance, the stage sticks.
+   Height is matched to the timeline's ~5.1 units (~39vh per unit): taller tracks
+   stretch the same choreography over dead scroll where nothing visibly moves. */
 .se-track.se-pinned {
-  height: 430vh;
+  height: 300vh;
 }
 
 .se-stage {
