@@ -1,339 +1,276 @@
-/* StackScout case study — premium, over the shared dark canvas. */
+/*
+ * StackScout — product section. Left: StorySection header + CTA (~42%).
+ * Right: a calm node-based workflow canvas (~58%) — rounded nodes, thin
+ * connectors, faint dot grid, restrained glow on the primary node only.
+ */
 
-.ss2 {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(30px, 4vw, 52px);
-}
-
-.ss2-eyebrow {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent-strong);
-  margin-bottom: 12px;
-}
-
-/* ---------- Problem + pull quote ---------- */
-.ss2-top {
+.ss3 .container {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: clamp(20px, 3vw, 44px);
-  align-items: center;
+  grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
+  grid-template-rows: auto auto;
+  column-gap: clamp(36px, 5vw, 84px);
 }
 
-.ss2-problem p {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: var(--text-mid);
-  max-width: 52ch;
+.ss3 .story-head {
+  grid-column: 1;
+  grid-row: 1;
+  margin-bottom: clamp(18px, 2.4vw, 28px);
 }
 
-.ss2-quote {
-  padding-left: clamp(18px, 2vw, 26px);
-  border-left: 2px solid color-mix(in srgb, var(--accent-strong), transparent 55%);
-}
-
-.ss2-quote p {
-  font-family: var(--font-display);
-  font-size: clamp(1.15rem, 1.8vw, 1.55rem);
-  font-weight: 500;
-  line-height: 1.3;
-  color: var(--text-hi);
-}
-
-.ss2-quote strong {
-  color: var(--accent-strong);
-  font-weight: 600;
-}
-
-/* ---------- Pipeline ---------- */
-.ss2-flow {
-  position: relative;
-}
-
-.ss2-pipe {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.ss2-node {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: clamp(16px, 1.6vw, 22px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--surface-2), transparent 36%);
-  transition:
-    border-color 0.28s var(--ease-out),
-    transform 0.28s var(--ease-out),
-    background-color 0.28s var(--ease-out);
-}
-
-.ss2-node:hover {
-  transform: translateY(-4px);
-  border-color: color-mix(in srgb, var(--accent-strong), transparent 45%);
-  background: color-mix(in srgb, var(--surface-2), transparent 22%);
-}
-
-/* Connector between stages. */
-.ss2-node:not(:first-child)::before {
-  content: '';
-  position: absolute;
-  top: 44px;
-  right: 100%;
-  width: 12px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent-strong));
-}
-
-.ss2-node-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 11px;
-  color: var(--logo-blue-hi);
-  background: color-mix(in srgb, var(--logo-blue), transparent 82%);
-  border: 1px solid color-mix(in srgb, var(--accent-strong), transparent 62%);
-}
-
-.ss2-node-icon svg {
-  width: 22px;
-  height: 22px;
-}
-
-.ss2-node-step {
-  margin-top: 8px;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--text-low);
-  font-variant-numeric: tabular-nums;
-}
-
-.ss2-node-label {
-  font-family: var(--font-display);
-  font-size: 1.14rem;
-  font-weight: 600;
-  color: var(--text-hi);
-}
-
-.ss2-node-tool {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--accent-strong);
-}
-
-.ss2-node-body {
-  font-size: 0.86rem;
-  line-height: 1.4;
-  color: var(--text-mid);
-  margin-top: 2px;
-}
-
-/* ---------- What it does + Stack ---------- */
-.ss2-cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.ss2-panel {
-  padding: clamp(20px, 2.4vw, 30px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--surface-2), transparent 32%);
-}
-
-.ss2-panel h3 {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: var(--text-hi);
-  margin-bottom: 16px;
-}
-
-.ss2-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.ss2-list li {
-  position: relative;
-  padding-left: 22px;
-  font-size: 0.98rem;
-  line-height: 1.4;
-  color: var(--text-hi);
-}
-
-.ss2-list li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.5em;
-  width: 8px;
-  height: 8px;
-  rotate: 45deg;
-  border-radius: 2px;
-  background: linear-gradient(135deg, var(--logo-blue-hi), var(--logo-blue-deep));
-}
-
-.ss2-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.ss2-chips li {
-  font-size: 0.84rem;
-  font-weight: 500;
-  color: var(--text-hi);
-  padding: 7px 14px;
-  border: 1px solid color-mix(in srgb, var(--accent-strong), transparent 60%);
-  border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--logo-blue), transparent 88%);
-}
-
-.ss2-target {
-  margin-top: 16px;
-  font-size: 0.88rem;
-  line-height: 1.45;
-  color: var(--text-mid);
-}
-
-/* ---------- Status ---------- */
-.ss2-status {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.ss2-status-col {
-  padding: clamp(18px, 2vw, 26px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--surface-2), transparent 36%);
-}
-
-.ss2-status-col--built {
-  border-color: color-mix(in srgb, var(--accent-strong), transparent 55%);
-}
-
-.ss2-status-head {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--text-hi);
-  margin-bottom: 14px;
-}
-
-.ss2-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--text-low);
-  flex-shrink: 0;
-}
-
-.ss2-dot--on {
-  background: var(--logo-blue-hi);
-  box-shadow: 0 0 12px var(--logo-blue);
-}
-
-.ss2-status-col ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 18px;
-}
-
-.ss2-status-col li {
-  font-size: 0.94rem;
-  color: var(--text-mid);
-}
-
-.ss2-status-col--built li {
-  color: var(--text-hi);
-}
-
-/* ---------- Value + CTA ---------- */
-.ss2-value {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: clamp(20px, 3vw, 44px);
-  align-items: center;
-  padding: clamp(24px, 3vw, 38px);
-  border: 1px solid color-mix(in srgb, var(--accent-strong), transparent 55%);
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--surface-2), transparent 26%);
-}
-
-.ss2-value h3 {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: var(--text-hi);
-  margin-bottom: 16px;
-}
-
-.ss2-list--value {
-  gap: 8px;
-}
-
-.ss2-cta {
+.ss3-actions {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px;
+  gap: 14px;
 }
 
-.ss2-cta p {
-  font-family: var(--font-display);
-  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+/* Honest framing, kept quiet — see design lessons. */
+.ss3-status {
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--text-low);
+}
+
+/* ---------- Workflow canvas ---------- */
+
+.ss3-canvas {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  position: relative;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Near-opaque navy base: the fixed 3D model must stay atmosphere around the
+     canvas, never compete with the nodes inside it (see design lessons). */
+  background-color: rgba(6, 12, 36, 0.94);
+  background-image:
+    radial-gradient(110% 90% at 22% 0%, var(--sc-accent-a15) 0%, transparent 55%),
+    linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.02));
+  padding: clamp(28px, 3.4vw, 52px) clamp(22px, 3vw, 48px);
+  overflow: hidden;
+}
+
+/* Faint technical dot grid, fading toward the edges. */
+.ss3-canvas-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(225, 236, 255, 0.1) 1px, transparent 1.4px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(ellipse 85% 80% at 50% 45%, black 35%, transparent 90%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 45%, black 35%, transparent 90%);
+}
+
+.ss3-flow {
+  position: relative;
+  list-style: none;
+  max-width: 420px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.ss3-step {
+  position: relative;
+  z-index: 1; /* node cards stay above the travelling signal dot */
+}
+
+/* One-shot signal: a single dot travels the chain once after the nodes reveal,
+   then the canvas settles static. Runs beneath the node cards (they are
+   positioned later siblings), so it reads through the connector gaps. `top`
+   animation on one 6px absolutely-positioned element for a single 2s pass is
+   deliberate — nothing else in the layout depends on it. */
+.ss3-pulse {
+  position: absolute;
+  left: 50%;
+  top: 2%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: var(--accent-strong);
+  box-shadow: 0 0 10px var(--sc-accent-a65);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  animation: ss3-signal 2s ease-in-out 1.1s forwards;
+}
+
+@keyframes ss3-signal {
+  0% {
+    top: 2%;
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  88% {
+    opacity: 0.85;
+  }
+  100% {
+    top: 98%;
+    opacity: 0;
+  }
+}
+
+/* Thin connector rising into each node from the previous one. Part of the
+   node's own reveal, so the chain illuminates in sequence as steps enter. */
+.ss3-step + .ss3-step {
+  margin-top: 20px;
+}
+
+.ss3-step + .ss3-step::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 1px;
+  height: 20px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent-strong), transparent 70%),
+    color-mix(in srgb, var(--accent-strong), transparent 35%)
+  );
+}
+
+/* Gentle alternating offset so the chain reads as a builder canvas, not a
+   list. Applied to the inner node (margins), never the li — the li's
+   transform belongs to the scroll reveal. */
+.ss3-step:nth-child(odd) .ss3-node {
+  margin-right: 44px;
+}
+
+.ss3-step:nth-child(even) .ss3-node {
+  margin-left: 44px;
+}
+
+.ss3-node {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition:
+    transform 0.25s var(--ease-out),
+    border-color 0.25s var(--ease-out),
+    background-color 0.25s var(--ease-out);
+}
+
+.ss3-node:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent-strong), transparent 50%);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.ss3-node:hover .ss3-node-label {
+  color: var(--text-mid);
+}
+
+/* Primary node — the one restrained glow in the canvas. */
+.ss3-step.is-primary .ss3-node {
+  border-color: color-mix(in srgb, var(--accent-strong), transparent 40%);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 0 0 1px var(--sc-accent-a15),
+    0 12px 34px var(--sc-accent-a30);
+}
+
+.ss3-node-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--sc-accent-a30);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: color-mix(in srgb, var(--sc-lavender), transparent 10%);
+}
+
+.ss3-node-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.ss3-node-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ss3-node-title {
+  font-size: 0.97rem;
   font-weight: 600;
-  line-height: 1.2;
   color: var(--text-hi);
+  line-height: 1.25;
+}
+
+.ss3-node-label {
+  font-size: 0.8rem;
+  color: var(--text-low);
+  line-height: 1.35;
+  transition: color 0.25s var(--ease-out);
 }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 900px) {
-  .ss2-top,
-  .ss2-cols,
-  .ss2-status,
-  .ss2-value {
-    grid-template-columns: 1fr;
+
+@media (max-width: 1020px) {
+  .ss3 .container {
+    display: block;
   }
 
-  .ss2-quote {
-    border-left: 0;
-    padding-left: 0;
-    border-top: 2px solid color-mix(in srgb, var(--accent-strong), transparent 55%);
-    padding-top: 16px;
+  .ss3-canvas {
+    margin-top: 40px;
   }
 
-  /* Pipeline goes vertical. */
-  .ss2-pipe {
-    grid-template-columns: 1fr;
-    gap: 10px;
+  .ss3-flow {
+    max-width: 440px;
   }
 
-  .ss2-node:not(:first-child)::before {
-    top: -10px;
-    left: 34px;
-    right: auto;
-    width: 1px;
-    height: 10px;
-    background: linear-gradient(180deg, transparent, var(--accent-strong));
+  /* Simplified straight chain on stacked layouts; no signal pass. */
+  .ss3-step:nth-child(odd) .ss3-node,
+  .ss3-step:nth-child(even) .ss3-node {
+    margin-inline: 0;
+  }
+
+  .ss3-pulse {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .ss3-canvas {
+    padding: 22px 16px;
+    border-radius: 18px;
+  }
+
+  .ss3-step + .ss3-step {
+    margin-top: 16px;
+  }
+
+  .ss3-step + .ss3-step::before {
+    height: 16px;
+  }
+
+  .ss3-node {
+    padding: 12px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ss3-node,
+  .ss3-node:hover {
+    transform: none;
+    transition: none;
+  }
+
+  .ss3-node-label {
+    transition: none;
   }
 }

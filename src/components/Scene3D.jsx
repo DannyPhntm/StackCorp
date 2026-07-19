@@ -80,7 +80,11 @@ export default function Scene3D({ onReady, onError }) {
       antialias: true,
       powerPreference: 'high-performance',
     })
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+    // DPR capped at 1.5: at retina DPR 2 the full-screen canvas renders ~4x the
+    // pixels of DPR 1 every frame, which is the single biggest GPU cost on
+    // integrated graphics — and behind the page's dimming veil the extra
+    // sharpness is invisible. 1.5 keeps edges clean at ~44% less fill.
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5))
     renderer.setSize(mount.clientWidth, mount.clientHeight)
     renderer.setClearColor(0x000000, 0) // transparent
     renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -194,7 +198,14 @@ export default function Scene3D({ onReady, onError }) {
       },
     )
 
+    // The services scene scrubs the canvas root to autoAlpha 0 (inline
+    // visibility:hidden) while its solid backdrop dominates — skip the WebGL
+    // render entirely there instead of drawing frames nobody can see. Reading
+    // the inline style is a plain string check (no layout, no getComputedStyle).
+    const rootEl = mount.parentElement
+
     const renderFrame = () => {
+      if (rootEl && rootEl.style.visibility === 'hidden') return
       const t = (performance.now() - startTime) / 1000
       if (model && !reduce) {
         // Calm idle float — never a spin.

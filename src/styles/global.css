@@ -6,9 +6,9 @@
  */
 
 :root {
-  /* Surfaces: deep navy → near-black charcoal, darkest to lightest. Blended
-     with a cool near-black (#04070c) for a richer, more cinematic base than
-     flat navy — the whole site reads darker and deeper. */
+  /* Surfaces: deep twilight indigo → richer as they rise, darkest to lightest.
+     Blended with a cool near-black (#04070c) so the base stays cinematic but
+     carries real colour — deep twilight rather than flat charcoal. */
   --surface-0: color-mix(in srgb, var(--sc-navy), #04070c 68%);
   --surface-1: color-mix(in srgb, var(--sc-navy), #04070c 48%);
   --surface-2: color-mix(in srgb, var(--sc-navy), #04070c 20%);
@@ -20,9 +20,11 @@
   --text-mid: color-mix(in srgb, var(--sc-ice), var(--sc-navy) 13%);
   --text-low: color-mix(in srgb, var(--sc-ice), var(--sc-navy) 30%);
 
-  /* Accent */
+  /* Accent — deep blue #05297D. The raw hue is very dark, so the "strong"
+     variant is lifted well toward lavender to hold AA contrast as small text
+     on the twilight surfaces. */
   --accent: var(--sc-blue);
-  --accent-strong: color-mix(in srgb, var(--sc-blue), var(--sc-ice) 32%);
+  --accent-strong: color-mix(in srgb, var(--sc-blue), var(--sc-ice) 58%);
 
   /* Borders */
   --line: color-mix(in srgb, var(--sc-stone), transparent 82%);
