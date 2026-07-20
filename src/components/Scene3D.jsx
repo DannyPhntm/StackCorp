@@ -71,8 +71,11 @@ export default function Scene3D({ onReady, onError }) {
     // model slides right-of-centre and a touch lower while its front-on angle is
     // preserved — panning (not re-aiming) avoids tilting the view into a top-down
     // 3/4 that reads less like the logo face.
-    camera.position.set(isMobile ? 0 : -1.15, isMobile ? 0.5 : 0.85, isMobile ? 7.1 : 5.6)
-    const lookTarget = new THREE.Vector3(isMobile ? 0 : -1.15, isMobile ? -1.05 : 0.45, 0)
+    // Mobile: centre the model as a present backdrop that the raised hero copy
+    // overlaps (logo behind the text from the first frame), a touch closer than
+    // before so it fills without being pushed into the upper-empty zone.
+    camera.position.set(isMobile ? 0 : -1.15, isMobile ? 0.15 : 0.85, isMobile ? 6.7 : 5.6)
+    const lookTarget = new THREE.Vector3(isMobile ? 0 : -1.15, isMobile ? -0.15 : 0.45, 0)
     camera.lookAt(lookTarget)
 
     const renderer = new THREE.WebGLRenderer({

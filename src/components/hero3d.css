@@ -105,14 +105,16 @@
   background: linear-gradient(180deg, var(--line-strong), transparent);
 }
 
-/* On phones the model sits center; anchor the copy to the lower-left as an
-   intentional editorial column — left-aligned, using the full width within the
-   gutters, with both CTAs sharing one row. Not a centred, shrunk desktop. */
+/* On phones the model is a centred backdrop; the copy is an intentional
+   left-aligned editorial column that starts high — right under the navbar — so
+   there's no dead space above the title and the model reads as sitting *behind*
+   the text from the first frame (the immersive, desktop-like overlap). */
 @media (max-width: 760px) {
   .hero3d {
-    align-items: flex-end;
-    padding-top: 0;
-    padding-bottom: clamp(26px, 6vh, 60px);
+    align-items: flex-start;
+    /* Start the title just below the navbar (+ iOS safe area), no empty gap. */
+    padding-top: calc(clamp(88px, 13vh, 116px) + env(safe-area-inset-top));
+    padding-bottom: clamp(20px, 4vh, 40px);
     /* dvh keeps the section exactly one viewport tall under mobile browser
        chrome; svh guards the min so nothing is cut off. */
     min-height: 100svh;
@@ -122,7 +124,7 @@
     max-width: 100%;
     align-items: flex-start;
     text-align: left;
-    gap: clamp(14px, 2.6vh, 24px);
+    gap: clamp(16px, 2.8vh, 26px);
   }
 
   .hero3d-brand {
