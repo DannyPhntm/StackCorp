@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import '@fontsource-variable/outfit'
 import './styles/fonts.css'
 import './styles/brand.css'
 import './styles/global.css'

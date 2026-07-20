@@ -54,8 +54,8 @@
   font-family: var(--font-display);
   font-size: clamp(2.6rem, 4.6vw, 4.2rem);
   font-weight: 600;
-  letter-spacing: 0.014em;
-  line-height: 1.02;
+  letter-spacing: -0.015em;
+  line-height: 1;
   margin-top: 10px;
   color: var(--text-hi);
 }
@@ -230,7 +230,7 @@
   font-size: clamp(3.4rem, 20vw, 5.6rem);
   font-weight: 600;
   line-height: 0.9;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.005em;
   color: color-mix(in srgb, var(--accent-strong), transparent 12%);
 }
 
@@ -238,8 +238,8 @@
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 9vw, 3rem);
   font-weight: 600;
-  letter-spacing: 0.014em;
-  line-height: 1.02;
+  letter-spacing: -0.015em;
+  line-height: 1;
   margin-top: 12px;
   color: var(--text-hi);
 }
@@ -283,7 +283,7 @@
   font-family: var(--font-display);
   font-size: 1.6rem;
   font-weight: 600;
-  letter-spacing: 0.014em;
+  letter-spacing: -0.01em;
 }
 
 .process-list p {

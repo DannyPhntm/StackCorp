@@ -1,31 +1,28 @@
 /*
- * Melodrama — StackCorp brand display font.
- * Licensed via Fontshare (Indian Type Foundry). Self-hosted woff2 only;
- * source files live in src/assets/fonts/Fonts/, web subset copied to
- * src/assets/fonts/melodrama/. Used for display text (headings, hero,
- * section titles); body copy stays on Outfit for readability.
+ * StackCorp type foundation — two self-hosted Fontshare (Indian Type Foundry)
+ * families, variable woff2 (one file each, full weight range):
+ *
+ *   Recia   — display serif. Headings, hero, section/card/case-study titles,
+ *             founder names. The editorial voice. Never body or small UI text.
+ *   Supreme — grotesque sans. Everything else: body, nav, buttons, labels,
+ *             forms, captions, metrics, numbers. The readable interface voice.
+ *
+ * Source files live in src/assets/fonts/{recia,supreme}/. Wired to the CSS
+ * variables --font-display (Recia) and --font-sans (Supreme) in global.css.
  */
 
 @font-face {
-  font-family: 'Melodrama';
-  src: url('../assets/fonts/melodrama/Melodrama-Regular.woff2') format('woff2');
-  font-weight: 400;
+  font-family: 'Recia';
+  src: url('../assets/fonts/recia/Recia-Variable.woff2') format('woff2');
+  font-weight: 300 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Melodrama';
-  src: url('../assets/fonts/melodrama/Melodrama-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Melodrama';
-  src: url('../assets/fonts/melodrama/Melodrama-Semibold.woff2') format('woff2');
-  font-weight: 600;
+  font-family: 'Supreme';
+  src: url('../assets/fonts/supreme/Supreme-Variable.woff2') format('woff2');
+  font-weight: 100 800;
   font-style: normal;
   font-display: swap;
 }

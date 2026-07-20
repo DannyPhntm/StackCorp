@@ -38,8 +38,8 @@
   gap: 10px;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1.18rem;
-  letter-spacing: 0.02em;
+  font-size: 1.24rem;
+  letter-spacing: -0.01em;
   margin-right: auto;
 }
 
@@ -47,8 +47,11 @@
   display: flex;
   align-items: center;
   gap: 26px;
-  font-size: 0.92rem;
+  /* Supreme at a slightly larger size + medium weight so links read clearly and
+     never thin against the dark bar. */
+  font-size: 0.95rem;
   font-weight: 500;
+  letter-spacing: 0;
   color: var(--text-mid);
 }
 
