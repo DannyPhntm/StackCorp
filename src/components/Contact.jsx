@@ -120,7 +120,10 @@ export default function Contact() {
         <Reveal delay={0.12} className="contact-form card">
           {status === 'success' ? (
             <div className="cf-success" role="status">
-              <h3>Thanks, that's in.</h3>
+              <h3>
+                <span className="cf-success-check" aria-hidden="true">✓</span> Audit request sent
+                successfully.
+              </h3>
               <p>
                 We've received your request and will get back to you at {sentEmail} shortly.
               </p>

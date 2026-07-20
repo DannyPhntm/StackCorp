@@ -93,14 +93,21 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Please enter a valid email address.' })
   }
 
-  const apiKey = process.env.RESEND_API_KEY
-  const toEmail = process.env.CONTACT_TO_EMAIL
-  const fromEmail = process.env.CONTACT_FROM_EMAIL
+  // Trim whitespace/newlines and strip accidental surrounding quotes — a
+  // trailing "\n" or wrapping quotes in the env value silently corrupts the
+  // Bearer header and makes Resend reject an otherwise-valid key with 401.
+  const cleanEnv = (v) =>
+    typeof v === 'string' ? v.trim().replace(/^['"]|['"]$/g, '').trim() : v
+  const apiKey = cleanEnv(process.env.RESEND_API_KEY)
+  const toEmail = cleanEnv(process.env.CONTACT_TO_EMAIL)
+  const fromEmail = cleanEnv(process.env.CONTACT_FROM_EMAIL)
 
-  // Diagnostic detail is returned to the client only when this internal header
-  // is present (normal browsers never send it), so end users still see a clean
-  // friendly message while we can read the true Resend error from a curl.
-  const diag = req.headers['x-sc-diag'] === '1'
+  // A key that is absent, a leftover placeholder, or not in Resend's `re_`
+  // format will always 401 — surface that as a clear config error rather than
+  // a generic "try again" so it is obvious the key needs setting.
+  const keyLooksValid = typeof apiKey === 'string' && /^re_[A-Za-z0-9_-]+$/.test(apiKey)
+
+  // Short id to correlate this request's log lines in the Vercel function logs.
   const reqId = Math.random().toString(36).slice(2, 8)
 
   console.log(`[contact ${reqId}] request received`, {
@@ -109,21 +116,16 @@ export default async function handler(req, res) {
     from: fromEmail || null,
   })
 
-  if (!apiKey || !toEmail || !fromEmail) {
-    console.error(`[contact ${reqId}] missing config`, {
+  if (!apiKey || !toEmail || !fromEmail || !keyLooksValid) {
+    // Full state goes to the server logs only — never to the client response.
+    console.error(`[contact ${reqId}] missing/invalid config`, {
       RESEND_API_KEY: Boolean(apiKey),
+      keyLooksValid,
       CONTACT_TO_EMAIL: Boolean(toEmail),
       CONTACT_FROM_EMAIL: Boolean(fromEmail),
     })
     return res.status(500).json({
       error: 'The contact form is not fully set up yet. Please email us directly in the meantime.',
-      ...(diag && {
-        detail: {
-          RESEND_API_KEY: Boolean(apiKey),
-          CONTACT_TO_EMAIL: Boolean(toEmail),
-          CONTACT_FROM_EMAIL: Boolean(fromEmail),
-        },
-      }),
     })
   }
   console.log(`[contact ${reqId}] validation passed`)
@@ -179,7 +181,6 @@ export default async function handler(req, res) {
       })
       return res.status(502).json({
         error: 'We could not send your message right now. Please try again shortly.',
-        ...(diag && { detail: { status: resendRes.status, body: parsed } }),
       })
     }
 
@@ -193,7 +194,6 @@ export default async function handler(req, res) {
     })
     return res.status(500).json({
       error: 'Something went wrong. Please try again shortly.',
-      ...(diag && { detail: { name: err?.name, message: err?.message } }),
     })
   }
 }
