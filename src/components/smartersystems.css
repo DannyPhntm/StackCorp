@@ -116,3 +116,135 @@
     grid-column: span 1;
   }
 }
+
+/* ---------- Mobile horizontal swipe carousel (≤640px) ---------- */
+
+.sys-carousel {
+  margin-top: clamp(28px, 7vw, 40px);
+}
+
+.sys-track {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  /* Bleed to the viewport edges (cancel the container gutter, then re-pad) so a
+     slice of the next card peeks at the edge — the swipe affordance. */
+  margin-inline: calc(-1 * clamp(20px, 4.5vw, 48px));
+  padding-inline: clamp(20px, 4.5vw, 48px);
+  scroll-padding-inline: clamp(20px, 4.5vw, 48px);
+}
+
+.sys-track::-webkit-scrollbar {
+  display: none;
+}
+
+.sys-slide {
+  flex: 0 0 84%;
+  max-width: 360px;
+  scroll-snap-align: center;
+  list-style: none;
+}
+
+.sys-card {
+  height: 100%;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  /* Glass surface: translucent so the backdrop reads through, plus a faint
+     corner sheen — kept as a static gradient (no backdrop-filter) for speed. */
+  background:
+    radial-gradient(
+      120% 90% at 100% 0,
+      color-mix(in srgb, var(--logo-blue), transparent 84%),
+      transparent 58%
+    ),
+    color-mix(in srgb, var(--surface-2), transparent 26%);
+  position: relative;
+  overflow: hidden;
+}
+
+.sys-card-index {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1;
+  color: color-mix(in srgb, var(--accent-strong), transparent 12%);
+  font-variant-numeric: tabular-nums;
+}
+
+.sys-card-text {
+  margin-top: auto;
+}
+
+.sys-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.32rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--text-hi);
+  margin-bottom: 8px;
+}
+
+.sys-card p {
+  font-size: 0.96rem;
+  line-height: 1.5;
+  color: var(--text-mid);
+}
+
+.sys-dots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 18px;
+}
+
+.sys-dot {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.sys-dot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  translate: -50% -50%;
+  rotate: 45deg;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--text-hi), transparent 62%);
+  transition:
+    background-color 0.3s var(--ease-out),
+    scale 0.3s var(--ease-out);
+}
+
+.sys-dot.is-active::before {
+  background: var(--accent-strong);
+  scale: 1.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sys-track {
+    scroll-behavior: auto;
+  }
+  .sys-dot::before {
+    transition: none;
+  }
+}

@@ -37,7 +37,11 @@ export default function Home() {
   const handleReady = useCallback(async ({ camera, layers, lookTarget, model }) => {
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
     if (reduce || !mainRef.current) return
-    const isMobile = window.matchMedia?.('(max-width: 760px)').matches ?? false
+    // Mobile: no scroll-driven camera at all. The GSAP scrub introduced a
+    // perceptible lag on the fixed canvas; instead the model stays at its hero
+    // pose and Scene3D applies a single CSS scale on scroll (see Scene3D's
+    // IntersectionObserver). Desktop keeps the full camera choreography.
+    if (window.matchMedia?.('(max-width: 760px)').matches) return
 
     const { default: gsap } = await import('gsap')
     const { ScrollTrigger } = await import('gsap/ScrollTrigger')
@@ -75,24 +79,6 @@ export default function Home() {
             scrub: 1,
           },
         })
-
-        // Mobile: the model is an ambient backdrop behind the page, not a
-        // scene-by-scene story (mobile services/process are their own scenes).
-        // So drop the aggressive per-pose dolly (a 7.1→4.7 zoom read as the logo
-        // lunging at you) for one subtle drift across the whole scroll — a small
-        // rise, a barely-perceptible move closer, and a gentle turn. Transform
-        // only, no scale/filter. Desktop keeps the full choreography below.
-        if (isMobile) {
-          tl.fromTo(
-            camera.position,
-            { x: heroCam.x, y: heroCam.y, z: heroCam.z },
-            { x: heroCam.x, y: heroCam.y + 0.7, z: heroCam.z - 0.6, duration: 5 },
-            0,
-          )
-          if (model) tl.to(model.rotation, { y: baseRotY + 0.18, duration: 5 }, 0)
-          ScrollTrigger.refresh()
-          return
-        }
 
         const openTo = (v, pos) => {
           if (hasLayers) tl.to(spread, { v, onUpdate: applySpread }, pos)

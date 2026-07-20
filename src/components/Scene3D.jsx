@@ -36,9 +36,33 @@ const MODEL_ROT = { x: 0, y: -1.42, z: 0.05 }
  */
 export default function Scene3D({ onReady, onError }) {
   const mountRef = useRef(null)
+  const rootRef = useRef(null)
   const [loaded, setLoaded] = useState(false)
   const [progress, setProgress] = useState(0)
   const [failed, setFailed] = useState(false)
+
+  // Mobile background-logo motion: a single scale step, not a continuous
+  // scroll-mapped zoom. An IntersectionObserver watches the hero — while the
+  // hero is (nearly) fully in view the canvas rests at scale 1; once the user
+  // scrolls away it animates ONCE to a slightly larger scale (CSS transition)
+  // and locks there, returning to 1 only when the hero is fully visible again.
+  // No per-scroll work, no state updates — the class toggle drives a GPU-only
+  // transform. Desktop/reduced-motion never enlarge (handled in CSS + guard).
+  useEffect(() => {
+    const isMobile = window.matchMedia?.('(max-width: 760px)').matches ?? false
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+    const root = rootRef.current
+    const hero = document.getElementById('top')
+    if (!isMobile || reduce || !root || !hero) return
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        root.classList.toggle('is-scrolled', entry.intersectionRatio < 0.9)
+      },
+      { threshold: [0, 0.9, 1] },
+    )
+    io.observe(hero)
+    return () => io.disconnect()
+  }, [])
 
   useEffect(() => {
     const mount = mountRef.current
@@ -287,7 +311,7 @@ export default function Scene3D({ onReady, onError }) {
   }, [onReady, onError])
 
   return (
-    <div className="scene3d" aria-hidden="true">
+    <div className="scene3d" aria-hidden="true" ref={rootRef}>
       <div className="scene3d-canvas" ref={mountRef} />
       {!loaded && !failed && (
         <div className="scene3d-loader">

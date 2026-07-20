@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import StorySection from './StorySection.jsx'
 import './smartersystems.css'
@@ -43,8 +44,85 @@ function FlowDiagram() {
   )
 }
 
+/*
+ * Mobile: a horizontal swipe carousel — one use case per card, short cards with
+ * a peek of the next to signal swipeability (App Store / Airbnb onboarding
+ * feel). Native scroll-snap does the swiping (no JS gesture handling, no scroll
+ * hijack); an IntersectionObserver on the slides tracks the active dot without
+ * per-frame work, and the dots scroll the track on tap.
+ */
+function SystemsCarousel() {
+  const trackRef = useRef(null)
+  const [active, setActive] = useState(0)
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    const slides = [...track.querySelectorAll('.sys-slide')]
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(Number(e.target.dataset.i))
+        })
+      },
+      { root: track, threshold: 0.6 },
+    )
+    slides.forEach((s) => io.observe(s))
+    return () => io.disconnect()
+  }, [])
+
+  const goTo = (i) => {
+    const track = trackRef.current
+    const slide = track?.children[i]
+    if (!slide) return
+    const left = slide.offsetLeft - (track.clientWidth - slide.clientWidth) / 2
+    track.scrollTo({ left, behavior: 'smooth' })
+  }
+
+  return (
+    <div className="sys-carousel">
+      <ul className="sys-track" ref={trackRef}>
+        {tiles.map((t, i) => (
+          <li className="sys-slide" key={t.key} data-i={i}>
+            <div className="sys-card">
+              <span className="sys-card-index">{String(i + 1).padStart(2, '0')}</span>
+              <div className="sys-card-text">
+                <h3>{t.title}</h3>
+                <p>{t.body}</p>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <div className="sys-dots" role="tablist" aria-label="Use cases">
+        {tiles.map((t, i) => (
+          <button
+            type="button"
+            key={t.key}
+            className={`sys-dot ${i === active ? 'is-active' : ''}`}
+            role="tab"
+            aria-selected={i === active}
+            aria-label={t.title}
+            onClick={() => goTo(i)}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+const query = (q) => (typeof window !== 'undefined' ? window.matchMedia(q) : null)
+
 export default function SmarterSystems() {
   const reduce = useReducedMotion()
+  const [mobile, setMobile] = useState(() => query('(max-width: 640px)')?.matches ?? false)
+
+  useEffect(() => {
+    const mq = query('(max-width: 640px)')
+    const onChange = () => setMobile(mq.matches)
+    mq?.addEventListener('change', onChange)
+    return () => mq?.removeEventListener('change', onChange)
+  }, [])
 
   return (
     <StorySection
@@ -53,26 +131,30 @@ export default function SmarterSystems() {
       title="Smarter systems. Real business use."
       sub="You may not need “AI”. You need less manual work and a clearer picture of what's happening. Here's where better systems actually help."
     >
-      <div className="ss-bento">
-        {tiles.map((t, i) => (
-          <motion.div
-            key={t.key}
-            className={`ss-tile ${t.span === 'lead' ? 'ss-tile--lead' : ''} ${
-              t.span === 'wide' ? 'ss-tile--wide' : ''
-            }`}
-            initial={reduce ? false : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.5, delay: (i % 3) * 0.06, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {t.span === 'lead' && <FlowDiagram />}
-            <div className="ss-tile-text">
-              <h3>{t.title}</h3>
-              <p>{t.body}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+      {mobile ? (
+        <SystemsCarousel />
+      ) : (
+        <div className="ss-bento">
+          {tiles.map((t, i) => (
+            <motion.div
+              key={t.key}
+              className={`ss-tile ${t.span === 'lead' ? 'ss-tile--lead' : ''} ${
+                t.span === 'wide' ? 'ss-tile--wide' : ''
+              }`}
+              initial={reduce ? false : { opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.5, delay: (i % 3) * 0.06, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {t.span === 'lead' && <FlowDiagram />}
+              <div className="ss-tile-text">
+                <h3>{t.title}</h3>
+                <p>{t.body}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
     </StorySection>
   )
 }

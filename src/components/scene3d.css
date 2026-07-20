@@ -51,6 +51,29 @@
   inset: 0;
 }
 
+/* Mobile background-logo motion: one GPU-only scale step, toggled by the
+   IntersectionObserver in Scene3D (never per-scroll). transform + will-change
+   only; the transition makes the 1→1.1 change animate once and lock. Also
+   dialled back a touch in opacity so it supports the content, not competes. */
+@media (max-width: 760px) {
+  .scene3d-canvas {
+    opacity: 0.85;
+    transform-origin: 50% 44%;
+    transition: transform 0.85s var(--ease-out);
+    will-change: transform;
+  }
+
+  .scene3d.is-scrolled .scene3d-canvas {
+    transform: scale(1.1);
+  }
+}
+
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .scene3d.is-scrolled .scene3d-canvas {
+    transform: none;
+  }
+}
+
 .scene3d-canvas canvas {
   display: block;
   width: 100% !important;
