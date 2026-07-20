@@ -97,12 +97,36 @@ export default async function handler(req, res) {
   const toEmail = process.env.CONTACT_TO_EMAIL
   const fromEmail = process.env.CONTACT_FROM_EMAIL
 
+  // Diagnostic detail is returned to the client only when this internal header
+  // is present (normal browsers never send it), so end users still see a clean
+  // friendly message while we can read the true Resend error from a curl.
+  const diag = req.headers['x-sc-diag'] === '1'
+  const reqId = Math.random().toString(36).slice(2, 8)
+
+  console.log(`[contact ${reqId}] request received`, {
+    hasKey: Boolean(apiKey),
+    to: toEmail || null,
+    from: fromEmail || null,
+  })
+
   if (!apiKey || !toEmail || !fromEmail) {
-    console.error('Contact form: RESEND_API_KEY / CONTACT_TO_EMAIL / CONTACT_FROM_EMAIL not configured')
+    console.error(`[contact ${reqId}] missing config`, {
+      RESEND_API_KEY: Boolean(apiKey),
+      CONTACT_TO_EMAIL: Boolean(toEmail),
+      CONTACT_FROM_EMAIL: Boolean(fromEmail),
+    })
     return res.status(500).json({
       error: 'The contact form is not fully set up yet. Please email us directly in the meantime.',
+      ...(diag && {
+        detail: {
+          RESEND_API_KEY: Boolean(apiKey),
+          CONTACT_TO_EMAIL: Boolean(toEmail),
+          CONTACT_FROM_EMAIL: Boolean(fromEmail),
+        },
+      }),
     })
   }
+  console.log(`[contact ${reqId}] validation passed`)
 
   const timestamp = new Date().toISOString()
   const text = [
@@ -121,6 +145,7 @@ export default async function handler(req, res) {
   ].join('\n')
 
   try {
+    console.log(`[contact ${reqId}] sending to Resend`, { from: fromEmail, to: toEmail })
     const resendRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       signal: AbortSignal.timeout(RESEND_TIMEOUT_MS),
@@ -137,16 +162,38 @@ export default async function handler(req, res) {
       }),
     })
 
+    // Always read the body so the true Resend error is never swallowed.
+    const raw = await resendRes.text()
+    let parsed
+    try {
+      parsed = raw ? JSON.parse(raw) : {}
+    } catch {
+      parsed = { raw }
+    }
+
     if (!resendRes.ok) {
-      console.error('Resend API responded with', resendRes.status)
+      // Full Resend error surfaced in the logs — status, name, and message.
+      console.error(`[contact ${reqId}] Resend error`, {
+        status: resendRes.status,
+        body: parsed,
+      })
       return res.status(502).json({
         error: 'We could not send your message right now. Please try again shortly.',
+        ...(diag && { detail: { status: resendRes.status, body: parsed } }),
       })
     }
 
-    return res.status(200).json({ ok: true })
+    console.log(`[contact ${reqId}] email sent`, { id: parsed.id })
+    return res.status(200).json({ ok: true, id: parsed.id })
   } catch (err) {
-    console.error('Contact form send failed:', err)
-    return res.status(500).json({ error: 'Something went wrong. Please try again shortly.' })
+    console.error(`[contact ${reqId}] send failed`, {
+      name: err?.name,
+      message: err?.message,
+      stack: err?.stack,
+    })
+    return res.status(500).json({
+      error: 'Something went wrong. Please try again shortly.',
+      ...(diag && { detail: { name: err?.name, message: err?.message } }),
+    })
   }
 }
