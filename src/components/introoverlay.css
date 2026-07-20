@@ -8,6 +8,11 @@
   display: grid;
   place-items: center;
   overflow: hidden;
+  /* Dynamic viewport height + iOS safe areas so the stage is never tucked under
+     the status bar / home indicator on a phone. */
+  min-height: 100svh;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 .intro-stage {
@@ -16,6 +21,14 @@
   height: 100%;
   display: grid;
   place-items: center;
+}
+
+@media (max-width: 640px) {
+  .intro-stage {
+    /* Keep the whole mark inside comfortable phone gutters. */
+    width: min(1100px, 100vw);
+    padding-inline: max(22px, env(safe-area-inset-left));
+  }
 }
 
 .intro-logo {
@@ -53,8 +66,32 @@
 }
 
 @media (max-width: 640px) {
+  /* Mobile-specific composition: a smaller logo and a smaller, right-anchored
+     wordmark so the logo swipes clear of it and the whole mark stays within the
+     gutters even at 320px — the same swipe, re-laid-out for a phone. */
+  .intro-logo svg {
+    width: clamp(84px, 24vw, 132px);
+  }
+
+  .intro-logo {
+    filter: drop-shadow(0 18px 34px color-mix(in srgb, var(--logo-blue-deep), transparent 66%));
+  }
+
   .intro-word {
-    font-size: clamp(2rem, 12vw, 3.4rem);
-    translate: -22% -50%;
+    font-size: clamp(1.55rem, 7vw, 2.3rem);
+    /* Anchored just right of centre so it clears the swiped logo. */
+    translate: -4% -50%;
+  }
+}
+
+@media (max-width: 360px) {
+  .intro-logo svg {
+    width: clamp(78px, 23vw, 110px);
+  }
+
+  .intro-word {
+    font-size: clamp(1.35rem, 6vw, 1.9rem);
+    /* Shifted further right at the tightest widths to clear the swiped logo. */
+    translate: 12% -50%;
   }
 }

@@ -105,27 +105,64 @@
   background: linear-gradient(180deg, var(--line-strong), transparent);
 }
 
-/* On phones the model sits center; move copy to the lower half so they don't
-   fight, and center it. */
+/* On phones the model sits center; anchor the copy to the lower-left as an
+   intentional editorial column — left-aligned, using the full width within the
+   gutters, with both CTAs sharing one row. Not a centred, shrunk desktop. */
 @media (max-width: 760px) {
   .hero3d {
     align-items: flex-end;
     padding-top: 0;
-    padding-bottom: 12vh;
+    padding-bottom: clamp(26px, 6vh, 60px);
+    /* dvh keeps the section exactly one viewport tall under mobile browser
+       chrome; svh guards the min so nothing is cut off. */
+    min-height: 100svh;
   }
 
   .hero3d-copy {
     max-width: 100%;
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
+    gap: clamp(14px, 2.6vh, 24px);
+  }
+
+  .hero3d-brand {
+    font-size: clamp(2.7rem, 14vw, 4rem);
+  }
+
+  .hero3d-motto {
+    font-size: 1rem;
+    max-width: 38ch;
+  }
+
+  .hero3d-headline {
+    font-size: clamp(1.5rem, 6.6vw, 2.15rem);
   }
 
   .hero3d-ctas {
-    justify-content: center;
-    flex-wrap: wrap;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 10px;
+    margin-top: 2px;
+  }
+
+  /* Both buttons share the row; shrink padding/label moderately so they fit
+     modern widths, and cap the primary a touch wider to keep hierarchy. */
+  .hero3d-ctas .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 13px 14px;
+    font-size: 0.86rem;
   }
 
   .hero3d-hint {
     display: none;
+  }
+}
+
+@media (max-width: 340px) {
+  .hero3d-ctas .btn {
+    padding: 12px 10px;
+    font-size: 0.8rem;
   }
 }

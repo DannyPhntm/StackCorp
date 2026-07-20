@@ -82,6 +82,116 @@ function buildSceneHandoff(gsap, ScrollTrigger, track, scene) {
   )
 }
 
+/*
+ * Mobile showcase — the same four capabilities as an editorial story you step
+ * through: one item at a time, advanced by the prev/next controls, the dots, a
+ * tap on the image, or a horizontal swipe. Vertical scroll is never blocked
+ * (no touch-action lock, no preventDefault), so the section can't trap the page
+ * and normal downward scroll flows into the next section after the last item.
+ */
+function ServicesMobile() {
+  const [idx, setIdx] = useState(0)
+  const start = useRef(null)
+
+  const clamp = (i) => Math.min(stages.length - 1, Math.max(0, i))
+  const go = (delta) => setIdx((i) => clamp(i + delta))
+
+  const onPointerDown = (e) => {
+    start.current = { x: e.clientX, y: e.clientY }
+  }
+  const onPointerUp = (e) => {
+    const s = start.current
+    start.current = null
+    if (!s) return
+    const dx = e.clientX - s.x
+    const dy = e.clientY - s.y
+    // Only a clearly horizontal swipe changes item — vertical stays page scroll.
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.4) go(dx < 0 ? 1 : -1)
+  }
+
+  const s = stages[idx]
+
+  return (
+    <section id="services" className="se-mobile">
+      <div className="se-grain" aria-hidden="true" />
+      <div className="container se-mobile-inner">
+        <p className="se-eyebrow">
+          <b>01</b>
+          What we do
+        </p>
+
+        <div className="se-mobile-top">
+          <span className="se-mobile-count">
+            <b>0{idx + 1}</b> / 04
+          </span>
+          <span className="se-mobile-outcome">{s.outcome}</span>
+        </div>
+
+        <div
+          className="se-mobile-stage"
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
+        >
+          {stages.map((st, i) => (
+            <figure
+              key={st.title}
+              className={`se-mobile-card ${i === idx ? 'is-active' : ''}`}
+              aria-hidden={i !== idx}
+            >
+              <img src={st.img} alt={st.alt} loading="lazy" />
+            </figure>
+          ))}
+          <button
+            type="button"
+            className="se-mobile-tap"
+            aria-label="Next capability"
+            onClick={() => go(1)}
+          />
+        </div>
+
+        <div className="se-mobile-text" key={idx}>
+          <h2 className="se-headline">{s.headline}</h2>
+          <p className="se-sub">{s.copy}</p>
+        </div>
+
+        <div className="se-mobile-controls">
+          <button
+            type="button"
+            className="se-mobile-arrow"
+            aria-label="Previous capability"
+            disabled={idx === 0}
+            onClick={() => go(-1)}
+          >
+            &#8592;
+          </button>
+          <div className="se-mobile-dots" role="tablist" aria-label="Capabilities">
+            {stages.map((st, i) => (
+              <button
+                type="button"
+                key={st.title}
+                className={`se-mobile-dot ${i === idx ? 'is-active' : ''}`}
+                aria-label={st.title}
+                aria-selected={i === idx}
+                role="tab"
+                onClick={() => setIdx(i)}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            className="se-mobile-arrow"
+            aria-label="Next capability"
+            disabled={idx === stages.length - 1}
+            onClick={() => go(1)}
+          >
+            &#8594;
+          </button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function ServicesEditorial() {
   const [mode, setMode] = useState(computeMode)
   const trackRef = useRef(null)
@@ -98,7 +208,10 @@ export default function ServicesEditorial() {
   }, [])
 
   useEffect(() => {
-    if (mode === 'static' || !trackRef.current) return
+    // Only the desktop pinned scene uses GSAP (scrub timeline + 3D canvas
+    // handoff). Mobile renders the self-contained tap/swipe showcase and
+    // reduced-motion renders static blocks — neither needs scroll wiring.
+    if (mode !== 'pinned' || !trackRef.current) return
     let ctx
     let alive = true
     let sceneWait = null
@@ -126,24 +239,6 @@ export default function ServicesEditorial() {
           sceneWait = setInterval(() => {
             if (wire() || ++tries > 40) clearInterval(sceneWait)
           }, 250)
-        }
-
-        if (mode === 'flow') {
-          // Light reveal per block — restrained, no pin on touch layouts.
-          track.querySelectorAll('.se-block').forEach((block) => {
-            gsap.fromTo(
-              block,
-              { autoAlpha: 0, y: 28 },
-              {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.6,
-                ease: 'power3.out',
-                scrollTrigger: { trigger: block, start: 'top 88%', once: true },
-              },
-            )
-          })
-          return
         }
 
         // ---- Pinned scene ----
@@ -266,7 +361,14 @@ export default function ServicesEditorial() {
     </figure>
   )
 
-  if (mode !== 'pinned') {
+  // Mobile: the interactive tap/swipe showcase.
+  if (mode === 'flow') {
+    return <ServicesMobile />
+  }
+
+  // Reduced motion: a plain, fully-visible vertical sequence (no animation,
+  // no interaction to discover) — the most accessible form of the same content.
+  if (mode === 'static') {
     return (
       <section id="services" className="se-track se-flow" ref={trackRef}>
         <div className="se-grain" aria-hidden="true" />
@@ -275,9 +377,7 @@ export default function ServicesEditorial() {
           {stages.map((s, i) => (
             <article className="se-block" key={s.title}>
               <p className="se-block-meta">
-                <span>
-                  0{i + 1} / 04
-                </span>
+                <span>0{i + 1} / 04</span>
                 <span>{s.outcome}</span>
               </p>
               <h2 className="se-headline">{s.headline}</h2>

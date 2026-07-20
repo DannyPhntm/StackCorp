@@ -7,6 +7,9 @@
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
   transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+  /* iOS safe area: pad the bar down from the status bar / notch so the brand
+     and menu button are never tucked under the browser chrome. */
+  padding-top: env(safe-area-inset-top);
 }
 
 /* Hidden while the opening intro overlay is playing, then fades in. */
@@ -67,12 +70,12 @@
   flex-direction: column;
   justify-content: center;
   gap: 6px;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   background: transparent;
   border: 1px solid var(--line-strong);
   border-radius: 10px;
-  padding: 10px;
+  padding: 11px;
 }
 
 .nav-toggle span {
@@ -114,7 +117,8 @@
 
   .nav-links {
     position: absolute;
-    top: 68px;
+    /* Sits directly below the bar, including the safe-area padding above it. */
+    top: calc(68px + env(safe-area-inset-top));
     left: 0;
     right: 0;
     flex-direction: column;
@@ -122,7 +126,7 @@
     gap: 0;
     background: var(--surface-0);
     border-bottom: 1px solid var(--line);
-    padding: 8px 24px 20px;
+    padding: 8px 24px calc(20px + env(safe-area-inset-bottom));
     display: none;
   }
 

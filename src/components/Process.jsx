@@ -5,7 +5,6 @@ import {
   useMotionValue,
   useMotionValueEvent,
   useTransform,
-  useReducedMotion,
 } from 'framer-motion'
 import Reveal from './Reveal.jsx'
 import './story.css'
@@ -174,51 +173,149 @@ function DragTrack() {
   )
 }
 
+/*
+ * Mobile scroll-driven stepper. A sticky stage shows one step at a time; the
+ * active step advances as the page scrolls through the (reasonably tall) track.
+ * One rAF-throttled scroll listener drives it — no scroll-jacking, no
+ * preventDefault, so native vertical scroll always continues and the section
+ * can never trap the user. Only transform/opacity animate.
+ */
+function MobileStepper() {
+  const trackRef = useRef(null)
+  const barRef = useRef(null)
+  const [active, setActive] = useState(0)
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const stageH = window.innerHeight
+      const dist = track.offsetHeight - stageH
+      const scrolled = -track.getBoundingClientRect().top
+      const p = dist > 0 ? Math.min(1, Math.max(0, scrolled / dist)) : 0
+      // Progress bar fills from one step's worth to full across the track.
+      if (barRef.current) {
+        const frac = 1 / steps.length + p * (1 - 1 / steps.length)
+        barRef.current.style.transform = `scaleX(${frac.toFixed(4)})`
+      }
+      const idx = Math.min(steps.length - 1, Math.floor(p * steps.length))
+      setActive((prev) => (prev === idx ? prev : idx))
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
+    update()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  return (
+    <div className="process-scroll" ref={trackRef}>
+      <div className="process-stage">
+        <div className="container process-stage-inner">
+          <div className="process-stage-meta">
+            <span className="process-stage-count">
+              <span className="process-counter-current">
+                {String(active + 1).padStart(2, '0')}
+              </span>
+              {' / '}
+              {String(steps.length).padStart(2, '0')}
+            </span>
+            <span className="process-stage-bar" aria-hidden="true">
+              <span ref={barRef} />
+            </span>
+          </div>
+          <div className="process-stage-items">
+            {steps.map((s, i) => (
+              <div
+                key={s.n}
+                className={`process-stage-item ${i === active ? 'is-active' : ''}`}
+                aria-hidden={i !== active}
+              >
+                <span className="process-stage-n">{s.n}</span>
+                <h3>{s.title}</h3>
+                <p>{s.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const head = (
+  <div className="container">
+    <Reveal className="story-head">
+      <span className="story-node" aria-hidden="true">
+        <span className="story-node-top" />
+        <span className="story-node-mid" />
+        <span className="story-node-bot" />
+      </span>
+      <div className="story-head-text">
+        <p className="story-kicker">How we work</p>
+        <h2 className="section-title">A clear path, first call to launch.</h2>
+        <p className="section-sub story-sub">
+          A six-step process, from first conversation to ongoing improvement.
+        </p>
+      </div>
+    </Reveal>
+  </div>
+)
+
+const query = (q) => (typeof window !== 'undefined' ? window.matchMedia(q) : null)
+
+function computeMode() {
+  if (query('(prefers-reduced-motion: reduce)')?.matches) return 'static'
+  return query('(min-width: 901px)')?.matches ? 'desktop' : 'mobile'
+}
+
 export default function Process() {
-  const reduce = useReducedMotion()
+  const [mode, setMode] = useState(computeMode)
+
+  useEffect(() => {
+    const queries = [query('(prefers-reduced-motion: reduce)'), query('(min-width: 901px)')]
+    const onChange = () => setMode(computeMode())
+    queries.forEach((q) => q?.addEventListener('change', onChange))
+    return () => queries.forEach((q) => q?.removeEventListener('change', onChange))
+  }, [])
 
   return (
     <section className="process section story-section" id="process">
-      <div className="container">
-        <Reveal className="story-head">
-          <span className="story-node" aria-hidden="true">
-            <span className="story-node-top" />
-            <span className="story-node-mid" />
-            <span className="story-node-bot" />
-          </span>
-          <div className="story-head-text">
-            <p className="story-kicker">How we work</p>
-            <h2 className="section-title">A clear path, first call to launch.</h2>
-            <p className="section-sub story-sub">
-              A six-step process, from first conversation to ongoing improvement.
-            </p>
-          </div>
-        </Reveal>
-      </div>
+      {head}
 
-      {/* Desktop draggable track */}
-      {!reduce && (
+      {mode === 'desktop' && (
         <div className="process-desktop">
           <DragTrack />
         </div>
       )}
 
-      {/* Mobile + reduced-motion vertical timeline */}
-      <div className={`process-mobile ${reduce ? 'is-forced' : ''}`}>
-        <div className="container">
-          <ol className="process-list">
-            {steps.map((s, i) => (
-              <Reveal as="li" key={s.n} delay={i * 0.05}>
-                <span className="process-n">{s.n}</span>
-                <div>
-                  <h3>{s.title}</h3>
-                  <p>{s.body}</p>
-                </div>
-              </Reveal>
-            ))}
-          </ol>
+      {mode === 'mobile' && <MobileStepper />}
+
+      {mode === 'static' && (
+        <div className="process-mobile is-forced">
+          <div className="container">
+            <ol className="process-list">
+              {steps.map((s) => (
+                <li key={s.n}>
+                  <span className="process-n">{s.n}</span>
+                  <div>
+                    <h3>{s.title}</h3>
+                    <p>{s.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   )
 }

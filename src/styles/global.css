@@ -121,6 +121,12 @@ button {
   }
 }
 
+/* Anchor jumps (#services, #work, #process, #contact) must land below the fixed
+   navbar, not tucked under it. Covers safe-area too. */
+section[id] {
+  scroll-margin-top: calc(80px + env(safe-area-inset-top));
+}
+
 .section-title {
   font-family: var(--font-display);
   font-size: clamp(2.05rem, 4.3vw, 3.3rem);

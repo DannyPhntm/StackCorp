@@ -38,7 +38,16 @@ export default function IntroOverlay({ onComplete }) {
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
 
-    const travel = Math.min(Math.round(window.innerWidth * 0.3), 460)
+    // Swipe distance. On phones the composition (logo + revealed wordmark) must
+    // stay inside the gutters, so travel a smaller fraction and cap it low —
+    // otherwise the logo's left edge and its drop-shadow cross the screen edge.
+    const vw = window.innerWidth
+    const travel =
+      vw <= 360
+        ? Math.round(vw * 0.26)
+        : vw <= 640
+          ? Math.round(vw * 0.2)
+          : Math.min(Math.round(vw * 0.3), 460)
 
     const run = async () => {
       // Small settle so the first frame isn't the mid-animation state.

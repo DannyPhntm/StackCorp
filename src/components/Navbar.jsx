@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { LogoMark } from './LogoStack.jsx'
 import './navbar.css'
@@ -15,6 +15,17 @@ export default function Navbar({ hidden = false }) {
   const [open, setOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
+
+  // Lock background scroll only while the mobile menu is open, and always
+  // restore it on close/unmount so the menu can never strand a locked page.
+  useEffect(() => {
+    if (!open) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [open])
 
   const goToAnchor = (anchor) => (e) => {
     e.preventDefault()

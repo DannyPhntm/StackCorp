@@ -1,5 +1,8 @@
 .process {
-  overflow: hidden;
+  /* No overflow:hidden here — it would make this the scroll container and break
+     the mobile stepper's position:sticky. The desktop drag track's horizontal
+     bleed is clipped by .process-viewport instead, and body has overflow-x:hidden. */
+  position: relative;
 }
 
 /* ---------- Desktop draggable track ---------- */
@@ -135,7 +138,127 @@
   color: var(--text-low);
 }
 
-/* ---------- Mobile / reduced-motion timeline ---------- */
+/* ---------- Mobile scroll-driven stepper ---------- */
+
+.process-scroll {
+  position: relative;
+  /* Reasonable travel: ~44svh of scroll per step. Tall enough to read each,
+     short enough to never feel like a dead pinned zone. */
+  height: calc(44svh * 6);
+  margin-top: 24px;
+}
+
+.process-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  align-items: center;
+  /* Clear the sticky navbar so the active step never sits under it. */
+  padding-top: calc(68px + env(safe-area-inset-top));
+  padding-bottom: 8vh;
+  /* Sit above the fixed 3D canvas (z-index:0), like the hero copy does. */
+  z-index: 1;
+}
+
+.process-stage-inner {
+  width: 100%;
+  /* Legibility over the brighter parts of the 3D model behind. */
+  text-shadow: 0 2px 22px color-mix(in srgb, #04070c, transparent 35%);
+}
+
+.process-stage-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: clamp(24px, 5vh, 44px);
+}
+
+.process-stage-count {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-low);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.process-stage-bar {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.process-stage-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+  transform-origin: left center;
+  transform: scaleX(0.1667);
+  will-change: transform;
+}
+
+/* Stacked steps; only the active one is shown, the rest crossfade out. */
+.process-stage-items {
+  position: relative;
+  min-height: clamp(220px, 42vh, 340px);
+}
+
+.process-stage-item {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.5s var(--ease-out),
+    transform 0.5s var(--ease-out);
+  pointer-events: none;
+}
+
+.process-stage-item.is-active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.process-stage-n {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(3.4rem, 20vw, 5.6rem);
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--accent-strong), transparent 12%);
+}
+
+.process-stage-item h3 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 9vw, 3rem);
+  font-weight: 600;
+  letter-spacing: 0.014em;
+  line-height: 1.02;
+  margin-top: 12px;
+  color: var(--text-hi);
+}
+
+.process-stage-item p {
+  margin-top: 16px;
+  max-width: 34ch;
+  color: var(--text-mid);
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .process-stage-item {
+    transition: none;
+  }
+}
+
+/* ---------- Reduced-motion vertical timeline ---------- */
 
 .process-list {
   list-style: none;
