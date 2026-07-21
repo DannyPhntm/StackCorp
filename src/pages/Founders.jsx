@@ -23,8 +23,8 @@ const founders = [
     name: 'Muhammad Affan Athar',
     role: 'Co-Founder, Technology & Systems',
     img: '/assets/founders/affan-cutout.png',
-    linkedin: 'https://www.linkedin.com/in/affan-athar-a3a7b6291/?isSelfProfile=false',
-    frame: { ph: '290%', py: '10px' },
+    linkedin: 'https://www.linkedin.com/in/muhammad-affan-athar-a3a7b6291',
+    frame: { ph: '132%', py: '40px' },
     bio: [
       "A builder at heart, I love learning by creating. From freelancing in design to engineering AI-powered systems, I'm passionate about turning ideas into products that solve real problems and deliver measurable value.",
     ],
@@ -147,15 +147,17 @@ export default function Founders() {
                       <li key={tag}>{tag}</li>
                     ))}
                   </ul>
-                  <a
-                    href={f.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="fd-linkedin-cta"
-                  >
-                    View LinkedIn ↗
-                  </a>
+                  <span className="fd-linkedin-cta">View LinkedIn ↗</span>
                 </div>
+                {/* Full-card link — the whole card opens the founder's LinkedIn
+                    in a new tab (overlay above photo + body). */}
+                <a
+                  className="fd-cardlink"
+                  href={f.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Visit ${f.name} on LinkedIn`}
+                />
               </FounderCard>
             )
           })}

@@ -157,10 +157,14 @@
 }
 
 /* Stretched link: whole card clickable, short accessible name. */
-.fp-linkedin-cta::after {
-  content: '';
+/* Full-card link overlay — covers photo + info so the whole card opens the
+   founder's LinkedIn. Sits above the content; the card's own hover still fires
+   because the overlay is a descendant of .fp-card. */
+.fp-cardlink {
   position: absolute;
   inset: 0;
+  z-index: 4;
+  border-radius: var(--radius);
 }
 
 .fp-card:hover .fp-linkedin-cta {

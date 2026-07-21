@@ -179,10 +179,12 @@
 /* Stretched link: makes the whole card clickable while keeping the
    link's accessible name short ("View LinkedIn") instead of the bio
    text getting absorbed into one giant link label. */
-.fd-linkedin-cta::after {
-  content: '';
+/* Full-card link overlay — the whole card opens the founder's LinkedIn. */
+.fd-cardlink {
   position: absolute;
   inset: 0;
+  z-index: 4;
+  border-radius: inherit;
 }
 
 .fd-card:hover .fd-linkedin-cta {

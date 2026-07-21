@@ -19,9 +19,9 @@ const founders = [
     name: 'Muhammad Affan Athar',
     role: 'Co-Founder, Technology & Systems',
     img: '/assets/founders/affan-cutout.png',
-    frame: { ph: '286%', py: '4px' },
+    frame: { ph: '152%', py: '2px' },
     focus: ['Websites', 'Systems', 'Automation'],
-    linkedin: 'https://www.linkedin.com/in/affan-athar-a3a7b6291/?isSelfProfile=false',
+    linkedin: 'https://www.linkedin.com/in/muhammad-affan-athar-a3a7b6291',
   },
 ]
 
@@ -100,16 +100,19 @@ export default function FounderPreview() {
                     <li key={tag}>{tag}</li>
                   ))}
                 </ul>
-                <a
-                  href={f.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="fp-linkedin-cta"
-                  data-haptic="tap"
-                >
-                  View LinkedIn ↗
-                </a>
+                <span className="fp-linkedin-cta">View LinkedIn ↗</span>
               </div>
+              {/* Full-card link: the entire card opens the founder's LinkedIn in
+                  a new tab. Overlay sits above photo + info so every part of the
+                  card is clickable. */}
+              <a
+                className="fp-cardlink"
+                href={f.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Visit ${f.name} on LinkedIn`}
+                data-haptic="tap"
+              />
             </FounderPreviewCard>
           )
         })}
