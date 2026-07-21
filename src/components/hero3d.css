@@ -26,13 +26,13 @@
 }
 
 .hero3d-brand {
-  font-family: var(--font-display);
-  /* Recia at hero scale: a shade lighter than the titles so the big wordmark
-     reads elegant rather than bold, with tight display tracking. */
-  font-weight: 560;
-  font-size: clamp(3.1rem, 6.2vw, 5.6rem);
+  /* The "StackCorp" wordmark is Satoshi (matches the nav logo) — a clean,
+     confident sans mark, letting Recia own the editorial tagline below. */
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(2.9rem, 5.8vw, 5.2rem);
   line-height: 0.98;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   color: var(--text-hi);
   text-shadow: 0 2px 22px color-mix(in srgb, #04070c, transparent 45%);
 }

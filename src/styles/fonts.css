@@ -1,19 +1,31 @@
 /*
- * StackCorp type foundation — two self-hosted Fontshare (Indian Type Foundry)
- * families, variable woff2 (one file each, full weight range):
+ * StackCorp type foundation — three self-hosted variable fonts (one woff2 each,
+ * full weight range), a clear display / heading / body split:
  *
- *   Recia   — display serif. Headings, hero, section/card/case-study titles,
- *             founder names. The editorial voice. Never body or small UI text.
- *   Supreme — grotesque sans. Everything else: body, nav, buttons, labels,
- *             forms, captions, metrics, numbers. The readable interface voice.
+ *   Recia   — display serif (Fontshare/ITF). MAJOR display only: hero headline,
+ *             large section titles, case-study titles, large CTA / footer CTA.
+ *             The editorial voice. Never structural headings, body, or UI.
+ *   Satoshi — geometric grotesque (Fontshare/ITF). Structural headings: card
+ *             titles, service/process/feature names, StackScout features, the
+ *             "StackCorp" wordmark, any H3/H4. Clarity + strong hierarchy.
+ *   Supreme — grotesque sans (Fontshare/ITF). Everything read continuously:
+ *             body, nav links, buttons, labels, forms, stats, captions, footer.
  *
- * Source files live in src/assets/fonts/{recia,supreme}/. Wired to the CSS
- * variables --font-display (Recia) and --font-sans (Supreme) in global.css.
+ * Source files live in src/assets/fonts/{recia,satoshi,supreme}/. Wired to the
+ * CSS variables --font-display / --font-heading / --font-sans in global.css.
  */
 
 @font-face {
   font-family: 'Recia';
   src: url('../assets/fonts/recia/Recia-Variable.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('../assets/fonts/satoshi/Satoshi-Variable.woff2') format('woff2');
   font-weight: 300 700;
   font-style: normal;
   font-display: swap;

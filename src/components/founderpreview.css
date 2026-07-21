@@ -115,7 +115,7 @@
 }
 
 .fp-info h3 {
-  font-family: var(--font-display);
+  font-family: var(--font-heading);
   font-size: clamp(1.15rem, 1.7vw, 1.5rem);
   font-weight: 600;
   line-height: 1.14;
