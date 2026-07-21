@@ -179,10 +179,8 @@ export default async function handler(req, res) {
         status: resendRes.status,
         body: parsed,
       })
-      const diagOk = req.headers['x-sc-diag'] === '86cc3b20d0fd161e4c459411c7cc6f03'
       return res.status(502).json({
         error: 'We could not send your message right now. Please try again shortly.',
-        ...(diagOk && { detail: { status: resendRes.status, body: parsed, from: fromEmail } }),
       })
     }
 
