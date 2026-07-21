@@ -179,12 +179,8 @@ export default async function handler(req, res) {
         status: resendRes.status,
         body: parsed,
       })
-      // TEMP one-shot diagnostic — gated behind a strong secret, removed in the
-      // very next commit once the exact Resend error has been read.
-      const diagOk = req.headers['x-sc-diag'] === 'd0bb98144f3feceadabf97ca53b09d37'
       return res.status(502).json({
         error: 'We could not send your message right now. Please try again shortly.',
-        ...(diagOk && { detail: { status: resendRes.status, body: parsed } }),
       })
     }
 
