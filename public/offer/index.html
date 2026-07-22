@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>StackCorp — A website for your customization studio</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="Most PPF, wrap and detailing studios have no website — so customers book the shop that does. StackCorp builds you a clean, fast site that shows your work and books the next job." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="A website for your customization studio — StackCorp" />
+  <meta property="og:description" content="Customers search for a wrap, PPF or detailing studio and book the one they can find online. Let's make that you." />
+  <meta property="og:image" content="/offer/og.png" />
+  <meta property="og:url" content="https://stackcorp.org/offer" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/assets/logo/stackcorp-icon-128.png" />
+  <style>
+    @font-face { font-family:'Recia'; src:url('/offer/fonts/recia.woff2') format('woff2'); font-weight:300 700; font-display:swap }
+    @font-face { font-family:'Satoshi'; src:url('/offer/fonts/satoshi.woff2') format('woff2'); font-weight:300 700; font-display:swap }
+    @font-face { font-family:'Supreme'; src:url('/offer/fonts/supreme.woff2') format('woff2'); font-weight:100 800; font-display:swap }
+
+    :root{
+      --bg:#080B13; --accent:#2563EB; --accent-soft:rgba(37,99,235,.14);
+      --hi:#F4F7FF; --mid:rgba(244,247,255,.72); --low:rgba(244,247,255,.5);
+      --line:rgba(255,255,255,.09);
+      --display:'Recia',Georgia,serif;
+      --head:'Satoshi',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      --body:'Supreme',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{
+      background:var(--bg); color:var(--hi); font-family:var(--body);
+      line-height:1.6; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      overflow-x:hidden; position:relative;
+    }
+    /* brand chrome — one soft glow + faint masked grid, matching the site */
+    body::before{content:'';position:fixed;inset:0;z-index:-2;pointer-events:none;
+      background:radial-gradient(120% 90% at 82% 8%, rgba(37,99,235,.18), rgba(37,99,235,.05) 40%, transparent 66%)}
+    body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;
+      background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+      background-size:88px 88px;
+      -webkit-mask-image:radial-gradient(ellipse 85% 60% at 50% 12%,#000 25%,transparent 80%);
+      mask-image:radial-gradient(ellipse 85% 60% at 50% 12%,#000 25%,transparent 80%)}
+
+    .wrap{max-width:720px;margin-inline:auto;padding:0 clamp(22px,6vw,40px)}
+
+    /* top bar */
+    .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding-top:calc(26px + env(safe-area-inset-top));padding-bottom:8px}
+    .lockup{display:flex;align-items:center;gap:12px}
+    .chip{width:44px;height:44px;border-radius:11px;overflow:hidden;flex:0 0 44px;
+      border:1px solid rgba(255,255,255,.10);box-shadow:0 0 0 1px rgba(37,99,235,.10),0 8px 24px rgba(0,0,0,.4);background:#0A0E1A}
+    .chip img{width:100%;height:100%;object-fit:cover;display:block}
+    .wm{font-family:var(--head);font-weight:700;font-size:1.02rem;letter-spacing:.13em;line-height:1}
+    .wm b{color:#fff}.wm i{color:var(--low);font-style:normal;font-weight:700}
+    .fortag{font-family:var(--body);font-weight:500;font-size:.78rem;letter-spacing:.02em;color:var(--low);
+      border:1px solid var(--line);border-radius:999px;padding:7px 14px;white-space:nowrap}
+    .fortag b{color:var(--mid);font-weight:600}
+
+    .eyebrow{font-family:var(--head);font-weight:600;font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+
+    /* hero */
+    .hero{padding:clamp(40px,10vw,88px) 0 clamp(36px,8vw,64px)}
+    .hero .eyebrow{margin-bottom:22px}
+    h1{font-family:var(--display);font-weight:600;font-size:clamp(2.3rem,8.5vw,4rem);line-height:1.02;letter-spacing:-.02em;color:var(--hi)}
+    h1 .js-shop{color:var(--accent)}
+    .lede{font-size:clamp(1.05rem,1rem + .5vw,1.28rem);line-height:1.55;color:var(--mid);margin-top:22px;max-width:34ch}
+
+    .cta{display:inline-flex;align-items:center;gap:12px;margin-top:34px;
+      font-family:var(--head);font-weight:600;font-size:1.02rem;letter-spacing:.005em;
+      color:#fff;background:var(--accent);border-radius:999px;padding:16px 28px;text-decoration:none;
+      box-shadow:0 10px 30px rgba(37,99,235,.28);transition:transform .15s ease, box-shadow .15s ease}
+    .cta:hover{transform:translateY(-1px);box-shadow:0 14px 38px rgba(37,99,235,.36)}
+    .cta span{font-family:var(--body)}
+    .cta-sub{font-size:.9rem;color:var(--low);margin-top:14px}
+
+    /* generic content block */
+    .block{padding:clamp(30px,7vw,54px) 0;border-top:1px solid var(--line)}
+    .heading{font-family:var(--head);font-weight:600;font-size:clamp(1.55rem,5vw,2.15rem);line-height:1.14;letter-spacing:-.015em;color:var(--hi);max-width:20ch}
+    .block .eyebrow{margin-bottom:16px}
+
+    /* problem cards */
+    .cards{display:grid;gap:14px;margin-top:26px}
+    @media(min-width:620px){.cards{grid-template-columns:1fr 1fr 1fr}}
+    .card{border:1px solid var(--line);border-radius:16px;padding:22px;background:rgba(255,255,255,.025)}
+    .card .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;margin-bottom:16px;
+      background:var(--accent-soft);border:1px solid rgba(37,99,235,.22);color:#7aa2ff}
+    .card h3{font-family:var(--head);font-weight:600;font-size:1.12rem;color:var(--hi);margin-bottom:6px;letter-spacing:-.01em}
+    .card p{font-size:.98rem;line-height:1.5;color:var(--mid)}
+
+    /* offer */
+    .incl{list-style:none;margin-top:24px;display:grid;gap:14px}
+    .incl li{display:flex;gap:14px;align-items:flex-start;font-size:1.06rem;line-height:1.45;color:var(--mid)}
+    .incl li .tick{flex:0 0 auto;margin-top:3px;color:var(--accent)}
+    .incl li b{color:var(--hi);font-weight:600}
+    .tease{margin-top:26px;padding:18px 22px;border:1px solid rgba(37,99,235,.3);border-radius:14px;
+      background:linear-gradient(90deg,rgba(37,99,235,.12),rgba(37,99,235,.03));
+      font-size:1.02rem;line-height:1.5;color:var(--mid)}
+    .tease b{color:var(--hi);font-weight:600}
+
+    /* proof */
+    .proof .lede{max-width:56ch;font-size:1.08rem;color:var(--mid);margin-top:20px}
+    .proof .lede b{color:var(--hi);font-weight:600}
+    .plink{display:inline-block;margin-top:16px;font-family:var(--head);font-weight:600;color:var(--accent);text-decoration:none;letter-spacing:.005em}
+
+    /* final CTA */
+    .final{padding:clamp(46px,10vw,80px) 0 clamp(30px,7vw,52px);border-top:1px solid var(--line);text-align:center}
+    .final h2{font-family:var(--display);font-weight:600;font-size:clamp(1.9rem,6.5vw,3rem);line-height:1.08;letter-spacing:-.02em;color:var(--hi);max-width:18ch;margin-inline:auto}
+    .final h2 .js-shop{color:var(--accent)}
+    .final .cta{margin-top:30px}
+
+    footer{border-top:1px solid var(--line);padding:26px 0 calc(30px + env(safe-area-inset-bottom));
+      display:flex;align-items:center;justify-content:space-between;gap:16px}
+    footer .wm{font-size:.92rem}
+    footer a{font-family:var(--body);font-weight:600;font-size:.92rem;color:var(--mid);text-decoration:none}
+    footer a:hover{color:var(--accent)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="bar">
+      <span class="lockup">
+        <span class="chip"><img src="/assets/logo/stackcorp-icon.png" alt="StackCorp" /></span>
+        <span class="wm"><b>STACK</b><i>CORP</i></span>
+      </span>
+      <span class="fortag">Prepared for <b class="js-shop">your studio</b></span>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">Websites for customization studios</p>
+        <h1>Right now, customers can't find <span class="js-shop">your studio</span> online.</h1>
+        <p class="lede">When someone searches for a PPF, wrap or detailing shop in your area, they land on a competitor who has a website — and book with them instead.</p>
+        <a class="cta" href="https://stackcorp.org" target="_blank" rel="noopener">Get a free website audit <span>&#8594;</span></a>
+        <p class="cta-sub">Free, no obligation — takes about two minutes.</p>
+      </section>
+
+      <section class="block">
+        <p class="eyebrow">The problem</p>
+        <h2 class="heading">Your work is world-class. Online, it's invisible.</h2>
+        <div class="cards">
+          <div class="card">
+            <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg></span>
+            <h3>Invisible online</h3>
+            <p>People search Google and Instagram, find nothing — so they go with the shop that shows up.</p>
+          </div>
+          <div class="card">
+            <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4l4 4 4-4h4a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/></svg></span>
+            <h3>Bookings everywhere</h3>
+            <p>Inquiries scattered across calls, DMs and walk-ins. Jobs slip through, and nothing gets recorded.</p>
+          </div>
+          <div class="card">
+            <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="M9 10h6M9 14h4"/></svg></span>
+            <h3>Run from memory</h3>
+            <p>Vehicles, stock and appointments live in your head or a notebook — until something's forgotten.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="block">
+        <p class="eyebrow">The offer</p>
+        <h2 class="heading">A clean, fast website that shows your work — and books the next job.</h2>
+        <ul class="incl">
+          <li><span class="tick"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5 9.5 17.5l-5-5"/></svg></span><span>A <b>gallery</b> that makes your wraps and PPF look as good as they are.</span></li>
+          <li><span class="tick"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5 9.5 17.5l-5-5"/></svg></span><span>Clear services and a <b>booking / inquiry form</b> that lands straight in your inbox.</span></li>
+          <li><span class="tick"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5 9.5 17.5l-5-5"/></svg></span><span><b>Fast and mobile-first</b>, built to show up when people search locally.</span></li>
+          <li><span class="tick"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5 9.5 17.5l-5-5"/></svg></span><span>Designed, built, secured and <b>deployed</b> — we handle all of it.</span></li>
+        </ul>
+        <p class="tease">And when you're ready: <b>online booking, vehicle logs and an inventory dashboard</b> — so the whole shop runs from one place instead of a notebook.</p>
+      </section>
+
+      <section class="block proof">
+        <p class="eyebrow">Proof</p>
+        <h2 class="heading">We don't just design. We ship real systems.</h2>
+        <p class="lede">We built and launched <b>Malir Cantt Bazaar</b> — a live production marketplace with user accounts, verified businesses, listings, image uploads, admin moderation and secure deployment. If we can run that, a website that books your jobs is the easy part.</p>
+        <a class="plink" href="https://malircanttbazaar.com" target="_blank" rel="noopener">malircanttbazaar.com &#8594;</a>
+      </section>
+
+      <section class="final">
+        <h2>See what <span class="js-shop">your studio</span>'s site could look like.</h2>
+        <a class="cta" href="https://stackcorp.org" target="_blank" rel="noopener">Get your free website audit <span>&#8594;</span></a>
+        <p class="cta-sub">One short reply and we'll show you exactly what's possible.</p>
+      </section>
+    </main>
+
+    <footer>
+      <span class="wm"><b>STACK</b><i>CORP</i></span>
+      <a href="https://stackcorp.org" target="_blank" rel="noopener">stackcorp.org</a>
+    </footer>
+  </div>
+  <script src="/offer/app.js"></script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/offer", "destination": "/offer/index.html" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "headers": [
