@@ -7,7 +7,7 @@ const founders = [
   {
     name: 'Daniyal Ali',
     role: 'Co-Founder, Strategy & Product',
-    img: '/assets/founders/daniyal-ali-cutout.png',
+    img: '/assets/founders/daniyal-ali-cutout.webp',
     linkedin: 'https://www.linkedin.com/in/daniyal-ali-846681395/?isSelfProfile=false',
     // Per-founder photo framing so both faces sit level and read at the same
     // size despite the source crops differing (Daniyal is head-to-waist; Affan
@@ -22,7 +22,7 @@ const founders = [
   {
     name: 'Muhammad Affan Athar',
     role: 'Co-Founder, Technology & Systems',
-    img: '/assets/founders/affan-cutout.png',
+    img: '/assets/founders/affan-cutout.webp',
     linkedin: 'https://www.linkedin.com/in/muhammad-affan-athar-a3a7b6291',
     frame: { ph: '132%', py: '40px' },
     bio: [
@@ -131,6 +131,8 @@ export default function Founders() {
                   <img
                     src={f.img}
                     alt={`${f.name}, ${f.role} of StackCorp`}
+                    loading="lazy"
+                    decoding="async"
                     style={{ '--ph': f.frame.ph, '--py': f.frame.py }}
                   />
                 </div>

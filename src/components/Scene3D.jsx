@@ -72,6 +72,13 @@ export default function Scene3D({ onReady, onError }) {
     const finePointer = window.matchMedia?.('(pointer: fine)').matches ?? false
     const parallaxOn = finePointer && !reduce
     const isMobile = window.matchMedia?.('(max-width: 760px)').matches ?? false
+    // Mobile has no scroll-camera (Home skips it) and no parallax (coarse
+    // pointer), so the only thing the render loop did was a subtle idle float —
+    // not worth a continuous 60fps GPU pass behind the scrolling page. Render a
+    // single settled frame instead (like reduced-motion); the scroll "life" is a
+    // pure-CSS scale on the canvas (see the IntersectionObserver above). This is
+    // the single biggest mobile GPU saving.
+    const staticRender = reduce || isMobile
 
     const scene = new THREE.Scene()
 
@@ -212,7 +219,7 @@ export default function Scene3D({ onReady, onError }) {
         group.add(model)
         setLoaded(true)
         onReady?.({ camera, model, layers, group, lookTarget, renderer, scene, THREE })
-        if (reduce) renderFrame() // static path: draw the single settled frame
+        if (staticRender) renderFrame() // static path: draw the single settled frame
       },
       (evt) => {
         if (evt.total) setProgress(Math.round((evt.loaded / evt.total) * 100))
@@ -234,7 +241,7 @@ export default function Scene3D({ onReady, onError }) {
     const renderFrame = () => {
       if (rootEl && rootEl.style.visibility === 'hidden') return
       const t = (performance.now() - startTime) / 1000
-      if (model && !reduce) {
+      if (model && !staticRender) {
         // Calm idle float — never a spin.
         group.position.y = Math.sin(t * 0.9) * 0.06
       }
@@ -257,7 +264,7 @@ export default function Scene3D({ onReady, onError }) {
       renderFrame()
     }
     const startLoop = () => {
-      if (!raf && !reduce) loop()
+      if (!raf && !staticRender) loop()
     }
     const stopLoop = () => {
       if (raf) {
@@ -267,7 +274,7 @@ export default function Scene3D({ onReady, onError }) {
     }
     const onVisibility = () => {
       if (document.hidden) stopLoop()
-      else if (reduce) renderFrame()
+      else if (staticRender) renderFrame()
       else startLoop()
     }
     document.addEventListener('visibilitychange', onVisibility)
@@ -285,7 +292,7 @@ export default function Scene3D({ onReady, onError }) {
         camera.aspect = w / h
         camera.updateProjectionMatrix()
         renderer.setSize(w, h)
-        if (reduce) renderFrame()
+        if (staticRender) renderFrame()
       }, 150)
     }
     window.addEventListener('resize', onResize)

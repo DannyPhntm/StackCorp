@@ -8,7 +8,7 @@ const founders = [
   {
     name: 'Daniyal Ali',
     role: 'Co-Founder, Strategy & Product',
-    img: '/assets/founders/daniyal-ali-cutout.png',
+    img: '/assets/founders/daniyal-ali-cutout.webp',
     // Per-founder photo framing (see founders.css / founderpreview.css) so both
     // faces sit level and read at the same size despite differing source crops.
     frame: { ph: '150%', py: '8px' },
@@ -18,7 +18,7 @@ const founders = [
   {
     name: 'Muhammad Affan Athar',
     role: 'Co-Founder, Technology & Systems',
-    img: '/assets/founders/affan-cutout.png',
+    img: '/assets/founders/affan-cutout.webp',
     frame: { ph: '152%', py: '2px' },
     focus: ['Websites', 'Systems', 'Automation'],
     linkedin: 'https://www.linkedin.com/in/muhammad-affan-athar-a3a7b6291',
@@ -89,6 +89,7 @@ export default function FounderPreview() {
                   src={f.img}
                   alt={`${f.name}, ${f.role} of StackCorp`}
                   loading="lazy"
+                  decoding="async"
                   style={{ '--ph': f.frame.ph, '--py': f.frame.py }}
                 />
               </div>
