@@ -2,7 +2,7 @@
  * Offer personalization. Reads ?shop=<name> from the URL and drops it into every
  * .js-shop slot. Uses textContent (never innerHTML) so a shop name can't inject
  * markup. If no ?shop is present the page keeps its graceful default ("your
- * studio"), so the link is never broken or empty.
+ * shop"), so the link is never broken or empty.
  *
  * Usage in outreach:  https://stackcorp.org/offer?shop=Elite%20Wraps
  */
