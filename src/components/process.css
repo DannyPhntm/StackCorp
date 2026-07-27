@@ -1,319 +1,293 @@
 .process {
-  /* No overflow:hidden here — it would make this the scroll container and break
-     the mobile stepper's position:sticky. The desktop drag track's horizontal
-     bleed is clipped by .process-viewport instead, and body has overflow-x:hidden. */
+  /* No overflow:hidden here — it would make this the scroll container. The
+     timeline uses normal flow, so nothing needs clipping. */
   position: relative;
 }
 
-/* ---------- Desktop draggable track ---------- */
+/* ---------- Workflow toggle (segmented control) ---------- */
 
-.process-desktop {
-  display: none;
+.pw-toggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface-2), transparent 35%);
+  margin-bottom: clamp(36px, 5vw, 56px);
 }
 
-.process-carousel {
-  margin-top: 56px;
-}
-
-.process-viewport {
-  overflow: hidden;
-  /* Track starts flush with the container's left edge, bleeds off-screen right. */
-  padding-left: max(clamp(20px, 4.5vw, 48px), calc((100vw - var(--container)) / 2 + clamp(20px, 4.5vw, 48px)));
-  /* Soft fade at the right edge hints that more steps live off-screen. */
-  mask-image: linear-gradient(90deg, black, black calc(100% - 140px), transparent);
-  -webkit-mask-image: linear-gradient(90deg, black, black calc(100% - 140px), transparent);
-}
-
-.process-track {
-  display: flex;
-  gap: clamp(48px, 5vw, 88px);
-  cursor: grab;
-  will-change: transform;
-  width: max-content;
-  padding-right: 12vw;
-}
-
-.process-track:active {
-  cursor: grabbing;
-}
-
-.process-step {
-  flex-shrink: 0;
-  width: min(460px, 36vw);
-  user-select: none;
-}
-
-.process-n {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--accent-strong);
-  letter-spacing: 0.08em;
-}
-
-.process-step h3 {
+.pw-toggle-btn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: var(--radius-pill);
   font-family: var(--font-heading);
-  font-size: clamp(2.6rem, 4.6vw, 4.2rem);
+  font-size: 0.92rem;
   font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1;
-  margin-top: 10px;
-  color: var(--text-hi);
+  letter-spacing: -0.005em;
+  color: var(--text-low);
+  background: transparent;
+  transition:
+    color 0.35s var(--ease-out),
+    background-color 0.35s var(--ease-out);
 }
 
-.process-step p {
-  margin-top: 16px;
+.pw-toggle-btn:hover {
   color: var(--text-mid);
-  font-size: 1.02rem;
-  max-width: 40ch;
 }
 
-.process-controls {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  max-width: var(--container);
-  margin-inline: auto;
-  padding-inline: clamp(20px, 4.5vw, 48px);
-  margin-top: 44px;
+.pw-toggle-btn.is-active {
+  color: var(--sc-ice);
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    color-mix(in srgb, var(--accent), var(--sc-ice) 18%)
+  );
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--accent), transparent 68%);
 }
 
-.process-counter {
+.pw-meta {
   font-size: 0.82rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--text-low);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  margin-bottom: clamp(20px, 3vw, 32px);
 }
 
-.process-counter-current {
+.pw-meta b {
   color: var(--accent-strong);
+  font-variant-numeric: tabular-nums;
 }
 
-.process-progress {
-  flex: 1;
-  height: 2px;
+/* ---------- Vertical timeline ---------- */
+
+.pw-timeline {
+  list-style: none;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  /* Left gutter holds the rail + nodes. */
+  --pw-node: 54px;
+  --pw-gutter: calc(var(--pw-node) / 2);
+}
+
+/* The rail sits centred on the nodes. Track is faint; fill illuminates up to
+   the last reached step and eases as the user scrolls. */
+.pw-rail {
+  position: absolute;
+  top: calc(var(--pw-node) / 2);
+  bottom: calc(var(--pw-node) / 2);
+  left: var(--pw-gutter);
+  width: 2px;
+  translate: -50% 0;
   background: var(--line);
   border-radius: 2px;
-  max-width: 420px;
+  overflow: hidden;
 }
 
-.process-progress span {
-  display: block;
-  height: 100%;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+.pw-rail-fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: top center;
+  transform: scaleY(var(--pw-fill, 0));
+  background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+  transition: transform 0.55s var(--ease-out);
 }
 
-.process-arrows {
-  display: flex;
-  gap: 10px;
+.pw-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--pw-node) 1fr;
+  gap: clamp(20px, 3vw, 34px);
+  padding-bottom: clamp(30px, 4.4vw, 52px);
 }
 
-.process-arrow {
-  width: 44px;
-  height: 44px;
+.pw-step:last-child {
+  padding-bottom: 0;
+}
+
+/* Node — the icon disc. Muted for upcoming steps, illuminated once reached. */
+.pw-node {
+  position: relative;
+  z-index: 1;
+  width: var(--pw-node);
+  height: var(--pw-node);
   border-radius: 50%;
-  border: 1px solid var(--line-strong);
-  background: transparent;
-  color: var(--text-hi);
-  font-size: 1.1rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition:
-    border-color 0.2s var(--ease-out),
-    color 0.2s var(--ease-out);
-}
-
-.process-arrow:hover {
-  border-color: var(--accent-strong);
-  color: var(--accent-strong);
-}
-
-.process-arrow:disabled {
-  opacity: 0.35;
-  cursor: default;
-  border-color: var(--line);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-1);
   color: var(--text-low);
+  transition:
+    color 0.5s var(--ease-out),
+    border-color 0.5s var(--ease-out),
+    background-color 0.5s var(--ease-out),
+    box-shadow 0.5s var(--ease-out);
 }
 
-/* ---------- Mobile scroll-driven stepper ---------- */
-
-.process-scroll {
-  position: relative;
-  /* Reasonable travel: ~44svh of scroll per step. Tall enough to read each,
-     short enough to never feel like a dead pinned zone. */
-  height: calc(44svh * 6);
-  margin-top: 24px;
-}
-
-.process-stage {
-  position: sticky;
-  top: 0;
-  height: 100svh;
-  display: grid;
-  align-items: center;
-  /* Clear the sticky navbar so the active step never sits under it. */
-  padding-top: calc(68px + env(safe-area-inset-top));
-  padding-bottom: 8vh;
-  /* Sit above the fixed 3D canvas (z-index:0), like the hero copy does. */
-  z-index: 1;
-}
-
-.process-stage-inner {
-  width: 100%;
-  /* Legibility over the brighter parts of the 3D model behind. */
-  text-shadow: 0 2px 22px color-mix(in srgb, #04070c, transparent 35%);
-}
-
-.process-stage-meta {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: clamp(24px, 5vh, 44px);
-}
-
-.process-stage-count {
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+.pw-num {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   color: var(--text-low);
   font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  transition: color 0.5s var(--ease-out);
 }
 
-.process-stage-bar {
-  flex: 1;
-  height: 2px;
-  background: var(--line);
-  border-radius: 2px;
-  overflow: hidden;
+.pw-body {
+  min-width: 0;
+  padding-top: 2px;
+  /* Upcoming steps sit slightly recessed; illuminated ones come forward. */
+  opacity: 0.5;
+  transition: opacity 0.5s var(--ease-out);
 }
 
-.process-stage-bar span {
-  display: block;
-  height: 100%;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
-  transform-origin: left center;
-  transform: scaleX(0.1667);
-  will-change: transform;
-}
-
-/* Stacked steps; only the active one is shown, the rest crossfade out. */
-.process-stage-items {
-  position: relative;
-  min-height: clamp(220px, 42vh, 340px);
-}
-
-.process-stage-item {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transform: translateY(16px);
-  transition:
-    opacity 0.5s var(--ease-out),
-    transform 0.5s var(--ease-out);
-  pointer-events: none;
-}
-
-.process-stage-item.is-active {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
-}
-
-.process-stage-n {
-  display: block;
+.pw-body h3 {
   font-family: var(--font-heading);
-  font-size: clamp(3.4rem, 20vw, 5.6rem);
-  font-weight: 600;
-  line-height: 0.9;
-  letter-spacing: -0.005em;
-  color: color-mix(in srgb, var(--accent-strong), transparent 12%);
-}
-
-.process-stage-item h3 {
-  font-family: var(--font-heading);
-  font-size: clamp(2.2rem, 9vw, 3rem);
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
   font-weight: 600;
   letter-spacing: -0.015em;
-  line-height: 1;
-  margin-top: 12px;
+  line-height: 1.1;
+  margin-top: 4px;
   color: var(--text-hi);
 }
 
-.process-stage-item p {
-  margin-top: 16px;
-  max-width: 34ch;
+.pw-body p {
+  margin-top: 8px;
+  max-width: 52ch;
+  color: var(--text-mid);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+/* Approval badge. */
+.pw-approve {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 6px 13px 6px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in srgb, var(--accent-strong), transparent 55%);
+  background: color-mix(in srgb, var(--accent), transparent 88%);
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.pw-approve svg {
+  flex-shrink: 0;
+}
+
+/* ---- Illumination states ---- */
+
+/* Upcoming — muted. (Default node/body styles above already handle this.) */
+
+/* Active — the step currently being reached: brightest, gently glowing. */
+.pw-step.is-active .pw-node,
+.pw-step.is-done .pw-node {
+  color: var(--sc-ice);
+  border-color: transparent;
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    color-mix(in srgb, var(--accent), var(--sc-ice) 20%)
+  );
+}
+
+.pw-step.is-active .pw-node {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent), transparent 82%),
+    0 8px 26px color-mix(in srgb, var(--accent), transparent 62%);
+}
+
+.pw-step.is-active .pw-body,
+.pw-step.is-done .pw-body {
+  opacity: 1;
+}
+
+.pw-step.is-active .pw-num,
+.pw-step.is-done .pw-num {
+  color: var(--accent-strong);
+}
+
+/* Done — reached and passed: illuminated but calmer than the active step. */
+.pw-step.is-done .pw-node {
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--accent), transparent 74%);
+}
+
+/* ---------- Trust signal ---------- */
+
+.pw-trust {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: clamp(44px, 6vw, 72px);
+  padding: clamp(22px, 3vw, 30px) clamp(22px, 3.4vw, 34px);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface-2), transparent 25%);
+  max-width: 760px;
   color: var(--text-mid);
   font-size: 1.02rem;
   line-height: 1.55;
 }
 
+.pw-trust-mark {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--accent-strong), transparent 55%);
+  background: color-mix(in srgb, var(--accent), transparent 88%);
+  color: var(--accent-strong);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+  .pw-timeline {
+    --pw-node: 46px;
+  }
+
+  .pw-toggle {
+    display: flex;
+    width: 100%;
+  }
+
+  .pw-toggle-btn {
+    flex: 1;
+    padding: 11px 12px;
+    font-size: 0.86rem;
+    text-align: center;
+  }
+
+  .pw-node svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .pw-trust {
+    flex-direction: column;
+    gap: 12px;
+    font-size: 0.96rem;
+  }
+}
+
+/* Reduced motion: no rail easing, no state transitions — everything lit. */
 @media (prefers-reduced-motion: reduce) {
-  .process-stage-item {
+  .pw-rail-fill,
+  .pw-node,
+  .pw-body,
+  .pw-num,
+  .pw-toggle-btn {
     transition: none;
-  }
-}
-
-/* ---------- Reduced-motion vertical timeline ---------- */
-
-.process-list {
-  list-style: none;
-  margin-top: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.process-list li {
-  display: flex;
-  gap: 20px;
-  padding: 26px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.process-list li:last-child {
-  border-bottom: none;
-}
-
-.process-list h3 {
-  font-family: var(--font-heading);
-  font-size: 1.6rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.process-list p {
-  margin-top: 6px;
-  color: var(--text-mid);
-  font-size: 0.97rem;
-}
-
-/* Desktop gets the drag track; mobile gets the list. Reduced motion
-   forces the list at every width. */
-@media (min-width: 901px) {
-  .process-desktop {
-    display: block;
-  }
-
-  .process-mobile {
-    display: none;
-  }
-
-  .process-mobile.is-forced {
-    display: block;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .process-desktop {
-    display: none;
-  }
-
-  .process-mobile {
-    display: block;
   }
 }
