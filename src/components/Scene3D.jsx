@@ -127,6 +127,12 @@ export default function Scene3D({ onReady, onError }) {
       // during scroll — MSAA there costs GPU/memory for edges the dimming veil
       // hides. Antialias only where the continuous loop shows moving edges.
       antialias: !isMobile,
+      // The static path renders ONE frame and never loops. With the default
+      // (false) the drawing buffer is cleared after the first composite, so on
+      // mobile the logo flashes once then vanishes to a blank background. Keeping
+      // the buffer means that single frame persists through every later scroll
+      // composite. Desktop loops every frame, so it never needs this.
+      preserveDrawingBuffer: staticRender,
       powerPreference: 'high-performance',
     })
     // DPR is capped because the full-screen canvas' fill cost scales with the
@@ -237,7 +243,14 @@ export default function Scene3D({ onReady, onError }) {
         group.add(model)
         setLoaded(true)
         onReady?.({ camera, model, layers, group, lookTarget, renderer, scene, THREE })
-        if (staticRender) renderFrame() // static path: draw the single settled frame
+        // Static path: draw the single settled frame. Render again on the next
+        // frame and once fonts/layout settle so the persisted buffer holds the
+        // final composition, not a pre-layout one.
+        if (staticRender) {
+          renderFrame()
+          requestAnimationFrame(renderFrame)
+          document.fonts?.ready?.then(() => !disposed && renderFrame())
+        }
       },
       (evt) => {
         if (evt.total) setProgress(Math.round((evt.loaded / evt.total) * 100))
