@@ -17,6 +17,10 @@
     <meta property="og:url" content="https://stackcorp.org" />
     <link rel="icon" type="image/png" href="/assets/logo/stackcorp-icon-128.png" />
     <meta name="theme-color" content="#153243" />
+    <!-- Warm the hero 3D asset in parallel with the JS bundle so the model is
+         already in cache by the time Scene3D calls the loader. (The Draco decoder
+         is a hashed same-origin bundle asset, fetched as soon as Scene3D loads.) -->
+    <link rel="preload" href="/model/stackcorp-logo.glb" as="fetch" crossorigin="anonymous" />
   </head>
   <body>
     <div id="root"></div>

@@ -1,7 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
+
+// The logo GLB is Draco-compressed geometry (1.9M tris → ~114k, 53MB → ~0.5MB).
+// DRACOLoader's default decoder (three's bundled wasm) is used: Vite emits and
+// hash-fingerprints it as a same-origin asset (CSP-safe, immutably cached, no
+// external CDN, no hand-maintained public copy). One shared loader across mounts
+// fetches + compiles the wasm exactly once.
+let sharedDraco = null
+function getDracoLoader() {
+  if (!sharedDraco) sharedDraco = new DRACOLoader()
+  return sharedDraco
+}
 import './scene3d.css'
 
 // Base orientation applied to the loaded model (radians). The GLB's broad
@@ -111,14 +123,19 @@ export default function Scene3D({ onReady, onError }) {
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      // Mobile draws a single static frame and composites a large fixed canvas
+      // during scroll — MSAA there costs GPU/memory for edges the dimming veil
+      // hides. Antialias only where the continuous loop shows moving edges.
+      antialias: !isMobile,
       powerPreference: 'high-performance',
     })
-    // DPR capped at 1.5: at retina DPR 2 the full-screen canvas renders ~4x the
-    // pixels of DPR 1 every frame, which is the single biggest GPU cost on
-    // integrated graphics — and behind the page's dimming veil the extra
-    // sharpness is invisible. 1.5 keeps edges clean at ~44% less fill.
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5))
+    // DPR is capped because the full-screen canvas' fill cost scales with the
+    // square of the ratio — at retina DPR 2 it renders ~4x the pixels of DPR 1.
+    // Desktop keeps 1.5 (clean edges on the animated model); mobile drops to
+    // 1.25 — the fixed canvas composites on every scroll frame, so a smaller
+    // drawing buffer is the biggest single win for scroll smoothness, and behind
+    // the veil the softness is invisible.
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.5))
     renderer.setSize(mount.clientWidth, mount.clientHeight)
     renderer.setClearColor(0x000000, 0) // transparent
     renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -165,6 +182,7 @@ export default function Scene3D({ onReady, onError }) {
     if (parallaxOn) window.addEventListener('pointermove', onPointerMove, { passive: true })
 
     const loader = new GLTFLoader()
+    loader.setDRACOLoader(getDracoLoader())
     loader.load(
       '/model/stackcorp-logo.glb',
       (gltf) => {
