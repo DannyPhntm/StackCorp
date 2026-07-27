@@ -66,6 +66,17 @@ export default function Home() {
     const heroCam = { x: camera.position.x, y: camera.position.y, z: camera.position.z }
     const heroLookX = lookTarget.x
 
+    // Amplitude damping. Every pose below is lerped toward the hero pose by DAMP,
+    // so the whole scroll choreography keeps its shape but travels far less — a
+    // subtle, premium drift instead of an aggressive pan/zoom. The z-axis (the
+    // "zoom" the brief called out) is damped hardest.
+    const DAMP = 0.55
+    const DAMP_Z = 0.42
+    const cx = (v) => heroCam.x + (v - heroCam.x) * DAMP
+    const cy = (v) => heroCam.y + (v - heroCam.y) * DAMP
+    const cz = (v) => heroCam.z + (v - heroCam.z) * DAMP_Z
+    const lx = (v) => heroLookX + (v - heroLookX) * DAMP
+
     // Build the scroll-driven camera timeline. Extracted so both the intro path
     // and the direct (already-seen) path reuse the identical setup.
     const buildScrollTimeline = () => {
@@ -89,26 +100,26 @@ export default function Home() {
 
         // Pose 2 — AI: ease in, re-centre, begin the unfold. fromTo so scroll 0
         // is pinned to the staged hero pose (identical to the intro's end frame).
-        tl.fromTo(camera.position, { x: heroCam.x, y: heroCam.y, z: heroCam.z }, { x: 0.4, y: 1.2, z: 4.7 }, 0)
-          .fromTo(lookTarget, { x: heroLookX }, { x: 0 }, 0)
+        tl.fromTo(camera.position, { x: heroCam.x, y: heroCam.y, z: heroCam.z }, { x: cx(0.4), y: cy(1.2), z: cz(4.7) }, 0)
+          .fromTo(lookTarget, { x: heroLookX }, { x: lx(0) }, 0)
         openTo(1, 0)
         turnTo(-0.06, 0)
         // Pose 3 — Business types.
-        tl.to(camera.position, { x: -1.5, y: 1.4, z: 4.9 }, 1)
+        tl.to(camera.position, { x: cx(-1.5), y: cy(1.4), z: cz(4.9) }, 1)
         openTo(0.5, 1)
         turnTo(-0.1, 1)
         // Pose 4 — Malir Cantt Bazaar.
-        tl.to(camera.position, { x: 1.7, y: 1.1, z: 4.6 }, 2).to(lookTarget, { x: 0.15 }, 2)
+        tl.to(camera.position, { x: cx(1.7), y: cy(1.1), z: cz(4.6) }, 2).to(lookTarget, { x: lx(0.15) }, 2)
         openTo(0.25, 2)
         turnTo(-0.01, 2)
         // Process.
-        tl.to(camera.position, { x: 0, y: 1.9, z: 5.3 }, 3).to(lookTarget, { x: 0 }, 3)
+        tl.to(camera.position, { x: cx(0), y: cy(1.9), z: cz(5.3) }, 3).to(lookTarget, { x: lx(0) }, 3)
         turnTo(0.05, 3)
         // Founders.
-        tl.to(camera.position, { x: -1.2, y: 1.4, z: 5.3 }, 4)
+        tl.to(camera.position, { x: cx(-1.2), y: cy(1.4), z: cz(5.3) }, 4)
         turnTo(0.08, 4)
         // Pose 5 — Finale/contact.
-        tl.to(camera.position, { x: 0, y: 1.5, z: 5.8 }, 5)
+        tl.to(camera.position, { x: cx(0), y: cy(1.5), z: cz(5.8) }, 5)
         openTo(0, 5)
         turnTo(0.08, 5)
 
