@@ -1,0 +1,367 @@
+/*
+ * Concierge — front desk surface.
+ *
+ * Every colour comes from src/styles/brand.css and every face from the three
+ * site fonts. Nothing here invents a shade, a radius or a shadow that the rest
+ * of the site does not already use: the point is that this does not look like
+ * an embedded third-party chat window bolted onto a StackCorp page.
+ */
+
+.sc-concierge {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: clamp(6rem, 12vw, 9rem) clamp(1.25rem, 5vw, 2rem) clamp(4rem, 8vw, 6rem);
+}
+
+.sc-concierge__head {
+  margin-bottom: clamp(2rem, 4vw, 2.75rem);
+}
+
+.sc-concierge__eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  /* The page sits on the site's dark ambient field, so everything OUTSIDE the
+     white panel is light-on-dark. Using the on-light token here rendered the
+     headline as near-black on deep twilight — invisible, and only caught by
+     looking at a screenshot rather than at the DOM. */
+  color: var(--sc-steel);
+  margin: 0 0 0.75rem;
+}
+
+.sc-concierge__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 7vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--sc-white);
+  margin: 0 0 1rem;
+}
+
+.sc-concierge__intro {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 2.2vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--sc-lavender);
+  opacity: 0.78;
+  margin: 0;
+  max-width: 34rem;
+}
+
+.sc-concierge__panel {
+  border: 1px solid var(--sc-accent-a15);
+  border-radius: 4px;
+  background: var(--sc-white);
+}
+
+/* ---- Thread ------------------------------------------------------------- */
+
+.sc-concierge__thread {
+  /* Tall enough to feel like a conversation, short enough that the composer
+     stays on screen with a phone keyboard up. */
+  min-height: 14rem;
+  max-height: min(52vh, 30rem);
+  overflow-y: auto;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sc-concierge__empty {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  color: var(--sc-black);
+  opacity: 0.45;
+  margin: auto 0;
+}
+
+.sc-concierge__turn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+/*
+ * No bubbles, no alternating alignment. Speaker labels and a rule read as a
+ * transcript, which is what this is — and it survives long replies without the
+ * lopsided balloon layout every chat widget has.
+ */
+.sc-concierge__who {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sc-steel);
+}
+
+.sc-concierge__turn--concierge .sc-concierge__who {
+  color: var(--sc-persian);
+}
+
+.sc-concierge__text {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--sc-black);
+  margin: 0;
+  /* A pasted wall of text must wrap, not stretch the panel. */
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.sc-concierge__turn--visitor .sc-concierge__text {
+  opacity: 0.68;
+}
+
+/* ---- Thinking ----------------------------------------------------------- */
+
+.sc-concierge__thinking {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin: 0;
+}
+
+.sc-concierge__dot {
+  width: 0.3125rem;
+  height: 0.3125rem;
+  border-radius: 50%;
+  background: var(--sc-persian);
+  opacity: 0.3;
+  animation: sc-concierge-pulse 1.2s ease-in-out infinite;
+}
+
+.sc-concierge__dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.sc-concierge__dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes sc-concierge-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-concierge__dot {
+    animation: none;
+    opacity: 0.55;
+  }
+}
+
+/* ---- Composer ----------------------------------------------------------- */
+
+.sc-concierge__composer {
+  border-top: 1px solid var(--sc-accent-a08);
+  padding: clamp(1rem, 2.5vw, 1.25rem);
+}
+
+.sc-concierge__field {
+  width: 100%;
+  border: none;
+  resize: vertical;
+  min-height: 3.25rem;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--sc-black);
+  background: transparent;
+  padding: 0;
+}
+
+.sc-concierge__field::placeholder {
+  color: var(--sc-steel);
+}
+
+.sc-concierge__field:focus {
+  outline: none;
+}
+
+/* The panel takes the focus ring, so the whole composer reads as one control
+   rather than a borderless box that appears to lose focus entirely. */
+.sc-concierge__composer:focus-within {
+  box-shadow: inset 0 0 0 2px var(--sc-accent-a30);
+}
+
+.sc-concierge__field:disabled {
+  opacity: 0.5;
+}
+
+.sc-concierge__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.sc-concierge__count {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--sc-steel);
+  margin-right: auto;
+}
+
+.sc-concierge__count--over {
+  color: #9b1c1c;
+}
+
+.sc-concierge__send {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--sc-white);
+  background: var(--sc-persian);
+  border: 1px solid var(--sc-persian);
+  border-radius: 2px;
+  padding: 0.625rem 1.5rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  /* Comfortable to hit on a phone. */
+  min-height: 2.75rem;
+}
+
+.sc-concierge__send:hover:not(:disabled) {
+  opacity: 0.86;
+}
+
+.sc-concierge__send:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.sc-concierge__skip {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--sc-black);
+  opacity: 0.55;
+  background: none;
+  border: none;
+  padding: 0.625rem 0.25rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sc-concierge__skip:hover {
+  opacity: 0.85;
+}
+
+/* Focus must always be visible, on every control. */
+.sc-concierge__send:focus-visible,
+.sc-concierge__skip:focus-visible,
+.sc-concierge__input:focus-visible {
+  outline: 2px solid var(--sc-persian);
+  outline-offset: 2px;
+}
+
+/* ---- Contact ------------------------------------------------------------ */
+
+.sc-concierge__contact {
+  border-top: 1px solid var(--sc-accent-a08);
+  background: var(--sc-accent-a08);
+  padding: clamp(1rem, 2.5vw, 1.25rem);
+}
+
+.sc-concierge__label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--sc-black);
+  margin-bottom: 0.25rem;
+}
+
+.sc-concierge__note {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--sc-black);
+  opacity: 0.6;
+  margin: 0 0 0.75rem;
+  max-width: 32rem;
+}
+
+.sc-concierge__contactRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.sc-concierge__input {
+  flex: 1 1 14rem;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--sc-black);
+  background: var(--sc-white);
+  border: 1px solid var(--sc-accent-a15);
+  border-radius: 2px;
+  padding: 0.625rem 0.75rem;
+  min-height: 2.75rem;
+}
+
+.sc-concierge__saved,
+.sc-concierge__error {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0.875rem clamp(1rem, 2.5vw, 1.25rem);
+  border-top: 1px solid var(--sc-accent-a08);
+}
+
+.sc-concierge__saved {
+  color: var(--sc-persian);
+}
+
+.sc-concierge__error {
+  color: #9b1c1c;
+}
+
+.sc-concierge__foot {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--sc-lavender);
+  opacity: 0.55;
+  margin: 1.25rem 0 0;
+  max-width: 34rem;
+}
+
+.sc-concierge__sronly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 30rem) {
+  .sc-concierge__thread {
+    /* Leaves room for the composer once the on-screen keyboard is up. */
+    max-height: 40vh;
+  }
+
+  .sc-concierge__send,
+  .sc-concierge__skip {
+    flex: 1 1 auto;
+  }
+}

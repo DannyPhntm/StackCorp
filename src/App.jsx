@@ -8,6 +8,7 @@ import { initHaptics } from './utils/haptics.js'
 import IntroOverlay from './components/IntroOverlay.jsx'
 import Home from './pages/Home.jsx'
 import Founders from './pages/Founders.jsx'
+import ConciergePage from './pages/Concierge.jsx'
 
 // The opening swipe intro plays only on the first home-page load of a session,
 // and never for reduced-motion. Decided synchronously so the overlay is present
@@ -63,6 +64,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/founders" element={<Founders />} />
+        <Route path="/concierge" element={<ConciergePage />} />
       </Routes>
       <Footer />
     </>
