@@ -179,8 +179,13 @@ export default function Concierge() {
                 type="email"
                 value={contact}
               />
+              {/*
+                Not "Send". The composer's button is already called that and
+                both are on screen at once here, so a screen reader announced
+                two identical buttons with no way to tell them apart.
+              */}
               <button className="sc-concierge__send" type="submit">
-                Send
+                Save address
               </button>
               <button
                 className="sc-concierge__skip"
