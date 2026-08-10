@@ -1,10 +1,20 @@
 /*
  * Concierge — front desk surface.
  *
- * Every colour comes from src/styles/brand.css and every face from the three
- * site fonts. Nothing here invents a shade, a radius or a shadow that the rest
- * of the site does not already use: the point is that this does not look like
- * an embedded third-party chat window bolted onto a StackCorp page.
+ * Every face comes from the three site fonts and every colour from a token.
+ * The point is that this does not look like an embedded third-party chat
+ * window bolted onto a StackCorp page.
+ *
+ * TWO SURFACES, AND THIS IS WHY THE TOKENS ARE MIXED.
+ *
+ * The page sits on the site's dark ambient field; the conversation panel is a
+ * deliberate LIGHT surface on top of it. So everything OUTSIDE the panel is
+ * light-on-dark and uses the derived layer every other component is built on
+ * — `--text-hi`, `--text-mid`, `--text-low`, `--line`. Everything INSIDE the
+ * panel is dark-on-light and cannot: `--text-hi` IS the light text, and using
+ * it on white would render the transcript invisible. The interior therefore
+ * keeps the on-light brand values, which is not a deviation but the only
+ * correct reading of a light panel.
  */
 
 .sc-concierge {
@@ -23,21 +33,19 @@
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  /* The page sits on the site's dark ambient field, so everything OUTSIDE the
-     white panel is light-on-dark. Using the on-light token here rendered the
-     headline as near-black on deep twilight — invisible, and only caught by
-     looking at a screenshot rather than at the DOM. */
-  color: var(--sc-steel);
+  color: var(--text-low);
   margin: 0 0 0.75rem;
 }
 
 .sc-concierge__title {
   font-family: var(--font-display);
-  font-weight: 400;
+  /* 600, matching `.section-title` — the site's display weight. This was 400,
+     which read lighter than every other Recia headline on the site. */
+  font-weight: 600;
   font-size: clamp(2.5rem, 7vw, 4rem);
   line-height: 1.05;
   letter-spacing: -0.02em;
-  color: var(--sc-white);
+  color: var(--text-hi);
   margin: 0 0 1rem;
 }
 
@@ -45,16 +53,20 @@
   font-family: var(--font-sans);
   font-size: clamp(1rem, 2.2vw, 1.125rem);
   line-height: 1.6;
-  color: var(--sc-lavender);
-  opacity: 0.78;
+  color: var(--text-mid);
   margin: 0;
   max-width: 34rem;
 }
 
 .sc-concierge__panel {
-  border: 1px solid var(--sc-accent-a15);
-  border-radius: 4px;
+  border: 1px solid var(--line);
+  /* `--radius`, the panel radius every card on the site uses. Was a one-off
+     4px that matched no token. */
+  border-radius: var(--radius);
   background: var(--sc-white);
+  /* The panel corners now round enough for the thread's scroll edge to show
+     through them without the clip. */
+  overflow: hidden;
 }
 
 /* ---- Thread ------------------------------------------------------------- */
@@ -215,27 +227,50 @@
 }
 
 .sc-concierge__count--over {
-  color: #9b1c1c;
+  color: var(--danger);
 }
 
+/*
+ * The site's button language: a pill, Supreme at 550, `--ease-out`. This was a
+ * 2px-radius rectangle — the only primary button on the site that was not a
+ * pill, which is most of why the panel read as a widget rather than a page.
+ */
 .sc-concierge__send {
   font-family: var(--font-sans);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 550;
   letter-spacing: 0.01em;
   color: var(--sc-white);
   background: var(--sc-persian);
   border: 1px solid var(--sc-persian);
-  border-radius: 2px;
+  border-radius: var(--radius-pill);
   padding: 0.625rem 1.5rem;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition:
+    background 0.2s var(--ease-out),
+    transform 0.2s var(--ease-out),
+    opacity 0.2s var(--ease-out);
   /* Comfortable to hit on a phone. */
   min-height: 2.75rem;
 }
 
 .sc-concierge__send:hover:not(:disabled) {
-  opacity: 0.86;
+  background: color-mix(in srgb, var(--sc-persian), var(--sc-white) 12%);
+}
+
+/* The site's tactile press, from `.btn:active`. */
+.sc-concierge__send:active:not(:disabled) {
+  transform: translateY(1px) scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-concierge__send {
+    transition: none;
+  }
+
+  .sc-concierge__send:active:not(:disabled) {
+    transform: none;
+  }
 }
 
 .sc-concierge__send:disabled {
@@ -261,12 +296,21 @@
   opacity: 0.85;
 }
 
-/* Focus must always be visible, on every control. */
+/*
+ * Focus must always be visible, on every control.
+ *
+ * 3px offset, matching the site convention. The COLOUR deliberately stays
+ * `--sc-persian` rather than the sitewide `--accent-strong`: these controls sit
+ * on the white panel, and `--accent-strong` is lifted 58% toward lavender to
+ * hold contrast on the DARK surfaces. On white it is close to invisible, so
+ * adopting it wholesale would have traded a cosmetic inconsistency for a real
+ * accessibility regression.
+ */
 .sc-concierge__send:focus-visible,
 .sc-concierge__skip:focus-visible,
 .sc-concierge__input:focus-visible {
   outline: 2px solid var(--sc-persian);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 /* ---- Contact ------------------------------------------------------------ */
@@ -309,8 +353,8 @@
   color: var(--sc-black);
   background: var(--sc-white);
   border: 1px solid var(--sc-accent-a15);
-  border-radius: 2px;
-  padding: 0.625rem 0.75rem;
+  border-radius: var(--radius);
+  padding: 0.625rem 0.875rem;
   min-height: 2.75rem;
 }
 
@@ -329,15 +373,14 @@
 }
 
 .sc-concierge__error {
-  color: #9b1c1c;
+  color: var(--danger);
 }
 
 .sc-concierge__foot {
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   line-height: 1.6;
-  color: var(--sc-lavender);
-  opacity: 0.55;
+  color: var(--text-low);
   margin: 1.25rem 0 0;
   max-width: 34rem;
 }

@@ -17,10 +17,18 @@
  *   - it is not a secret we own, and nothing else is held client-side
  */
 
-const ORIGIN = (import.meta.env.VITE_CONCIERGE_ORIGIN || 'http://localhost:8787').replace(
-  /\/+$/,
-  '',
-)
+/*
+ * The deployed service. A production build with no VITE_CONCIERGE_ORIGIN set
+ * must still reach Railway — the site is hosted, the backend is not part of it,
+ * and a missing env var must not silently point visitors at localhost. Dev
+ * keeps the local backend as its fallback.
+ */
+const PRODUCTION_ORIGIN = 'https://stackcorp-concierge-production.up.railway.app'
+const DEV_ORIGIN = 'http://localhost:8787'
+
+const ORIGIN = (
+  import.meta.env.VITE_CONCIERGE_ORIGIN || (import.meta.env.DEV ? DEV_ORIGIN : PRODUCTION_ORIGIN)
+).replace(/\/+$/, '')
 
 const STORAGE_KEY = 'sc_concierge_session_v1'
 
