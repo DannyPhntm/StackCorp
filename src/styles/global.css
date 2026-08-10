@@ -30,6 +30,15 @@
   --line: color-mix(in srgb, var(--sc-stone), transparent 82%);
   --line-strong: color-mix(in srgb, var(--sc-stone), transparent 62%);
 
+  /* Danger — the one state the palette had no colour for. Every red in the
+     codebase was the literal #9b1c1c, typed twice into concierge.css, because
+     there was nothing to reach for. `--danger` is that value promoted to a
+     token: it is tuned for LIGHT surfaces (the Concierge panel), where it
+     holds AA against white. `--danger-strong` is the lifted variant for the
+     dark twilight surfaces, where the deep red goes muddy. */
+  --danger: #9b1c1c;
+  --danger-strong: color-mix(in srgb, #9b1c1c, var(--sc-ice) 55%);
+
   /* Logo layer colors, sampled from the approved stackcorp-icon.png */
   --logo-blue: #2f6df0;
   --logo-blue-hi: color-mix(in srgb, var(--logo-blue), var(--sc-ice) 38%);
