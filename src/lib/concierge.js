@@ -32,6 +32,13 @@ const ORIGIN = (
 
 const STORAGE_KEY = 'sc_concierge_session_v1'
 
+/*
+ * Long enough that a Railway cold start still lands — the service sleeps and the
+ * first request of the day pays for the wake-up. Short enough that a visitor is
+ * not left watching a button that will never change.
+ */
+const REQUEST_TIMEOUT_MS = 15_000
+
 export const MAX_TEXT = 2000
 
 /*
@@ -76,19 +83,52 @@ async function post(path, body, token) {
   const headers = { 'Content-Type': 'application/json' }
   if (token) headers['X-Concierge-Session'] = token
 
+  // A service that REFUSES gives us an error to show. One that simply never
+  // answers — a cold start, a stalled connection — gives us nothing, and the
+  // composer sits on "Sending" until the visitor reloads the page. The abort is
+  // what turns that silence into a state the UI already knows how to render.
+  const controller = new AbortController()
+  const timer = setTimeout(() => {
+    controller.abort()
+  }, REQUEST_TIMEOUT_MS)
+
   let res
+  let data
   try {
-    res = await fetch(`${ORIGIN}${path}`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(body),
-    })
-  } catch {
-    throw new ConciergeError('network', 'We could not reach the Concierge just now.')
+    try {
+      res = await fetch(`${ORIGIN}${path}`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+        signal: controller.signal,
+      })
+    } catch (err) {
+      // Same `kind` either way: to the visitor, and to every error branch in
+      // the UI, a request that timed out and one that never connected are the
+      // same event. Only the sentence differs, because "taking too long" is
+      // worth waiting out and "could not reach" is not.
+      if (err?.name === 'AbortError') {
+        throw new ConciergeError('network', 'The Concierge is taking longer than usual.')
+      }
+      throw new ConciergeError('network', 'We could not reach the Concierge just now.')
+    }
+
+    // Inside the timeout too: headers can arrive promptly and the body still
+    // never finish, which strands the UI exactly the same way.
+    // Body may be absent or not JSON on an error; never let that throw.
+    data = await res.json().catch(() => ({}))
+
+    // That `catch` would otherwise turn an aborted body into an empty object
+    // and a confident, wrong error further down. If the abort fired, say so.
+    if (controller.signal.aborted) {
+      throw new ConciergeError('network', 'The Concierge is taking longer than usual.')
+    }
+  } finally {
+    // Cleared on every path — success, refusal, timeout — so a settled request
+    // leaves no timer behind.
+    clearTimeout(timer)
   }
 
-  // Body may be absent or not JSON on an error; never let that throw.
-  const data = await res.json().catch(() => ({}))
   const safeMessage = typeof data?.error === 'string' ? data.error : ''
 
   if (res.ok) return data

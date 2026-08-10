@@ -83,11 +83,24 @@
   gap: 1.5rem;
 }
 
+/*
+ * SECONDARY TEXT ON THE WHITE PANEL.
+ *
+ * Everything muted in here used to be `--sc-black` at an opacity, or
+ * `--sc-steel`, and each one landed between 2.5:1 and 4.35:1 against white —
+ * under the 4.5:1 AA needs for normal text. Opacity is the wrong instrument:
+ * it composites toward whatever is behind, which on a white panel means
+ * straight toward invisible, and it also fades any focus ring drawn on the
+ * element.
+ *
+ * These now mix explicitly toward `--sc-white`, which is the same visual move
+ * with a value we can actually hold to a ratio. The hierarchy is unchanged —
+ * secondary text is still plainly lighter than the transcript.
+ */
 .sc-concierge__empty {
   font-family: var(--font-sans);
   font-size: 0.9375rem;
-  color: var(--sc-black);
-  opacity: 0.45;
+  color: color-mix(in srgb, var(--sc-black), var(--sc-white) 35%);
   margin: auto 0;
 }
 
@@ -108,7 +121,9 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sc-steel);
+  /* `--sc-steel` is tuned for the dark surfaces; on white it is 2.6:1. Kept as
+     the base hue, darkened until the label is legible. */
+  color: color-mix(in srgb, var(--sc-steel), var(--sc-black) 45%);
 }
 
 .sc-concierge__turn--concierge .sc-concierge__who {
@@ -193,8 +208,9 @@
   padding: 0;
 }
 
+/* The composer's only affordance before anyone types — it has to be readable. */
 .sc-concierge__field::placeholder {
-  color: var(--sc-steel);
+  color: color-mix(in srgb, var(--sc-steel), var(--sc-black) 45%);
 }
 
 .sc-concierge__field:focus {
@@ -278,11 +294,11 @@
   cursor: not-allowed;
 }
 
+/* An interactive label, so it carries the least of the fading. */
 .sc-concierge__skip {
   font-family: var(--font-sans);
   font-size: 0.875rem;
-  color: var(--sc-black);
-  opacity: 0.55;
+  color: color-mix(in srgb, var(--sc-black), var(--sc-white) 25%);
   background: none;
   border: none;
   padding: 0.625rem 0.25rem;
@@ -293,7 +309,7 @@
 }
 
 .sc-concierge__skip:hover {
-  opacity: 0.85;
+  color: var(--sc-black);
 }
 
 /*
@@ -334,8 +350,7 @@
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   line-height: 1.5;
-  color: var(--sc-black);
-  opacity: 0.6;
+  color: color-mix(in srgb, var(--sc-black), var(--sc-white) 35%);
   margin: 0 0 0.75rem;
   max-width: 32rem;
 }
