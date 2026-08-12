@@ -6,7 +6,7 @@
  *
  *   POST /api/public/session  {}                -> { sessionToken }
  *   POST /api/public/turn     { text }          -> { reply, escalated, awaitingContact }
- *   POST /api/public/contact  { email }         -> { recorded }
+ *   POST /api/public/contact  { phone?, email?, channel? } -> { recorded }
  *
  * The responses carry no ids, no confidence, no sources, no diagnostics — so
  * this module never reads, stores or surfaces anything beyond the fields above.
@@ -180,13 +180,20 @@ export async function sendTurn(text) {
 }
 
 /* Optional contact capture. Never required to continue the conversation. */
-export async function sendContact(email) {
+export async function sendContact(details) {
   const token = readToken()
   if (!token) {
     throw new ConciergeError('expired', 'This conversation has expired.')
   }
+  // Only what was actually given. The endpoint validates each field it is sent
+  // and ignores the ones it is not, so an empty string must not be sent as one.
+  const body = {}
+  for (const field of ['email', 'phone', 'channel']) {
+    const value = details?.[field]
+    if (typeof value === 'string' && value.trim().length > 0) body[field] = value.trim()
+  }
   try {
-    const data = await post('/api/public/contact', { email }, token)
+    const data = await post('/api/public/contact', body, token)
     return data?.recorded === true
   } catch (err) {
     if (err instanceof ConciergeError && err.kind === 'expired') clearToken()

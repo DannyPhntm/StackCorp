@@ -667,3 +667,51 @@
     flex: 1 1 auto;
   }
 }
+
+/* ---- Contact channel ---------------------------------------------------- */
+
+/*
+ * The number and how to use it, on one line.
+ *
+ * Asking for a number, then which way to use it, then a name, then a company
+ * is four questions at the moment someone is already waiting for a person.
+ * What they type answers the first question — an address needs no channel —
+ * so this appears only alongside a number.
+ */
+.sc-concierge__channel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: none;
+  padding: 0.25rem 0 0;
+  margin: 0;
+}
+
+.sc-concierge__choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--text-mid);
+  cursor: pointer;
+  min-height: 2.25rem;
+}
+
+.sc-concierge__choice input {
+  /* The platform control, because a custom radio is a custom keyboard model
+     and an accessibility surface nobody asked for. */
+  accent-color: var(--accent-strong);
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.sc-concierge__choice:hover {
+  color: var(--text-hi);
+}
+
+.sc-concierge__choice input:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 3px;
+}

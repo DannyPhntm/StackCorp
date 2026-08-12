@@ -48,6 +48,7 @@ export default function Concierge() {
   const [error, setError] = useState(null)
   const [contactState, setContactState] = useState('hidden') // hidden | asking | saved
   const [contact, setContact] = useState('')
+  const [channel, setChannel] = useState('whatsapp')
   const [contactError, setContactError] = useState('')
 
   const endRef = useRef(null)
@@ -133,11 +134,19 @@ export default function Concierge() {
   const submitContact = useCallback(
     async (event) => {
       event.preventDefault()
-      const email = contact.trim()
-      if (!email) return
+      const given = contact.trim()
+      if (!given) return
       setContactError('')
       try {
-        await sendContact(email)
+        // One field, either kind. Asking "phone or email?" and then which of
+        // the two they prefer is two questions at the moment someone is
+        // already waiting for a person; what they typed answers the first.
+        const looksLikeEmail = given.includes('@')
+        await sendContact(
+          looksLikeEmail
+            ? { email: given, channel: 'email' }
+            : { phone: given, channel },
+        )
         setContactState('saved')
       } catch (err) {
         setContactError(
@@ -145,7 +154,7 @@ export default function Concierge() {
         )
       }
     },
-    [contact],
+    [channel, contact],
   )
 
   const restart = useCallback(() => {
@@ -154,6 +163,7 @@ export default function Concierge() {
     setError(null)
     setDraft('')
     setContact('')
+    setChannel('whatsapp')
     setContactState('hidden')
     setContactError('')
     inputRef.current?.focus()
@@ -239,22 +249,23 @@ export default function Concierge() {
             <form className="sc-concierge__contact" onSubmit={submitContact}>
               <span className="sc-concierge__who">StackCorp</span>
               <label className="sc-concierge__label" htmlFor="sc-concierge-email">
-                Where should we reach you?
+                What is the best number to reach you on?
               </label>
               <p className="sc-concierge__note">
-                Optional. A person is picking this up, and without an address we have no way to
-                reply. Kept for 30 days with the conversation, then deleted.
+                Optional, and an email works just as well. A person is picking this up, and without
+                one of the two we have no way to reply. Kept for 30 days with the conversation,
+                then deleted.
               </p>
               <div className="sc-concierge__contactRow">
                 <input
-                  autoComplete="email"
+                  autoComplete="tel"
                   className="sc-concierge__input"
                   id="sc-concierge-email"
-                  inputMode="email"
+                  inputMode="tel"
                   maxLength={254}
                   onChange={(event) => setContact(event.target.value)}
-                  placeholder="you@company.com"
-                  type="email"
+                  placeholder="0300 1234567, or an email"
+                  type="text"
                   value={contact}
                 />
                 {/*
@@ -263,7 +274,7 @@ export default function Concierge() {
                   identical buttons with no way to tell them apart.
                 */}
                 <button className="sc-concierge__send sc-concierge__send--text" type="submit">
-                  Save address
+                  Save
                 </button>
                 <button
                   className="sc-concierge__skip"
@@ -273,6 +284,27 @@ export default function Concierge() {
                   Not now
                 </button>
               </div>
+              {!contact.includes('@') && (
+                /* Only for a number: an address has already answered this. */
+                <fieldset className="sc-concierge__channel">
+                  <legend className="sc-concierge__sronly">How should we reach you?</legend>
+                  {[
+                    ['whatsapp', 'WhatsApp'],
+                    ['email', 'A call'],
+                  ].map(([value, label]) => (
+                    <label className="sc-concierge__choice" key={value}>
+                      <input
+                        checked={channel === value}
+                        name="sc-concierge-channel"
+                        onChange={() => setChannel(value)}
+                        type="radio"
+                        value={value}
+                      />
+                      <span>{label}</span>
+                    </label>
+                  ))}
+                </fieldset>
+              )}
               {contactError && (
                 <p className="sc-concierge__error" role="alert">
                   {contactError}
