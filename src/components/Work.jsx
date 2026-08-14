@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import Reveal from './Reveal.jsx'
 import './story.css'
 import './work.css'
@@ -145,6 +146,24 @@ export default function Work() {
           >
             View Live Project
           </a>
+        </Reveal>
+
+        {/* The second piece of proof, and the only one we built for ourselves:
+            the Concierge. The live front desk stays out of the nav for now, so
+            this card — the case study — is how it is found. */}
+        <Reveal delay={0.18} className="work-next">
+          <Link className="work-next-card card" data-haptic="tap" to="/work/concierge">
+            <span className="work-next-kicker">Case study</span>
+            <span className="work-next-title">StackCorp Concierge</span>
+            <span className="work-next-sub">
+              An AI front desk for our own site: answers from published knowledge, escalates to a
+              person, and cannot publish anything to itself.
+            </span>
+            <span className="work-next-cta">
+              Read the case study
+              <span aria-hidden="true">→</span>
+            </span>
+          </Link>
         </Reveal>
       </div>
     </section>

@@ -1,0 +1,584 @@
+/*
+ * /work/concierge — case study page.
+ *
+ * Everything here reads the brand tokens from global.css/brand.css; no hex
+ * values, no new type scale. The page is long-form, so the one thing it adds
+ * over the home page is a reading measure (--wc-measure) that keeps prose off
+ * the full 1320px container.
+ */
+
+.wc {
+  --wc-measure: 62ch;
+  display: block;
+}
+
+/* ---------- Hero ---------- */
+
+.wc-hero {
+  padding-block: clamp(120px, 16vh, 172px) 56px;
+}
+
+.wc-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-low);
+  margin-bottom: 22px;
+}
+
+.wc-breadcrumb a {
+  color: var(--accent-strong);
+}
+
+.wc-breadcrumb a:hover {
+  color: var(--text-hi);
+}
+
+.wc-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 6.4vw, 4.6rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--text-hi);
+}
+
+.wc-lede {
+  margin-top: 24px;
+  max-width: var(--wc-measure);
+  color: var(--text-mid);
+  font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+  line-height: 1.55;
+}
+
+.wc-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 18px 28px;
+  margin-top: 44px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+}
+
+.wc-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.wc-fact-label {
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-low);
+}
+
+.wc-fact-value {
+  color: var(--text-hi);
+  font-size: 0.98rem;
+  font-weight: 550;
+  /* Long values (an origin, a stack line) must wrap rather than push the grid
+     wider than the viewport. */
+  overflow-wrap: anywhere;
+}
+
+.wc-cta {
+  margin-top: 40px;
+}
+
+/* ---------- Section shell ---------- */
+
+.wc-section {
+  padding-block: clamp(64px, 9vw, 104px);
+}
+
+.wc-section--tint {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--surface-1), transparent 55%),
+    transparent
+  );
+}
+
+.wc-kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-low);
+  margin-bottom: 18px;
+}
+
+.wc-kicker b {
+  color: var(--accent-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.wc-prose {
+  max-width: var(--wc-measure);
+  margin-top: 22px;
+  display: grid;
+  gap: 18px;
+  color: var(--text-mid);
+  font-size: var(--body-size);
+  line-height: var(--body-lh);
+}
+
+/* ---------- Two-column contrast ---------- */
+
+.wc-split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 42px;
+}
+
+.wc-col {
+  padding: 30px 28px;
+}
+
+.wc-col:hover {
+  transform: none;
+}
+
+.wc-col-title {
+  font-family: var(--font-heading);
+  font-size: 1.06rem;
+  font-weight: 600;
+  color: var(--text-hi);
+  letter-spacing: -0.005em;
+}
+
+.wc-list {
+  list-style: none;
+  margin-top: 18px;
+  display: grid;
+  gap: 11px;
+  color: var(--text-mid);
+  font-size: 0.96rem;
+  line-height: 1.5;
+}
+
+.wc-list li {
+  position: relative;
+  padding-left: 20px;
+}
+
+.wc-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 10px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--accent);
+}
+
+.wc-col--negative .wc-list li::before {
+  background: var(--text-low);
+}
+
+/* ---------- Flow diagram ---------- */
+
+.wc-panel {
+  margin-top: 42px;
+  padding: 34px 30px;
+}
+
+.wc-panel:hover {
+  transform: none;
+}
+
+.wc-flow {
+  display: grid;
+  gap: 26px;
+}
+
+.wc-flow-lane {
+  display: grid;
+  gap: 12px;
+}
+
+.wc-lane-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-low);
+}
+
+.wc-flow-lane--operator .wc-lane-label {
+  color: var(--accent-strong);
+}
+
+.wc-flow-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.wc-flow-node-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.wc-flow-node {
+  padding: 9px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  font-size: 0.86rem;
+  font-weight: 550;
+  color: var(--text-hi);
+  background: color-mix(in srgb, var(--surface-3), transparent 55%);
+  overflow-wrap: anywhere;
+}
+
+.wc-flow-lane--operator .wc-flow-node {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--accent-strong), transparent 50%);
+}
+
+.wc-flow-link {
+  width: 24px;
+  height: 1px;
+  flex: none;
+  background: linear-gradient(90deg, var(--line-strong), var(--accent));
+}
+
+.wc-flow-foot {
+  margin-top: 4px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--text-mid);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  max-width: var(--wc-measure);
+}
+
+/* ---------- Route table ---------- */
+
+.wc-routes {
+  margin-top: 36px;
+}
+
+.wc-route-list {
+  list-style: none;
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.wc-route {
+  display: grid;
+  grid-template-columns: 58px minmax(0, auto) minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface-2), transparent 55%);
+}
+
+.wc-route-method {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent-strong);
+}
+
+.wc-route-path {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.86rem;
+  color: var(--text-hi);
+  overflow-wrap: anywhere;
+}
+
+.wc-route-note {
+  color: var(--text-mid);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 640px) {
+  .wc-route {
+    grid-template-columns: 58px minmax(0, 1fr);
+  }
+
+  .wc-route-note {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- Transcript ---------- */
+
+.wc-thread {
+  margin-top: 40px;
+  padding: 32px 28px;
+  display: grid;
+  gap: 24px;
+}
+
+.wc-thread:hover {
+  transform: none;
+}
+
+.wc-turn {
+  display: grid;
+  gap: 8px;
+  max-width: 68ch;
+}
+
+/* The visitor carries the raised surface; the reply is plain prose — the same
+   decision the live Concierge makes, so the transcript reads as the product. */
+.wc-turn--visitor {
+  justify-self: end;
+  text-align: left;
+  padding: 16px 20px;
+  border-radius: 14px 14px 4px 14px;
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--surface-3), transparent 40%);
+  max-width: 46ch;
+}
+
+.wc-who {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-low);
+}
+
+.wc-turn-text {
+  color: var(--text-hi);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.wc-turn--concierge .wc-turn-text {
+  color: var(--text-mid);
+  font-size: 1.05rem;
+}
+
+.wc-turn-note {
+  margin-top: 2px;
+  padding-left: 14px;
+  border-left: 2px solid color-mix(in srgb, var(--accent-strong), transparent 55%);
+  color: var(--text-low);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.wc-thread-foot {
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--text-low);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+/* ---------- Learning loop ---------- */
+
+.wc-loop {
+  margin-top: 44px;
+}
+
+.wc-loop-list {
+  list-style: none;
+  display: grid;
+  gap: 0;
+  border-left: 1px solid var(--line-strong);
+  padding-left: clamp(20px, 3vw, 34px);
+}
+
+.wc-loop-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 18px;
+  padding-block: 20px;
+}
+
+.wc-loop-item + .wc-loop-item {
+  border-top: 1px solid var(--line);
+}
+
+/* The node on the spine. Human steps are filled; system steps are hollow — the
+   whole point of the diagram is that you can see the gates at a glance. */
+.wc-loop-item::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * clamp(20px, 3vw, 34px) - 5px);
+  top: 30px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-0);
+}
+
+.wc-loop-item--founder::before {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
+
+.wc-loop-index {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--text-low);
+  padding-top: 3px;
+}
+
+.wc-loop-body p {
+  margin-top: 7px;
+  color: var(--text-mid);
+  font-size: 0.97rem;
+  line-height: 1.58;
+  max-width: var(--wc-measure);
+}
+
+.wc-loop-step {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-hi);
+}
+
+.wc-loop-who {
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-low);
+}
+
+.wc-loop-item--founder .wc-loop-who {
+  color: var(--accent-strong);
+  border-color: color-mix(in srgb, var(--accent-strong), transparent 55%);
+}
+
+@media (max-width: 560px) {
+  .wc-loop-item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+}
+
+/* ---------- Card grids ---------- */
+
+.wc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+  gap: 18px;
+  margin-top: 42px;
+}
+
+.wc-grid--two {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.wc-card {
+  padding: 26px 24px;
+}
+
+.wc-card p {
+  margin-top: 10px;
+  color: var(--text-mid);
+  font-size: 0.95rem;
+  line-height: 1.58;
+}
+
+.wc-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--text-hi);
+  letter-spacing: -0.005em;
+}
+
+/* ---------- Operator surface ---------- */
+
+.wc-operator {
+  margin-top: 42px;
+  padding: 30px 28px;
+}
+
+.wc-operator:hover {
+  transform: none;
+}
+
+.wc-operator-note {
+  margin-top: 12px;
+  color: var(--text-low);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  max-width: var(--wc-measure);
+}
+
+.wc-tabs {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.wc-tab {
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--surface-2), transparent 45%);
+  color: var(--text-mid);
+  font-size: 0.85rem;
+}
+
+/* ---------- Outro ---------- */
+
+.wc-outro {
+  margin-top: 44px;
+  padding: 34px 30px;
+}
+
+.wc-outro:hover {
+  transform: none;
+}
+
+.wc-outro-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  color: var(--text-hi);
+  letter-spacing: -0.01em;
+}
+
+.wc-outro p {
+  margin-top: 14px;
+  max-width: var(--wc-measure);
+  color: var(--text-mid);
+  font-size: var(--body-size);
+  line-height: var(--body-lh);
+}
+
+.wc-outro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}

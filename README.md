@@ -75,6 +75,7 @@ Reusable starting points for client-facing work:
 
 ### Projects (`projects/`)
 - [malir-cantt-bazaar.md](projects/malir-cantt-bazaar.md) — live flagship project
+- [stackcorp-concierge.md](projects/stackcorp-concierge.md) — Concierge case study (page: `/work/concierge`)
 - [future-project-template.md](projects/future-project-template.md) — scaffold for new projects
 
 ### Reference (`reference/`)
